@@ -21,6 +21,9 @@ public class MyLouiseApi {
     @Autowired
     private SendPictureApi sendPictureApi;
 
+    @Autowired
+    private SearchPictureApi searchPictureApi;
+
     //BOT运行接口
     //String BASE_BOT_URL = "http://localhost:5700";
 
@@ -51,21 +54,23 @@ public class MyLouiseApi {
         String message_type = message.getString("message_type");
         String command = message.getString("raw_message").substring(1).split(" ")[0];
         String number = "";
+        String nickname = message.getJSONObject("sender").getString("nickname");
 
         //判断私聊或是群聊
-        int operate = 0;
+        String senderType = "";
         if (message_type.equals("group")) {
             number = message.getString("group_id");
-            operate = 2;
+            senderType = "group_id";
         } else if (message_type.equals("private")) {
             number = message.getString("user_id");
-            operate = 1;
+            senderType = "user_id";
         }
 
         switch (command) {
             //调用LoliconAPI随机或根据参数请求色图
-            case "setu": sendPictureApi.sendPicture(number, operate, message); break;
-            case "find": break;
+            case "setu": sendPictureApi.sendPicture(number, nickname, senderType, message); break;
+            //调用识图API根据上传图片进行识图
+            case "find": searchPictureApi.findWithSourceNAO(number, nickname, senderType, message); break;
         }
 
         return;

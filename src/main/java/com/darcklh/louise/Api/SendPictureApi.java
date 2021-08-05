@@ -21,9 +21,11 @@ public class SendPictureApi {
     @Value("${BASE_BOT_URL}")
     String BASE_BOT_URL;
 
-    Logger logger = LoggerFactory.getLogger(MyLouiseApi.class);
+    Logger logger = LoggerFactory.getLogger(SendPictureApi.class);
 
-    public void sendPicture(String id, int operate, JSONObject message) {
+    public void sendPicture(String id, String nickname, String senderType, JSONObject message) {
+
+        logger.info("进入发图流程, 发起用户为:"+nickname+" QQ:"+id);
 
         //构造Rest请求模板
         RestTemplate restTemplate = new RestTemplate();
@@ -45,13 +47,10 @@ public class SendPictureApi {
         logger.info(goodLoli.getJSONArray("data").toString());
 
         if(goodLoli.getJSONArray("data").toArray().length == 0) {
-            if (operate == 1) {
-                jsonObject.put("user_id",id);
-                jsonObject.put("message", "没能找到结果，也许你对XP系统有着独特的理解");
-            } else if (operate == 2) {
-                jsonObject.put("group_id",id);
-                jsonObject.put("message", "没能找到结果，也许你对XP系统有着独特的理解");
-            }
+
+            jsonObject.put(senderType, id);
+            jsonObject.put("message", "没能找到结果，也许你对XP系统有着独特的理解");
+
             headers.setContentLength(jsonObject.toString().length());
             HttpEntity<String> entity = new HttpEntity<String>(jsonObject.toString(),headers);
             restTemplate.postForObject(BASE_BOT_URL+"/send_msg", entity, String.class);
@@ -63,6 +62,7 @@ public class SendPictureApi {
         String author = "";
         String pid = "";
         String url = "";
+        String tags = "";
         JSONArray loliArray = goodLoli.getJSONArray("data");
 
         for (int i = 0; i < loliArray.size(); i++) {
@@ -70,23 +70,16 @@ public class SendPictureApi {
             author = loliArray.getJSONObject(i).getString("author");
             pid = loliArray.getJSONObject(i).getString("pid");
             url = loliArray.getJSONObject(i).getJSONObject("urls").getString("regular");
+            tags = loliArray.getJSONObject(i).getJSONArray("tags").toString();
         }
-
-        if (operate == 1) {
-            jsonObject.put("user_id",id);
-            jsonObject.put("message",
-                    "标题:"+title+
-                            "\n作者:"+author+
-                            "\npid:"+pid+
-                            "\n[CQ:image,file="+url+"]");
-        } else if (operate == 2) {
-            jsonObject.put("group_id",id);
-            jsonObject.put("message",
-                    "标题:"+title+
-                            "\n作者:"+author+
-                            "\npid:"+pid+
-                            "\n[CQ:image,file="+url+"]");
-        }
+        jsonObject.put(senderType, id);
+        jsonObject.put("message",
+                nickname+"，你要的涩图已经送达，请注意身体健康哦"+
+                "\n标题:"+title+
+                "\n作者:"+author+
+                "\npid:"+pid+
+                "\n[CQ:image,file="+url+"]"+
+                "\n标签:"+tags);
 
         HttpEntity<String> entity = new HttpEntity<String>(jsonObject.toString(),headers);
         restTemplate.postForObject(BASE_BOT_URL+"/send_msg", entity, String.class);
@@ -102,7 +95,7 @@ public class SendPictureApi {
     JSONObject generateRequestBody(String testString, String commandType) {
 
         JSONObject loliBody = new JSONObject();
-        loliBody.put("tag","");
+        loliBody.put(commandType,"");
         JSONArray loliParams = new JSONArray();
         for (String params : testString.split(" ")) {
             JSONArray loliParam = new JSONArray();
