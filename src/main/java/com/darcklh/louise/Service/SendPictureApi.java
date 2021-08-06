@@ -1,4 +1,4 @@
-package com.darcklh.louise.Api;
+package com.darcklh.louise.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 /**
  * 发送随机好图的Api
  */
-@Controller
+@Service
 public class SendPictureApi {
 
     //BOT运行接口
@@ -23,7 +23,7 @@ public class SendPictureApi {
 
     Logger logger = LoggerFactory.getLogger(SendPictureApi.class);
 
-    public void sendPicture(String id, String nickname, String senderType, JSONObject message) {
+    public JSONObject sendPicture(String id, String nickname, String senderType, JSONObject message) {
 
         logger.info("进入发图流程, 发起用户为:"+nickname+" QQ:"+id);
 
@@ -40,6 +40,7 @@ public class SendPictureApi {
         JSONObject requestLoli = generateRequestBody(message.getString("raw_message").substring(5), "tag");
         requestLoli.put("size","regular");
 
+        //TODO 请求第三方API的状态码判断
         HttpEntity<String> littlLoli = new HttpEntity<>(requestLoli.toString(), loli);
         String result = restTemplate.postForObject("https://api.lolicon.app/setu/v2", littlLoli, String.class);
 
@@ -47,14 +48,8 @@ public class SendPictureApi {
         logger.info(goodLoli.getJSONArray("data").toString());
 
         if(goodLoli.getJSONArray("data").toArray().length == 0) {
-
-            jsonObject.put(senderType, id);
-            jsonObject.put("message", "没能找到结果，也许你对XP系统有着独特的理解");
-
-            headers.setContentLength(jsonObject.toString().length());
-            HttpEntity<String> entity = new HttpEntity<String>(jsonObject.toString(),headers);
-            restTemplate.postForObject(BASE_BOT_URL+"/send_msg", entity, String.class);
-            return;
+            jsonObject.put("reply", "没能找到结果，也许你对XP系统有着独特的理解");
+            return jsonObject;
         }
         logger.debug(goodLoli.toString());
         //格式化结果
@@ -73,18 +68,14 @@ public class SendPictureApi {
             tags = loliArray.getJSONObject(i).getJSONArray("tags").toString();
         }
         jsonObject.put(senderType, id);
-        jsonObject.put("message",
+        jsonObject.put("reply",
                 nickname+"，你要的涩图已经送达，请注意身体健康哦"+
                 "\n标题:"+title+
                 "\n作者:"+author+
                 "\npid:"+pid+
                 "\n[CQ:image,file="+url+"]"+
                 "\n标签:"+tags);
-
-        HttpEntity<String> entity = new HttpEntity<String>(jsonObject.toString(),headers);
-        restTemplate.postForObject(BASE_BOT_URL+"/send_msg", entity, String.class);
-        return;
-
+        return jsonObject;
     }
 
     /**
@@ -105,7 +96,6 @@ public class SendPictureApi {
             loliParams.add(loliParam);
         }
         loliBody.put("tag", loliParams);
-
-        return  loliBody;
+        return loliBody;
     }
 }
