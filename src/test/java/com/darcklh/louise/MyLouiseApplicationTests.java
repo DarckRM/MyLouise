@@ -2,13 +2,19 @@ package com.darcklh.louise;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Mapper.UploadInfoDao;
+import com.darcklh.louise.Mapper.UserDao;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashMap;
 
 @SpringBootTest
 class MyLouiseApplicationTests {
+
+    @Autowired
+    UserDao userDao;
 
     @Test
     void contextLoads() {
@@ -36,6 +42,11 @@ class MyLouiseApplicationTests {
         loliBody.put("tag", loliParams);
 
         System.out.println(loliBody);
+    }
+
+    @Test
+    void testMapper() {
+        System.out.println(userDao.selectById("412543224"));
     }
 
 }

@@ -1,8 +1,11 @@
 package com.darcklh.louise.Api;
 
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Mapper.UserDao;
+import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Service.SearchPictureApi;
 import com.darcklh.louise.Service.SendPictureApi;
+import com.darcklh.louise.Service.UserApi;
 import com.darcklh.louise.Utils.EncryptUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +31,13 @@ public class MyLouiseApi {
     private SearchPictureApi searchPictureApi;
 
     @Autowired
-    private  EncryptUtils encryptUtils;
+    private UserDao userDao;
+
+    @Autowired
+    private UserApi userApi;
+
+    @Autowired
+    private EncryptUtils encryptUtils;
 
     //机器人上报密钥
     @Value("${HTTP_POST_KEY}")
@@ -55,24 +64,47 @@ public class MyLouiseApi {
     public JSONObject requestProcessCenter(@RequestBody String request) {
 
         JSONObject jsonObject = JSONObject.parseObject(request);
+        //快速返回
+        JSONObject returnJson = new JSONObject();
         String post_type = jsonObject.getString("post_type");
-
-        //logger.info("命令: " + jsonObject.getString("raw_message").substring(1) + " 用户qq号: " +jsonObject.getJSONObject("sender").getString("user_id"));
+        String user_id = jsonObject.getString("user_id");
+        String group_id = jsonObject.getString("group_id");
+        String raw_message = jsonObject.getString("raw_message");
         //排除心跳检测
         if (post_type.equals("meta_event")) {
             logger.debug("心跳检测");
             return null;
         }
 
+        //注册用户
+        if (jsonObject.getString("raw_message").substring(1).split(" ")[0].equals("join")) {
+            //判断如果是私聊禁止注册
+            if (jsonObject.getString("group_id") == null) {
+                //TODO go-cqhttp只能根据qq号和群号获取某个用户的信息 但是这会导致数据库中使用双主键 比较麻烦 后期解决一下这个问题
+                returnJson.put("reply","露易丝不支持私聊注册哦，\n请在群聊里使用吧");
+                return returnJson;
+            }
+            return userApi.joinLouise(user_id, group_id);
+        }
+
+        //判断用户是否已注册
+        if (0 == userDao.selectById(jsonObject.getString("user_id"))) {
+            returnJson.put("reply", "你还没有在露易丝这里留下你的记录哦。" +
+                    "\n请使用!join");
+            return returnJson;
+        }
+        logger.info("上报类型: " + post_type);
         switch (post_type) {
             case "message": return handleMessagePost(jsonObject);
+            //case "notice": return handleNoticePost(jsonObject);
         }
         return null;
     }
 
     /**
-     * 处理Message类型上报
-     *
+     * 预处理Message类型上报
+     * @param message
+     * @return JSONObject
      */
     private JSONObject handleMessagePost(JSONObject message) {
 
@@ -94,17 +126,54 @@ public class MyLouiseApi {
 
         //默认返回值
         JSONObject defaultResult = new JSONObject();
-        defaultResult.put("reply", "不是很懂你在说什么，如有需要请输入!help获取帮助");
+        defaultResult.put("reply", "没有听懂诶，如果需要帮助的话请说!help");
 
         switch (command) {
             //处理默认信息
             default: return defaultResult;
-            case "help": defaultResult.put("reply", "笑死，根本没有帮助"); return defaultResult;
+            //TODO 暂时先请求网络图片 Linux和Windows对于本地路径的解析不同 很烦
+            //case "help": defaultResult.put("reply", "[CQ:image,file=file:///data/MyLouiseResource/louise_help.jpg]"); return defaultResult;
+            case "help": defaultResult.put("reply", "[CQ:image,file=https://chenjie.ink:8096/file/images/Image_20210807215100047_V10M.jpg]"); return defaultResult;
             //调用LoliconAPI随机或根据参数请求色图
             case "setu": return sendPictureApi.sendPicture(number, nickname, senderType, message);
             //TODO 完善其它图库的返回结果
             //调用识图API根据上传图片进行识图
             case "find": return searchPictureApi.findWithSourceNAO(number, nickname, senderType, message);
         }
+    }
+
+    /**
+     * 预处理Notice类型上报
+     * @param notice
+     * @return JSONObject
+     */
+    private JSONObject handleNoticePost(JSONObject notice) {
+
+        //获取Notice上报元数据
+        String notice_type = notice.getString("notice_type");
+        String user_id = notice.getString("user_id");
+        logger.info("提醒类上报的类型: " + notice_type);
+        //判断Notice的类型
+        switch (notice_type) {
+            default: return null;
+            case "group_upload": return initFileUploadInfo(notice, user_id);
+        }
+    }
+
+    /**
+     * 初次上传文件写入记录
+     * @param notice JSONObject
+     * @return JSONObject
+     */
+
+    private JSONObject initFileUploadInfo(JSONObject notice, String user_id) {
+
+        logger.info("进入初始化上传流程");
+        String nickname = user_id;
+
+        //构造快速操作返回信息
+        JSONObject reply = new JSONObject();
+        reply.put("reply", "你上传的文件已经确实记录下来了");
+        return reply;
     }
 }
