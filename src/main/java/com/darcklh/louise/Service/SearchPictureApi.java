@@ -66,7 +66,7 @@ public class SearchPictureApi {
             if (status != 0) {
                 if (status > 0) {
                     jsonObject.put("relpy", "sourceNAO出问题了，不关咱的事");
-                } else if (status < 0) {
+                } else {
                     jsonObject.put("reply", "上传的图片有问题，或者我出了啥问题，我也不知道");
                 }
                 return jsonObject;
