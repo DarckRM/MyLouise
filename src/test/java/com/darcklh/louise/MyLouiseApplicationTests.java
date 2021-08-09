@@ -46,7 +46,7 @@ class MyLouiseApplicationTests {
 
     @Test
     void testMapper() {
-        System.out.println(userDao.selectById("412543224"));
+        System.out.println("412543224");
     }
 
 }

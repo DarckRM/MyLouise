@@ -1,5 +1,6 @@
 package com.darcklh.louise.Model;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 @Data
 public class User {
 
+    @TableId
     private String user_id;
     private String group_id;
     private String nickname;

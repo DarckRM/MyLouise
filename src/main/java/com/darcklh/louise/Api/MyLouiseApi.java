@@ -48,10 +48,10 @@ public class MyLouiseApi {
     public JSONObject testRequestProcessCenter(HttpServletRequest request, @RequestBody String message) throws NoSuchAlgorithmException {
 
         String cryptCode = request.getHeader("X-signature");
-        String encryptCode = encryptUtils.genHMAC(request.toString(), HTTP_POST_KEY);
-
-        logger.debug(cryptCode);
-        logger.debug(encryptCode);
+        String encryptCode = encryptUtils.hamcsha1(message +"\n", HTTP_POST_KEY);
+        logger.info("HTTP明文: " + message);
+        logger.info(cryptCode);
+        logger.info(encryptCode);
 
         JSONObject result = new JSONObject();
         result.put("reply","现在测试中");
@@ -88,7 +88,7 @@ public class MyLouiseApi {
         }
 
         //判断用户是否已注册
-        if (0 == userDao.selectById(jsonObject.getString("user_id"))) {
+        if (0 == userDao.isUserExist(jsonObject.getString("user_id"))) {
             returnJson.put("reply", "你还没有在露易丝这里留下你的记录哦。" +
                     "\n请使用!join");
             return returnJson;
@@ -113,12 +113,15 @@ public class MyLouiseApi {
         String command = message.getString("raw_message").substring(1).split(" ")[0];
         String number = "";
         String nickname = message.getJSONObject("sender").getString("nickname");
+        //TODO 有待优化的变量
+        String user_id = message.getString("user_id");
 
         //判断私聊或是群聊
         String senderType = "";
         if (message_type.equals("group")) {
             number = message.getString("group_id");
             senderType = "group_id";
+
         } else if (message_type.equals("private")) {
             number = message.getString("user_id");
             senderType = "user_id";
@@ -132,13 +135,16 @@ public class MyLouiseApi {
             //处理默认信息
             default: return defaultResult;
             //TODO 暂时先请求网络图片 Linux和Windows对于本地路径的解析不同 很烦
-            //case "help": defaultResult.put("reply", "[CQ:image,file=file:///data/MyLouiseResource/louise_help.jpg]"); return defaultResult;
             case "help": defaultResult.put("reply", "[CQ:image,file=https://chenjie.ink:8096/file/images/Image_20210807215100047_V10M.jpg]"); return defaultResult;
             //调用LoliconAPI随机或根据参数请求色图
-            case "setu": return sendPictureApi.sendPicture(number, nickname, senderType, message);
+            case "setu": {
+                userApi.updateCount(user_id,1);
+                return sendPictureApi.sendPicture(number, nickname, senderType, message);
+            }
             //TODO 完善其它图库的返回结果
             //调用识图API根据上传图片进行识图
             case "find": return searchPictureApi.findWithSourceNAO(number, nickname, senderType, message);
+            case "myinfo": return userApi.myInfo(user_id);
         }
     }
 
