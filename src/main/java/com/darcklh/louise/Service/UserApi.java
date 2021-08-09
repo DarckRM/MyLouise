@@ -17,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import static com.darcklh.louise.Utils.isEmpty.isEmpty;
+
 /**
  * @author DarckLH
  * @date 2021/8/7 19:14
@@ -72,6 +74,44 @@ public class UserApi {
         }
 
         return jsonObject;
+    }
+
+    /**
+     * 根据用户qq查询相关用户信息
+     * @param user_id String
+     * @return
+     */
+    public JSONObject myInfo(String user_id) {
+
+        JSONObject returnJson = new JSONObject();
+
+        User user = userDao.selectById(user_id);
+        if (isEmpty(user)) {
+            returnJson.put("reply", "没有你的信息诶");
+        } else {
+            String nickname = user.getNickname();
+            Timestamp create_time = user.getCreate_time();
+            Integer count_setu = user.getCount_setu();
+            Integer count_upload = user.getCount_upload();
+            returnJson.put("reply", nickname + "，你的个人信息" +
+                    "\n总共请求涩图次数：" + count_setu +
+                    "\n总共上传文件次数：" +count_upload);
+        }
+        return returnJson;
+    }
+
+    /**
+     * 更新用户某类数据
+     * @param user_id String 用户qq
+     * @param option String 某个字段
+     */
+    public void updateCount(String user_id, int option) {
+
+        switch (option) {
+            case 1: userDao.updateCountSetu(user_id); return;
+            case 2: userDao.updateCountUpload(user_id); return;
+        }
+
     }
 
 }

@@ -5,6 +5,7 @@ import com.darcklh.louise.Model.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * @author DarckLH
@@ -21,5 +22,11 @@ public interface UserDao extends BaseMapper<User> {
     public int insert(User user);
 
     @Select("SELECT COUNT(user_id) FROM t_user WHERE user_id = #{user_id}")
-    public Integer selectById(String user_id);
+    public Integer isUserExist(String user_id);
+
+    @Update("UPDATE t_user SET count_setu = count_setu + 1 WHERE user_id = #{user_id}")
+    public Integer updateCountSetu(String user_id);
+
+    @Update("UPDATE t_user SET count_upload = count_upload + 1 WHERE user_id = #{user_id}")
+    public Integer updateCountUpload(String user_id);
 }
