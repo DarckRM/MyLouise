@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONPOJOBuilder;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,19 +38,69 @@ public class SearchPictureApi {
     @Value("${SOURCENAO_API_KEY}")
     private String SOURCENAO_API_KEY;
 
-    public JSONObject findWithSourceNAO(String id, String nickname, String senderType, JSONObject message) {
+    /**
+     * 搜图入口
+     * @param id
+     * @param nickname
+     * @param senderType
+     * @param message
+     * @return
+     */
+    public JSONObject searchPictureCenter(String id, String nickname, String senderType, JSONObject message) {
+
+        logger.info("进入搜图流程, 发起用户为:"+nickname+" QQ:"+id);
+        logger.debug(message.toString());
+        //解析上传的信息 拿到图片URL还有一些相关参数
+        String url = message.getString("message");
+        url = url.substring(url.indexOf("url=")+4, url.length()-1);
+        logger.info("上传图片的地址:"+url);
+
+        findWithSourceNAO(id, nickname, senderType, url);
+
+        return null;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public JSONObject findWithAscii2d() {
+
+        //返回JSON
+        JSONObject returnJson = new JSONObject();
+
+        //由于Ascii2d返回的是HTML文档 借助Jsoup进行解析
         try {
-            logger.info("进入搜图流程, 发起用户为:"+nickname+" QQ:"+id);
-            logger.debug(message.toString());
-            //解析上传的信息 拿到图片URL还有一些相关参数
-            String url = message.getString("message");
-            url = url.substring(url.indexOf("url=")+4, url.length()-1);
-            logger.info("上传图片的地址:"+url);
+            Document document = Jsoup.connect("https://ascii2d.net/search/").get();
+            //解析Document查询出来的第一个数据
+            Element element = document.getElementsByClass("info-box").get(1).select(".detail-box h6").get(0);
+
+            String thumbnail = element.child(0).attr("src");
+            String title = element.child(1).text();
+            String author = element.child(2).text();
+
+        } catch (IOException e) {
+            logger.info("请求失败： "+e.getMessage());
+            returnJson.put("reply", "请求Ascii2d失败了！");
+            return returnJson;
+        }
+        return null;
+    }
+
+    /**
+     * 通过SourceNAO开放API搜图
+     * @param id QQ
+     * @param nickname 昵称
+     * @param senderType 群聊或是私聊
+     * @param url 图片地址
+     * @return
+     */
+    public JSONObject findWithSourceNAO(String id, String nickname, String senderType, String url) {
+        try {
+
             //构造Rest请求模板
             RestTemplate restTemplate = new RestTemplate();
-            //请求go-cqhhtp的参数和请求头
-            HttpHeaders headers= new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(senderType, id);
 
@@ -67,11 +121,10 @@ public class SearchPictureApi {
                 if (status > 0) {
                     jsonObject.put("relpy", "sourceNAO出问题了，不关咱的事");
                 } else {
-                    jsonObject.put("reply", "上传的图片有问题，或者我出了啥问题，我也不知道");
+                    jsonObject.put("reply", "上传的图片失败，或者我出了啥问题");
                 }
                 return jsonObject;
             }
-
 
             JSONObject sourceNAO = result.getJSONArray("results").getJSONObject(0);
             logger.info("最匹配的结果: "+sourceNAO.toString());
@@ -79,10 +132,7 @@ public class SearchPictureApi {
             //格式化结果
             JSONObject sourceNaoData = sourceNAO.getJSONObject("data");
             JSONObject sourceNaoHeader = sourceNAO.getJSONObject("header");
-
-
             String similarity = sourceNAO.getJSONObject("header").getString("similarity");
-
             Integer indexId = sourceNAO.getJSONObject("header").getInteger("index_id");
 
             //判断结果来源 如twitter之流来源很难获取图片 会补充URL以供查看
@@ -90,13 +140,12 @@ public class SearchPictureApi {
                 //来自Pixiv
                 case 5: return handleFromPixiv(nickname, similarity, jsonObject, sourceNaoData);
                 case 41: return handleFromTwitter(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader);
-                case 9: return handleFromDanbooru(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader);
-                case 12: return handleFromDanbooru(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader);
+                case 9 | 12 : return handleFromDanbooru(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader);
             }
             return jsonObject;
         } catch (Exception e) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("reply", "我粗事儿啦！救我！\n" +
+            jsonObject.put("reply", "坏掉了！救我！\n" +
                     "堆栈信息: "+ e.getMessage());
             return jsonObject;
         }
@@ -107,15 +156,15 @@ public class SearchPictureApi {
      * @param nickname String
      * @param similarity String
      * @param reply JSONObject
-     * @param sourceNaoData JSONObject
+     * @param resultData JSONObject
      * @return JSONObject
      */
-    private JSONObject handleFromPixiv(String nickname, String similarity, JSONObject reply, JSONObject sourceNaoData) {
+    private JSONObject handleFromPixiv(String nickname, String similarity, JSONObject reply, JSONObject resultData) {
 
-        String pixiv_id = sourceNaoData.getString("pixiv_id");
-        String title = sourceNaoData.getString("title");
-        String member_name = sourceNaoData.getString("member_name");
-        String ext_urls = sourceNaoData.getJSONArray("ext_urls").toArray()[0].toString();
+        String pixiv_id = resultData.getString("pixiv_id");
+        String title = resultData.getString("title");
+        String member_name = resultData.getString("member_name");
+        String ext_urls = resultData.getJSONArray("ext_urls").toArray()[0].toString();
         String url = "https://pixiv.cat/" + pixiv_id + ".jpg";
         reply.put("reply",
                 nickname+"，查询出来咯"+

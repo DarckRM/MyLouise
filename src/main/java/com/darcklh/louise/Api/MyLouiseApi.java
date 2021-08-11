@@ -143,7 +143,7 @@ public class MyLouiseApi {
             }
             //TODO 完善其它图库的返回结果
             //调用识图API根据上传图片进行识图
-            case "find": return searchPictureApi.findWithSourceNAO(number, nickname, senderType, message);
+            case "find": return searchPictureApi.findWithSourceNAO(number, nickname, senderType, message.toString());
             case "myinfo": return userApi.myInfo(user_id);
         }
     }
