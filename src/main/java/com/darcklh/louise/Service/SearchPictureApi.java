@@ -55,9 +55,8 @@ public class SearchPictureApi {
         url = url.substring(url.indexOf("url=")+4, url.length()-1);
         logger.info("上传图片的地址:"+url);
 
-        findWithSourceNAO(id, nickname, senderType, url);
+        return findWithSourceNAO(id, nickname, senderType, url);
 
-        return null;
     }
 
     /**
@@ -134,13 +133,20 @@ public class SearchPictureApi {
             JSONObject sourceNaoHeader = sourceNAO.getJSONObject("header");
             String similarity = sourceNAO.getJSONObject("header").getString("similarity");
             Integer indexId = sourceNAO.getJSONObject("header").getInteger("index_id");
+            //相似度低于78%的直接返回
+            if (Float.parseFloat(similarity) < 78.0) {
+                jsonObject.put("reply", "找到的结果相似度为"+similarity+"不予显示" +
+                        "\n此为不大可能的结果: \n"+
+                        sourceNaoData.getJSONArray("ext_urls").toString());
+                return jsonObject;
+            }
 
             //判断结果来源 如twitter之流来源很难获取图片 会补充URL以供查看
             switch (indexId) {
                 //来自Pixiv
                 case 5: return handleFromPixiv(nickname, similarity, jsonObject, sourceNaoData);
                 case 41: return handleFromTwitter(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader);
-                case 9 | 12 : return handleFromDanbooru(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader);
+                case 9: return handleFromDanbooru(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader);
             }
             return jsonObject;
         } catch (Exception e) {
@@ -159,23 +165,52 @@ public class SearchPictureApi {
      * @param resultData JSONObject
      * @return JSONObject
      */
-    private JSONObject handleFromPixiv(String nickname, String similarity, JSONObject reply, JSONObject resultData) {
+    private JSONObject handleFromPixiv(String nickname, String similarity, JSONObject reply, JSONObject resultData) throws IOException{
 
         String pixiv_id = resultData.getString("pixiv_id");
         String title = resultData.getString("title");
         String member_name = resultData.getString("member_name");
         String ext_urls = resultData.getJSONArray("ext_urls").toArray()[0].toString();
         String url = "https://pixiv.cat/" + pixiv_id + ".jpg";
-        reply.put("reply",
-                nickname+"，查询出来咯"+
-                        "\n来源Pixiv"+
-                        "\n标题:"+title+
-                        "\n作者:"+member_name+
-                        "\n相似度:"+similarity+
-                        "\n可能的图片地址:"+ext_urls+
-                        "\n[CQ:image,file="+url+"]");
-        logger.info("图片地址:"+url);
-        return reply;
+
+        //牺牲速度获得更好的图片显示 后台预解析图片信息
+        //TODO 预解析的时候直接下载到服务器，发送过后删除
+        try {
+            Document document = Jsoup.connect(url).ignoreHttpErrors(true).post();
+
+            //TODO 存在隐患 当图的数量大于9的时候count数可能会出错
+            Integer count = Integer.valueOf(document.body().getElementsByTag("p").first().text().substring(9,10));
+            if (count > 1) {
+                //大于1张图的情况
+                String images = "";
+                for (int i = 1; i <= count; i++) {
+                    images += "[CQ:image,file=https://pixiv.cat/"+pixiv_id +"-"+i+".jpg]";
+                }
+                reply.put("reply",
+                        nickname+"，查询出来咯，有"+count+"张结果"+
+                                "\n来源Pixiv"+
+                                "\n标题:"+title+
+                                "\n作者:"+member_name+
+                                "\n相似度:"+similarity+
+                                "\n可能的图片地址:"+ext_urls+
+                                "\n"+images+"");
+                logger.info("图片地址:"+images);
+                return reply;
+            }
+        } catch (Exception e) {
+
+            reply.put("reply",
+                    nickname+"，查询出来咯"+
+                            "\n来源Pixiv"+
+                            "\n标题:"+title+
+                            "\n作者:"+member_name+
+                            "\n相似度:"+similarity+
+                            "\n可能的图片地址:"+ext_urls+
+                            "\n[CQ:image,file="+url+"]");
+            logger.info("图片地址:"+url);
+            return reply;
+        }
+        return null;
     }
     /**
      * 处理来自Twitter的图
@@ -220,6 +255,7 @@ public class SearchPictureApi {
      */
     private JSONObject handleFromDanbooru(String nickname, String similarity, JSONObject reply, JSONObject sourceNaoData, JSONObject sourceNaoHeader) {
 
+        logger.info("处理Danbooru来源");
         String sourceNaoArray = sourceNaoData.getJSONArray("ext_urls").toString();
         String characters = sourceNaoData.getString("characters");
         String creator = sourceNaoData.getString("creator");

@@ -48,7 +48,7 @@ public class SendPictureApi {
         logger.info(goodLoli.getJSONArray("data").toString());
 
         if(goodLoli.getJSONArray("data").toArray().length == 0) {
-            jsonObject.put("reply", "没能找到结果，也许你对XP系统有着独特的理解");
+            jsonObject.put("reply", "非常遗憾，没能找到结果");
             return jsonObject;
         }
         logger.debug(goodLoli.toString());
