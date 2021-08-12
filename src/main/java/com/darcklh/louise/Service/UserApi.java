@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,13 +25,13 @@ import static com.darcklh.louise.Utils.isEmpty.isEmpty;
  * @date 2021/8/7 19:14
  * @Description 用户信息相关接口
  */
-@Service
+@Controller
 public class UserApi {
 
     Logger logger = LoggerFactory.getLogger(UserApi.class);
 
     @Autowired
-    private UserDao userDao;
+    public UserDao userDao;
 
     public JSONObject joinLouise(String user_id, String group_id) {
 
@@ -114,4 +115,10 @@ public class UserApi {
 
     }
 
+    public boolean isUserExist(String user_id) {
+        //判断用户是否已注册
+        if (0 == userDao.isUserExist(user_id))
+            return false;
+        return true;
+    }
 }
