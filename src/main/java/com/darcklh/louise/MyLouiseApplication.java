@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
 @MapperScan("com.darcklh.louise.Mapper")
-@PropertySource(value="classpath:LouiseConfig.properties")
+@PropertySource(value="classpath:myLouise.properties")
 public class MyLouiseApplication {
 
     public static void main(String[] args) {

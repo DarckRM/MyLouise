@@ -1,5 +1,6 @@
 package com.darcklh.louise.Api;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Mapper.UserDao;
 import com.darcklh.louise.Model.R;
@@ -11,17 +12,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 
-@Controller
+@RestController
 @RequestMapping("/louise")
-public class MyLouiseApi {
+public class MyLouiseApi implements ErrorController {
     Logger logger = LoggerFactory.getLogger(MyLouiseApi.class);
 
     @Autowired
@@ -43,8 +46,24 @@ public class MyLouiseApi {
     @Value("${HTTP_POST_KEY}")
     String HTTP_POST_KEY;
 
+    @RequestMapping("/error")
+    public JSONObject commandError() {
+        return null;
+    }
+
+    /**
+     * 返回帮助信息
+     * @return
+     */
+    @RequestMapping("/help")
+    public JSONObject help() {
+        JSONObject returnJson = new JSONObject();
+        //TODO 暂时先请求网络图片 Linux和Windows对于本地路径的解析不同 很烦
+        returnJson.put("reply","[CQ:image,file=https://chenjie.ink:8096/file/images/Image_20210807215100047_V10M.jpg]");
+        return returnJson;
+    }
+
     @RequestMapping("/test")
-    @ResponseBody
     public JSONObject testRequestProcessCenter(HttpServletRequest request, @RequestBody String message) throws NoSuchAlgorithmException {
 
         String cryptCode = request.getHeader("X-signature");
@@ -59,22 +78,24 @@ public class MyLouiseApi {
 
     }
 
-    @RequestMapping("/bot")
-    @ResponseBody
+    @RequestMapping("/meta")
     public JSONObject requestProcessCenter(@RequestBody String request) {
+        return null;
+    }
 
-        JSONObject jsonObject = JSONObject.parseObject(request);
-        //快速返回
-        JSONObject returnJson = new JSONObject();
-        String post_type = jsonObject.getString("post_type");
+    /**
+     * 注册新用户
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping("/join")
+    public JSONObject Join(@RequestBody JSONObject jsonObject) {
+
         String user_id = jsonObject.getString("user_id");
         String group_id = jsonObject.getString("group_id");
-        String raw_message = jsonObject.getString("raw_message");
-        //排除心跳检测
-        if (post_type.equals("meta_event")) {
-            logger.debug("心跳检测");
-            return null;
-        }
+
+        //快速返回
+        JSONObject returnJson = new JSONObject();
 
         //注册用户
         if (jsonObject.getString("raw_message").substring(1).split(" ")[0].equals("join")) {
@@ -86,31 +107,19 @@ public class MyLouiseApi {
             }
             return userApi.joinLouise(user_id, group_id);
         }
-
-        //判断用户是否已注册
-        if (0 == userDao.isUserExist(jsonObject.getString("user_id"))) {
-            returnJson.put("reply", "你还没有在露易丝这里留下你的记录哦。" +
-                    "\n请使用!join");
-            return returnJson;
-        }
-        logger.info("上报类型: " + post_type);
-        switch (post_type) {
-            case "message": return handleMessagePost(jsonObject);
-            //case "notice": return handleNoticePost(jsonObject);
-        }
         return null;
     }
 
     /**
-     * 预处理Message类型上报
+     * 发送随机色图
      * @param message
      * @return JSONObject
      */
-    private JSONObject handleMessagePost(JSONObject message) {
+    @RequestMapping("/setu")
+    private JSONObject sendRandomSetu(@RequestBody JSONObject message) {
 
         //获取请求元数据信息
         String message_type = message.getString("message_type");
-        String command = message.getString("raw_message").substring(1).split(" ")[0];
         String number = "";
         String nickname = message.getJSONObject("sender").getString("nickname");
         //TODO 有待优化的变量
@@ -127,25 +136,39 @@ public class MyLouiseApi {
             senderType = "user_id";
         }
 
-        //默认返回值
-        JSONObject defaultResult = new JSONObject();
-        defaultResult.put("reply", "没有听懂诶，如果需要帮助的话请说!help");
+        //调用LoliconAPI随机或根据参数请求色图
+        userApi.updateCount(user_id,1);
+        return sendPictureApi.sendPicture(number, nickname, senderType, message);
+//            case "myinfo": return userApi.myInfo(user_id);
+//        }
+    }
 
-        switch (command) {
-            //处理默认信息
-            default: return defaultResult;
-            //TODO 暂时先请求网络图片 Linux和Windows对于本地路径的解析不同 很烦
-            case "help": defaultResult.put("reply", "[CQ:image,file=https://chenjie.ink:8096/file/images/Image_20210807215100047_V10M.jpg]"); return defaultResult;
-            //调用LoliconAPI随机或根据参数请求色图
-            case "setu": {
-                userApi.updateCount(user_id,1);
-                return sendPictureApi.sendPicture(number, nickname, senderType, message);
-            }
-            //TODO 完善其它图库的返回结果
-            //调用识图API根据上传图片进行识图
-            case "find": return searchPictureApi.findWithSourceNAO(number, nickname, senderType, message.toString());
-            case "myinfo": return userApi.myInfo(user_id);
+    /**
+     * 根据图片以及参数调用识图接口
+     * @param message
+     * @return
+     */
+    @RequestMapping("/find")
+    private JSONObject findPicture(@RequestBody JSONObject message) {
+
+        //获取请求元数据信息
+        String message_type = message.getString("message_type");
+        String number = "";
+        String nickname = message.getJSONObject("sender").getString("nickname");
+        logger.info(message.toString());
+        //判断私聊或是群聊
+        String senderType = "";
+        if (message_type.equals("group")) {
+            number = message.getString("group_id");
+            senderType = "group_id";
+
+        } else if (message_type.equals("private")) {
+            number = message.getString("user_id");
+            senderType = "user_id";
         }
+
+        return searchPictureApi.findWithSourceNAO(number, nickname, senderType, message.toString());
+
     }
 
     /**
