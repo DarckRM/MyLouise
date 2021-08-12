@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 
 @RestController
-@RequestMapping("/louise")
 public class MyLouiseApi implements ErrorController {
     Logger logger = LoggerFactory.getLogger(MyLouiseApi.class);
 
@@ -34,9 +33,6 @@ public class MyLouiseApi implements ErrorController {
     private SearchPictureApi searchPictureApi;
 
     @Autowired
-    private UserDao userDao;
-
-    @Autowired
     private UserApi userApi;
 
     @Autowired
@@ -45,6 +41,10 @@ public class MyLouiseApi implements ErrorController {
     //机器人上报密钥
     @Value("${HTTP_POST_KEY}")
     String HTTP_POST_KEY;
+
+    //帮助页地址
+    @Value("${LOUISE_HELP_PAGE}")
+    String LOUISE_HELP_PAGE;
 
     @RequestMapping("/error")
     public JSONObject commandError() {
@@ -59,7 +59,7 @@ public class MyLouiseApi implements ErrorController {
     public JSONObject help() {
         JSONObject returnJson = new JSONObject();
         //TODO 暂时先请求网络图片 Linux和Windows对于本地路径的解析不同 很烦
-        returnJson.put("reply","[CQ:image,file=https://chenjie.ink:8096/file/images/Image_20210807215100047_V10M.jpg]");
+        returnJson.put("reply","[CQ:image,file="+LOUISE_HELP_PAGE+"]");
         return returnJson;
     }
 
@@ -155,7 +155,7 @@ public class MyLouiseApi implements ErrorController {
         String message_type = message.getString("message_type");
         String number = "";
         String nickname = message.getJSONObject("sender").getString("nickname");
-        logger.info(message.toString());
+
         //判断私聊或是群聊
         String senderType = "";
         if (message_type.equals("group")) {
@@ -167,7 +167,7 @@ public class MyLouiseApi implements ErrorController {
             senderType = "user_id";
         }
 
-        return searchPictureApi.findWithSourceNAO(number, nickname, senderType, message.toString());
+        return searchPictureApi.searchPictureCenter(number, nickname, senderType, message);
 
     }
 

@@ -25,7 +25,7 @@ import static com.darcklh.louise.Utils.isEmpty.isEmpty;
  * @date 2021/8/7 19:14
  * @Description 用户信息相关接口
  */
-@Controller
+@Service
 public class UserApi {
 
     Logger logger = LoggerFactory.getLogger(UserApi.class);
