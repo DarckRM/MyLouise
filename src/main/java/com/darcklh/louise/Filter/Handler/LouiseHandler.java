@@ -54,7 +54,7 @@ public class LouiseHandler implements HandlerInterceptor {
         JSONObject jsonObject = JSONObject.parseObject(body);
         String user_id = jsonObject.getJSONObject("sender").getString("user_id");
 
-        if (command.equals("/louise/join")) {
+        if (command.equals("/join")) {
             return true;
         }
 

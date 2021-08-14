@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
@@ -150,24 +151,19 @@ public class MyLouiseApi implements ErrorController {
      */
     @RequestMapping("/find")
     private JSONObject findPicture(@RequestBody JSONObject message) {
-
-        //获取请求元数据信息
-        String message_type = message.getString("message_type");
-        String number = "";
+        //返回值
+        JSONObject returnJson = new JSONObject();
         String nickname = message.getJSONObject("sender").getString("nickname");
 
-        //判断私聊或是群聊
-        String senderType = "";
-        if (message_type.equals("group")) {
-            number = message.getString("group_id");
-            senderType = "group_id";
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                searchPictureApi.searchPictureCenter(message);
+            }
+        }).start();
 
-        } else if (message_type.equals("private")) {
-            number = message.getString("user_id");
-            senderType = "user_id";
-        }
-
-        return searchPictureApi.searchPictureCenter(number, nickname, senderType, message);
+        returnJson.put("reply", nickname+"!露易丝在搜索了哦！");
+        return returnJson;
 
     }
 
