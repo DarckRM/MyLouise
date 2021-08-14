@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -40,22 +41,35 @@ public class SearchPictureApi {
 
     /**
      * 搜图入口
-     * @param id
-     * @param nickname
-     * @param senderType
      * @param message
      * @return
      */
-    public JSONObject searchPictureCenter(String id, String nickname, String senderType, JSONObject message) {
+    public JSONObject searchPictureCenter(JSONObject message) {
 
-        logger.info("进入搜图流程, 发起用户为:"+nickname+" QQ:"+id);
-        logger.debug(message.toString());
+
         //解析上传的信息 拿到图片URL还有一些相关参数
         String url = message.getString("message");
         url = url.substring(url.indexOf("url=")+4, url.length()-1);
+        //获取请求元数据信息
+        String message_type = message.getString("message_type");
+        String number = "";
+        String nickname = message.getJSONObject("sender").getString("nickname");
+
+        //判断私聊或是群聊
+        String senderType = "";
+        if (message_type.equals("group")) {
+            number = message.getString("group_id");
+            senderType = "group_id";
+
+        } else if (message_type.equals("private")) {
+            number = message.getString("user_id");
+            senderType = "user_id";
+        }
+        logger.info("进入搜图流程, 发起用户为:"+nickname+" QQ:"+number);
+        logger.debug(message.toString());
         logger.info("上传图片的地址:"+url);
 
-        return findWithSourceNAO(id, nickname, senderType, url);
+        return findWithSourceNAO(number, nickname, senderType, url);
 
     }
 
@@ -141,14 +155,29 @@ public class SearchPictureApi {
                 return jsonObject;
             }
 
+            //返回结果集
+            JSONObject returnJson = new JSONObject();
+
             //判断结果来源 如twitter之流来源很难获取图片 会补充URL以供查看
             switch (indexId) {
                 //来自Pixiv
-                case 5: return handleFromPixiv(nickname, similarity, jsonObject, sourceNaoData);
-                case 41: return handleFromTwitter(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader);
-                case 9: return handleFromDanbooru(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader);
+                case 5: returnJson = handleFromPixiv(nickname, similarity, jsonObject, sourceNaoData); break;
+                case 41: returnJson = handleFromTwitter(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader); break;
+                case 9: returnJson = handleFromDanbooru(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader); break;
             }
-            return jsonObject;
+            //添加用户信息
+            returnJson.put(senderType, id);
+
+            //请求go-cqhhtp的参数和请求头
+            HttpHeaders headers= new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> cqhttp = new HttpEntity<>(returnJson.toString(), headers);
+
+            //让Bot发送图片
+            String response = restTemplate.postForObject("http://localhost:5700/send_msg", cqhttp, String.class);
+            logger.debug("请求Bot的响应结果: "+response);
+
+            return null;
         } catch (Exception e) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("reply", "坏掉了！救我！\n" +
@@ -186,7 +215,7 @@ public class SearchPictureApi {
                 for (int i = 1; i <= count; i++) {
                     images += "[CQ:image,file=https://pixiv.cat/"+pixiv_id +"-"+i+".jpg]";
                 }
-                reply.put("reply",
+                reply.put("message",
                         nickname+"，查询出来咯，有"+count+"张结果"+
                                 "\n来源Pixiv"+
                                 "\n标题:"+title+
@@ -199,7 +228,7 @@ public class SearchPictureApi {
             }
         } catch (Exception e) {
 
-            reply.put("reply",
+            reply.put("message",
                     nickname+"，查询出来咯"+
                             "\n来源Pixiv"+
                             "\n标题:"+title+
@@ -233,7 +262,7 @@ public class SearchPictureApi {
         String imageUrlPrefix = "https://pbs.twimg.com/media/";
         imageUrl = imageUrlPrefix + imageUrl + "?format=" + imageUrlEndfix + "&name=large";
 
-        reply.put("reply",
+        reply.put("message",
                 nickname+"，查询出来咯"+
                         "\n来源Twitter"+
                         "\n推文用户:"+twitter_user_handle+
@@ -271,7 +300,7 @@ public class SearchPictureApi {
         String finalUrl = "https://img3.gelbooru.com//images/" + imageFinalUrlPrefix + imageUrl + imageUrlEndfix;
         String exampleUrl = "https://img3.gelbooru.com//samples/" + imageExampleUrlPrefix + imageUrl + imageUrlEndfix;
         if (index_id == 12) {
-            reply.put("reply",
+            reply.put("message",
                     nickname+"，查询出来咯"+
                     "\n来源Yande.re"+
                     "\n角色:"+characters+
@@ -280,7 +309,7 @@ public class SearchPictureApi {
                     "\n可能的图片地址:"+sourceNaoArray+
                     "\n暂不支持输出Yande.re的图，请通过上面的链接访问");
         } else {
-            reply.put("reply",
+            reply.put("message",
                     nickname+"，查询出来咯"+
                     "\n来源Danbooru"+
                     "\n角色:"+characters+
