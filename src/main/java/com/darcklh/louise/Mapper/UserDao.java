@@ -24,6 +24,12 @@ public interface UserDao extends BaseMapper<User> {
     @Select("SELECT COUNT(user_id) FROM t_user WHERE user_id = #{user_id}")
     public Integer isUserExist(String user_id);
 
+    @Select("SELECT isenabled FROM t_user WHERE user_id = #{user_id}")
+    public Integer isUserEnabled(String user_id);
+
+    @Update("UPDATE t_user SET isenabled = -isenabled WHERE user_id = #{user_id}")
+    public Integer banUser(String user_id);
+
     @Update("UPDATE t_user SET count_setu = count_setu + 1 WHERE user_id = #{user_id}")
     public Integer updateCountSetu(String user_id);
 

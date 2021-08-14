@@ -47,6 +47,10 @@ public class MyLouiseApi implements ErrorController {
     @Value("${LOUISE_HELP_PAGE}")
     String LOUISE_HELP_PAGE;
 
+    //管理员QQ
+    @Value("${LOUISE_ADMIN_NUMBER}")
+    String LOUISE_ADMIN_NUMBER;
+
     @RequestMapping("/error")
     public JSONObject commandError() {
         return null;
@@ -62,6 +66,24 @@ public class MyLouiseApi implements ErrorController {
         //TODO 暂时先请求网络图片 Linux和Windows对于本地路径的解析不同 很烦
         returnJson.put("reply","[CQ:image,file="+LOUISE_HELP_PAGE+"]");
         return returnJson;
+    }
+
+    /**
+     * 封禁用户
+     * @param message
+     * @return
+     */
+    @RequestMapping("/ban")
+    public JSONObject banUser(@RequestBody JSONObject message) {
+        JSONObject reply = new JSONObject();
+        String admin = message.getString("user_id");
+        if (!admin.equals(LOUISE_ADMIN_NUMBER)) {
+            reply.put("reply", "我只认"+LOUISE_ADMIN_NUMBER+"这个账号哦");
+            return reply;
+        }
+        String user_id = message.getString("message").substring(5);
+        reply.put("reply",userApi.banUser(user_id));
+        return reply;
     }
 
     @RequestMapping("/test")
@@ -140,8 +162,6 @@ public class MyLouiseApi implements ErrorController {
         //调用LoliconAPI随机或根据参数请求色图
         userApi.updateCount(user_id,1);
         return sendPictureApi.sendPicture(number, nickname, senderType, message);
-//            case "myinfo": return userApi.myInfo(user_id);
-//        }
     }
 
     /**
@@ -183,6 +203,19 @@ public class MyLouiseApi implements ErrorController {
             default: return null;
             case "group_upload": return initFileUploadInfo(notice, user_id);
         }
+    }
+
+    /**
+     * 查询用户信息
+     * @param message
+     * @return
+     */
+    @RequestMapping("/myinfo")
+    public JSONObject myInfo(@RequestBody JSONObject message) {
+
+        String user_id = message.getString("user_id");
+        return userApi.myInfo(user_id);
+
     }
 
     /**
