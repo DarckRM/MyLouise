@@ -115,9 +115,22 @@ public class UserApi {
 
     }
 
+    public String banUser(String user_id) {
+        String reply = isUserEnabled(user_id) ? "用户"+user_id+"已暂时烟了" : "用户"+user_id+"已解封";
+        userDao.banUser(user_id);
+        return reply;
+    }
+
     public boolean isUserExist(String user_id) {
         //判断用户是否已注册
         if (0 == userDao.isUserExist(user_id))
+            return false;
+        return true;
+    }
+
+    public boolean isUserEnabled(String user_id) {
+        //判断用户是否启用
+        if (0 >= userDao.isUserEnabled(user_id))
             return false;
         return true;
     }

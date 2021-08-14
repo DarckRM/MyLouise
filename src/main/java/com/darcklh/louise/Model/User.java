@@ -21,5 +21,6 @@ public class User {
     private Timestamp create_time;
     private Integer count_setu;
     private Integer count_upload;
+    private Integer isEnabled;
 
 }

@@ -117,6 +117,11 @@ public class SearchPictureApi {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(senderType, id);
 
+            //请求go-cqhhtp的参数和请求头
+            HttpHeaders headers= new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+
             //构造请求SourceNAO的请求体
             Map<String, String> map = new HashMap<>();
             map.put("url", url);
@@ -132,11 +137,15 @@ public class SearchPictureApi {
             int status = result.getJSONObject("header").getInteger("status");
             if (status != 0) {
                 if (status > 0) {
-                    jsonObject.put("relpy", "sourceNAO出问题了，不关咱的事");
+                    jsonObject.put("message", "sourceNAO出问题了，不关咱的事");
                 } else {
-                    jsonObject.put("reply", "上传的图片失败，或者我出了啥问题");
+                    jsonObject.put("message", "上传图片失败！请检查你的参数是否正确，以这种格式使用哦!find [图片]");
                 }
-                return jsonObject;
+                jsonObject.put(senderType, id);
+                HttpEntity<String> cqhttp = new HttpEntity<>(jsonObject.toString(), headers);
+                //返回错误信息
+                restTemplate.postForObject("http://localhost:5700/send_msg", cqhttp, String.class);
+                return null;
             }
 
             JSONObject sourceNAO = result.getJSONArray("results").getJSONObject(0);
@@ -167,12 +176,7 @@ public class SearchPictureApi {
             }
             //添加用户信息
             returnJson.put(senderType, id);
-
-            //请求go-cqhhtp的参数和请求头
-            HttpHeaders headers= new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> cqhttp = new HttpEntity<>(returnJson.toString(), headers);
-
             //让Bot发送图片
             String response = restTemplate.postForObject("http://localhost:5700/send_msg", cqhttp, String.class);
             logger.debug("请求Bot的响应结果: "+response);
