@@ -69,7 +69,7 @@ public class LouiseHandler implements HandlerInterceptor {
         //判断用户是否启用
         if (!userApi.isUserEnabled(user_id)) {
             PrintWriter writer = response.getWriter();
-            logger.debug("未登记的用户: " + user_id);
+            logger.debug("未启用的用户: " + user_id);
             returnJson.put("reply", r.BANNED_USER);
             writer.print(returnJson);
             writer.close();
