@@ -102,7 +102,7 @@ public class MyLouiseApi implements ErrorController {
     }
 
     @RequestMapping("/meta")
-    public JSONObject requestProcessCenter(@RequestBody String request) {
+    public JSONObject requestProcessCenter() {
         return null;
     }
 

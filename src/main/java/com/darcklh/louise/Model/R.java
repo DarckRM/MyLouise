@@ -2,13 +2,21 @@ package com.darcklh.louise.Model;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
+
+/**
+ * 请求cqhttp的实体
+ */
 @Component
 public class R {
 
@@ -22,11 +30,25 @@ public class R {
     @Value("${LOUISE.banned_user}")
     public String BANNED_USER;
 
-    public static JSONObject sendJsonMessage(HttpServletResponse response, String message) throws Exception {
+    //请求go-cqhhtp的请求头
+    private HttpHeaders headers= new HttpHeaders();
 
-        JSONObject returnJson = new JSONObject();
-        returnJson.put("reply",message);
-        return returnJson;
+    //构造Rest请求模板
+    private RestTemplate restTemplate = new RestTemplate();
+
+    /**
+     * 根据参数向cqhttp发送消息
+     * @param sendJson JSONObject
+     * @return response String
+     */
+    public String sendMessage(JSONObject sendJson) {
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> cqhttp = new HttpEntity<>(sendJson.toString(), headers);
+        //让Bot发送信息
+        String response = restTemplate.postForObject("http://localhost:5700/send_msg", cqhttp, String.class);
+
+        return response;
     }
 
 }
