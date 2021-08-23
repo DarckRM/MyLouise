@@ -12,14 +12,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,34 +81,77 @@ public class SearchPictureApi {
         logger.info("进入搜图流程, 发起用户为:"+nickname+" QQ:"+number);
         logger.debug(message.toString());
         logger.info("上传图片的地址:"+url);
+        /**
+         * TODO findWithAscii2d(number, nickname, senderType, url);
+         */
+        findWithSourceNAO(number, nickname, senderType, url);
 
-        return findWithSourceNAO(number, nickname, senderType, url);
-
+        return null;
     }
 
     /**
      *
      * @return
      */
-    public JSONObject findWithAscii2d() {
+    public JSONObject findWithAscii2d(String id, String nickname, String senderType, String url) {
 
+        logger.info("进入Ascii2d识别流程");
         //返回JSON
         JSONObject returnJson = new JSONObject();
-
+        returnJson.put(senderType, id);
         //由于Ascii2d返回的是HTML文档 借助Jsoup进行解析
         try {
-            Document document = Jsoup.connect("https://ascii2d.net/search/").get();
-            //解析Document查询出来的第一个数据
-            Element element = document.getElementsByClass("info-box").get(1).select(".detail-box h6").get(0);
 
-            String thumbnail = element.child(0).attr("src");
+            /**
+             * TODO 现在的做法是先把搜索的图片作为参数去请求一次Ascii2d
+             *      Ascii2d这样才能得到图片的MD5编码
+             *      获取到的Document中的色度检索和特征检索URL
+             *      再以获取到的URL做请求Ascii2d
+             */
+            logger.info("正在向Ascii2d上传图片 URL https://ascii2d.net/search/uri/?utf8=✓&uri=" + url);
+            String uri = "https://ascii2d.net/search/uri";
+            String utf8 = "✓";
+
+            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+            params.add("utf8", utf8);
+            params.add("uri", url);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.USER_AGENT, "PostmanRuntime/7.26.8");
+            headers.add("Connection","keep-alive");
+//            headers.add(HttpHeaders.DATE, n);
+            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, request, String.class);
+
+            String colorSearchUrl = response.getBody().substring(35,100);
+            String bovwSearchUrl = "https://ascii2d.net/search/bovw/" + colorSearchUrl.substring(colorSearchUrl.length() - 32);
+
+            //解析Document查询出来的第一个数据
+            logger.info("上传完成 图片的检索URL为 " + bovwSearchUrl);
+            logger.info("开始进行特征检索");
+            params.clear();
+            HttpEntity<MultiValueMap<String, String>> request2 = new HttpEntity<>(params, headers);
+            ResponseEntity<String> result = restTemplate.exchange(bovwSearchUrl, HttpMethod.GET, request2, String.class);
+            Document document = Jsoup.parse(result.getBody());
+
+            Element element = document.getElementsByClass("info-box").get(1).select(".detail-box h6").get(0);
+            Element img = document.getElementsByClass("image-box").get(1);
+
+            String thumbnail = img.child(0).attr("src");
             String title = element.child(1).text();
             String author = element.child(2).text();
 
-        } catch (IOException e) {
+            returnJson.put("message", nickname+"，这是Ascii2d的结果" +
+                    "\n标题: " + title +
+                    "\n作者: " + author +
+                    "\n[CQ:image,file=https://ascii2d.net" + thumbnail + "]");
+            r.sendMessage(returnJson);
+        } catch (Exception e) {
             logger.info("请求失败： "+e.getMessage());
-            returnJson.put("reply", "请求Ascii2d失败了！");
-            return returnJson;
+            returnJson.put("message", "请求Ascii2d失败了！");
+            r.sendMessage(returnJson);
         }
         return null;
     }
@@ -121,6 +165,7 @@ public class SearchPictureApi {
      * @return
      */
     public JSONObject findWithSourceNAO(String id, String nickname, String senderType, String url) {
+        logger.info("进入SourceNAO识别流程");
         try {
 
             //构造Rest请求模板
@@ -161,12 +206,13 @@ public class SearchPictureApi {
             JSONObject sourceNaoHeader = sourceNAO.getJSONObject("header");
             String similarity = sourceNAO.getJSONObject("header").getString("similarity");
             Integer indexId = sourceNAO.getJSONObject("header").getInteger("index_id");
-            //相似度低于78%的直接返回
+            //相似度低于78%的结果以缩略图显示
             if (Float.parseFloat(similarity) < 78.0) {
                 logger.info("结果可能性低");
-                jsonObject.put("message", "找到的结果相似度为"+similarity+"不予显示" +
+                jsonObject.put("message", "找到的结果相似度为"+similarity+"显示缩略图" +
                         "\n此为不大可能的结果: \n"+
-                        sourceNaoData.getJSONArray("ext_urls").toString());
+                        sourceNaoData.getJSONArray("ext_urls").toString()+
+                        "\n[CQ:image,file="+sourceNaoHeader.getString("thumbnail")+"]");
                 jsonObject.put(senderType, id);
                 r.sendMessage(jsonObject);
                 return null;
@@ -193,9 +239,10 @@ public class SearchPictureApi {
             return null;
         } catch (Exception e) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("reply", "坏掉了！救我！\n" +
+            jsonObject.put("message", "坏掉了！救我！\n" +
                     "堆栈信息: "+ e.getMessage());
-            return jsonObject;
+            r.sendMessage(jsonObject);
+            return null;
         }
     }
 
@@ -217,7 +264,6 @@ public class SearchPictureApi {
         String url = BOT_LOUISE_CACHE_IMAGE + pixiv_id + ".jpg";
 
         //牺牲速度获得更好的图片显示 后台预解析图片信息
-        //TODO 预解析的时候直接下载到服务器，发送过后删除
         try {
             Document document = Jsoup.connect("https://pixiv.cat/" + pixiv_id + ".jpg").ignoreHttpErrors(true).post();
 
@@ -251,7 +297,7 @@ public class SearchPictureApi {
 
             if (count <= 5) {
                 start = 1;
-                end = 5;
+                end = count;
             }
 
             //大于1张图的情况
