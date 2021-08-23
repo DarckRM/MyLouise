@@ -81,9 +81,8 @@ public class SearchPictureApi {
         logger.info("进入搜图流程, 发起用户为:"+nickname+" QQ:"+number);
         logger.debug(message.toString());
         logger.info("上传图片的地址:"+url);
-        /**
-         * TODO findWithAscii2d(number, nickname, senderType, url);
-         */
+
+        findWithAscii2d(number, nickname, senderType, url);
         findWithSourceNAO(number, nickname, senderType, url);
 
         return null;
@@ -275,8 +274,14 @@ public class SearchPictureApi {
 
             //确认是多图结果 从JSON中获取匹配结果图片的次序
             String image_index = resultHeader.getString("index_name");
-            image_index = image_index.substring(image_index.indexOf("_") + 2, image_index.length()-4);
-            Integer index = Integer.parseInt(image_index) + 1;
+            image_index = image_index.substring(image_index.indexOf("_p") + 2);
+            String indexString = "";
+            for (char cc : image_index.toCharArray()) {
+                if (Character.isDigit(cc)) {
+                    indexString += cc;
+                } else break;
+            }
+            Integer index = Integer.parseInt(indexString) + 1;
             logger.info("精确匹配结果为第 " + index + " 张");
 
             int start = index - 2;

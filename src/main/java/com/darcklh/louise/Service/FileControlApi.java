@@ -29,14 +29,14 @@ public class FileControlApi {
      */
     public void downloadPicture(String urlList, String fileName) {
         URL url = null;
-        //判断目录是否存在
-        File folder = new File(LOUISE_IMAGE_CACHE);
-        if (!folder.exists() && !folder.isDirectory()) {
-
-            logger.info("创建了图片缓存文件夹");
-            folder.mkdirs();
-
-        }
+//        //判断目录是否存在
+//        File folder = new File(LOUISE_IMAGE_CACHE);
+//        if (!folder.exists() && !folder.isDirectory()) {
+//
+//            logger.info("创建了图片缓存文件夹");
+//            folder.mkdirs();
+//
+//        }
 
         try {
             url = new URL(urlList);
