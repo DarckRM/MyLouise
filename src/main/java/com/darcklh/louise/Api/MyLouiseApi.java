@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.servlet.http.HttpServletRequest;
@@ -175,17 +172,25 @@ public class MyLouiseApi implements ErrorController {
         JSONObject returnJson = new JSONObject();
         String nickname = message.getJSONObject("sender").getString("nickname");
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                searchPictureApi.searchPictureCenter(message);
-            }
-        }).start();
+        new Thread(() -> searchPictureApi.searchPictureCenter(message)).start();
 
         returnJson.put("reply", nickname+"!露易丝在搜索了哦！" +
                 "\n目前Ascii2d搜索引擎仍在测试中，受网络影响较大！");
         return returnJson;
 
+    }
+
+    @RequestMapping("/pixiv/{pixiv_id}")
+    private JSONObject findPixivId(@PathVariable String pixiv_id, @RequestBody JSONObject message) {
+        //返回值
+        JSONObject returnJson = new JSONObject();
+        String nickname = message.getJSONObject("sender").getString("nickname");
+
+        returnJson.put("reply", nickname + "，你要的图片" + pixiv_id + "找到了" +
+                "\n[CQ:image,file=https://pixiv.cat/" + pixiv_id + ".jpg]" +
+                "\n如果未显示出图片请在pixiv_id后指定第几张作品");
+
+        return returnJson;
     }
 
     /**

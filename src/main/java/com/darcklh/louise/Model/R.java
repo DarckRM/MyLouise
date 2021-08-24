@@ -1,6 +1,8 @@
 package com.darcklh.louise.Model;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +19,7 @@ import java.util.Date;
 /**
  * 请求cqhttp的实体
  */
+@Data
 @Component
 public class R {
 
@@ -29,6 +32,8 @@ public class R {
     public String UNKNOWN_USER;
     @Value("${LOUISE.banned_user}")
     public String BANNED_USER;
+
+    private JSONObject message = new JSONObject();
 
     //请求go-cqhhtp的请求头
     private HttpHeaders headers= new HttpHeaders();
@@ -49,6 +54,15 @@ public class R {
         String response = restTemplate.postForObject("http://localhost:5700/send_msg", cqhttp, String.class);
 
         return response;
+    }
+
+    /**
+     * 向R中的message对象添加信息
+     * @param key
+     * @param value
+     */
+    public void put(String key, String value) {
+        this.message.put(key, value);
     }
 
 }

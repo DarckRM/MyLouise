@@ -82,22 +82,25 @@ public class SearchPictureApi {
         logger.debug(message.toString());
         logger.info("上传图片的地址:"+url);
 
-        findWithAscii2d(number, nickname, senderType, url);
-        findWithSourceNAO(number, nickname, senderType, url);
+        //封装信息
+        r.put(senderType, number);
+        r.put("url", url);
+
+        new Thread(() -> findWithAscii2d(nickname, r)).start();
+        new Thread(() -> findWithSourceNAO(nickname, r)).start();
 
         return null;
     }
 
     /**
-     *
-     * @return
+     * 通过Ascii2d搜索图片
+     * @param nickname
+     * @param r
      */
-    public JSONObject findWithAscii2d(String id, String nickname, String senderType, String url) {
+    public void findWithAscii2d(String nickname, R r) {
 
+        String url = r.getMessage().getString("url");
         logger.info("进入Ascii2d识别流程");
-        //返回JSON
-        JSONObject returnJson = new JSONObject();
-        returnJson.put(senderType, id);
         //由于Ascii2d返回的是HTML文档 借助Jsoup进行解析
         try {
 
@@ -142,36 +145,31 @@ public class SearchPictureApi {
             String title = element.child(1).text();
             String author = element.child(2).text();
 
-            returnJson.put("message", nickname+"，这是Ascii2d的结果" +
+            r.put("message", nickname+"，这是Ascii2d的结果" +
                     "\n标题: " + title +
                     "\n作者: " + author +
                     "\n[CQ:image,file=https://ascii2d.net" + thumbnail + "]");
-            r.sendMessage(returnJson);
+            r.sendMessage(r.getMessage());
         } catch (Exception e) {
             logger.info("请求失败： "+e.getMessage());
-            returnJson.put("message", "请求Ascii2d失败了！");
-            r.sendMessage(returnJson);
+            r.put("message", "请求Ascii2d失败了！");
+            r.sendMessage(r.getMessage());
         }
-        return null;
     }
 
     /**
      * 通过SourceNAO开放API搜图
-     * @param id QQ
      * @param nickname 昵称
-     * @param senderType 群聊或是私聊
-     * @param url 图片地址
+     * @param r R
      * @return
      */
-    public JSONObject findWithSourceNAO(String id, String nickname, String senderType, String url) {
+    public void findWithSourceNAO(String nickname, R r) {
         logger.info("进入SourceNAO识别流程");
         try {
+            String url = r.getMessage().getString("url");
 
             //构造Rest请求模板
             RestTemplate restTemplate = new RestTemplate();
-
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put(senderType, id);
 
             //构造请求SourceNAO的请求体
             Map<String, String> map = new HashMap<>();
@@ -188,13 +186,12 @@ public class SearchPictureApi {
             int status = result.getJSONObject("header").getInteger("status");
             if (status != 0) {
                 if (status > 0) {
-                    jsonObject.put("message", "sourceNAO出问题了，不关咱的事");
+                    r.put("message", "sourceNAO出问题了，不关咱的事");
                 } else {
-                    jsonObject.put("message", "上传图片失败！请检查你的参数是否正确，以这种格式使用哦!find [图片]");
+                    r.put("message", "上传图片失败！请检查你的参数是否正确，以这种格式使用哦!find [图片]");
                 }
-                jsonObject.put(senderType, id);
-                r.sendMessage(jsonObject);
-                return null;
+                r.sendMessage(r.getMessage());
+                return;
             }
 
             JSONObject sourceNAO = result.getJSONArray("results").getJSONObject(0);
@@ -208,13 +205,12 @@ public class SearchPictureApi {
             //相似度低于78%的结果以缩略图显示
             if (Float.parseFloat(similarity) < 78.0) {
                 logger.info("结果可能性低");
-                jsonObject.put("message", "找到的结果相似度为"+similarity+"显示缩略图" +
+                r.put("message", "找到的结果相似度为"+similarity+"显示缩略图" +
                         "\n此为不大可能的结果: \n"+
                         sourceNaoData.getJSONArray("ext_urls").toString()+
                         "\n[CQ:image,file="+sourceNaoHeader.getString("thumbnail")+"]");
-                jsonObject.put(senderType, id);
-                r.sendMessage(jsonObject);
-                return null;
+                r.sendMessage(r.getMessage());
+                return;
             }
 
             //返回结果集
@@ -223,25 +219,19 @@ public class SearchPictureApi {
             //判断结果来源 如twitter之流来源很难获取图片 会补充URL以供查看
             switch (indexId) {
                 //来自Pixiv
-                case 5: returnJson = handleFromPixiv(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader); break;
-                case 41: returnJson = handleFromTwitter(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader); break;
-                case 9: returnJson = handleFromDanbooru(nickname, similarity, jsonObject, sourceNaoData, sourceNaoHeader); break;
+                case 5: returnJson = handleFromPixiv(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
+                case 41: returnJson = handleFromTwitter(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
+                case 9: returnJson = handleFromDanbooru(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 default: {
                     returnJson.put("reply", "");
-                    return  returnJson;
+                    return;
                 }
             }
-            //添加用户信息
-            returnJson.put(senderType, id);
             logger.info("请求Bot的响应结果: "+r.sendMessage(returnJson));
-
-            return null;
         } catch (Exception e) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("message", "坏掉了！救我！\n" +
+            r.put("message", "坏掉了！救我！\n" +
                     "堆栈信息: "+ e.getMessage());
-            r.sendMessage(jsonObject);
-            return null;
+            r.sendMessage(r.getMessage());
         }
     }
 
@@ -313,7 +303,7 @@ public class SearchPictureApi {
                 images += "[CQ:image,file=" + BOT_LOUISE_CACHE_IMAGE + pixiv_id + "-" + i + ".jpg]";
             }
             reply.put("message",
-                    nickname + "，查询出来咯，有" + count + "张结果" +
+                    nickname + "，查询出来咯，有" + count + "张结果" + "，精确结果在第" + index + "张" +
                             "\n来源Pixiv" +
                             "\n标题:" + title +
                             "\n作者:" + member_name +
