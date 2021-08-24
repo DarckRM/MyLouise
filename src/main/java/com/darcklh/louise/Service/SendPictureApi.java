@@ -29,9 +29,7 @@ public class SendPictureApi {
 
         //构造Rest请求模板
         RestTemplate restTemplate = new RestTemplate();
-        //请求go-cqhhtp的参数和请求头
-        HttpHeaders headers= new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+
         JSONObject jsonObject = new JSONObject();
 
         //构造请求LoliApi V2的请求体
