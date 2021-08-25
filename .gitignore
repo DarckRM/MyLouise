@@ -17,6 +17,8 @@ buildNumber.properties
 *.iws
 *.iml
 *.ipr
+*.sh
+*.bat
 
 ## Plugin-specific files:
 
