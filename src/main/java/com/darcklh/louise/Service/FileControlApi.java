@@ -29,20 +29,19 @@ public class FileControlApi {
      */
     public void downloadPicture(String urlList, String fileName) {
         URL url = null;
-//        //判断目录是否存在
-//        File folder = new File(LOUISE_IMAGE_CACHE);
-//        if (!folder.exists() && !folder.isDirectory()) {
-//
-//            logger.info("创建了图片缓存文件夹");
-//            folder.mkdirs();
-//
-//        }
+        //判断目录是否存在
+        File folder = new File(LOUISE_IMAGE_CACHE);
+        if (!folder.exists() && !folder.isDirectory()) {
 
+            logger.info("创建了图片缓存文件夹");
+            folder.mkdirs();
+
+        }
+
+        String imageName = LOUISE_IMAGE_CACHE + fileName + ".jpg";
         try {
             url = new URL(urlList);
             DataInputStream dataInputStream = new DataInputStream(url.openStream());
-
-            String imageName = LOUISE_IMAGE_CACHE + fileName + ".jpg";
 
             //判断文件是否存在
             if (new File(imageName).exists()) {
@@ -66,7 +65,7 @@ public class FileControlApi {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            logger.info("下载图片失败");
+            logger.info("下载图片" + imageName + "失败");
         }
     }
 

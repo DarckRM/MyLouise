@@ -221,7 +221,9 @@ public class SearchPictureApi {
                 //来自Pixiv
                 case 5: returnJson = handleFromPixiv(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 case 41: returnJson = handleFromTwitter(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
-                case 9: returnJson = handleFromDanbooru(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
+                case 9:
+                case 12:
+                    returnJson = handleFromDanbooru(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 default: {
                     returnJson.put("reply", "");
                     return;
@@ -381,7 +383,7 @@ public class SearchPictureApi {
 
         String imageUrl;
         imageUrl = index_name.substring(index_name.indexOf(" - ")+3, index_name.length()-4);
-        String imageUrlEndfix = index_name.substring(index_name.length()-4, index_name.length());
+        String imageUrlEndfix = index_name.substring(index_name.length()-4);
         imageUrl = imageUrl.substring(0, imageUrl.indexOf("_"));
         String imageFinalUrlPrefix = imageUrl.substring(0,2) + "/" + imageUrl.substring(2,4) + "/";
         String imageExampleUrlPrefix = imageUrl.substring(0,2) + "/" + imageUrl.substring(2,4) + "/sample_";
@@ -399,7 +401,8 @@ public class SearchPictureApi {
                     "\n作者:"+creator+
                     "\n相似度:"+similarity+
                     "\n可能的图片地址:" + sourceNaoArray +
-                    "\n暂不支持输出Yande.re的图，请通过上面的链接访问");
+                    "\n[CQ:image,file=" + BOT_LOUISE_CACHE_IMAGE + imageUrl + ".jpg]" +
+                    "\n信息来自Yande.re，结果可能不准确，请通过上面的链接访问");
         } else {
             reply.put("message",
                     nickname+"，查询出来咯"+
