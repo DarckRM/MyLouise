@@ -47,9 +47,6 @@ public class SearchPictureApi {
     private String BOT_LOUISE_CACHE_IMAGE;
 
     @Autowired
-    private R r;
-
-    @Autowired
     FileControlApi fileControlApi;
 
     /**
@@ -57,37 +54,14 @@ public class SearchPictureApi {
      * @param message
      * @return
      */
-    public JSONObject searchPictureCenter(JSONObject message) {
+    public JSONObject searchPictureCenter(JSONObject message, R r) {
 
-
-        //解析上传的信息 拿到图片URL还有一些相关参数
-        String url = message.getString("message");
-        url = url.substring(url.indexOf("url=")+4, url.length()-1);
-        //获取请求元数据信息
-        String message_type = message.getString("message_type");
-        String number = "";
-        String nickname = message.getJSONObject("sender").getString("nickname");
-
-        //判断私聊或是群聊
-        String senderType = "";
-        if (message_type.equals("group")) {
-            number = message.getString("group_id");
-            senderType = "group_id";
-
-        } else if (message_type.equals("private")) {
-            number = message.getString("user_id");
-            senderType = "user_id";
-        }
-        logger.info("进入搜图流程, 发起用户为:"+nickname+" QQ:"+number);
+        logger.info("进入搜图流程, 发起用户为:"+r.getNickname()+" QQ:"+r.getNumber());
         logger.debug(message.toString());
-        logger.info("上传图片的地址:"+url);
+        logger.info("上传图片的地址:"+r.getMessage().getString("url"));
 
-        //封装信息
-        r.put(senderType, number);
-        r.put("url", url);
-
-        new Thread(() -> findWithAscii2d(nickname, r)).start();
-        new Thread(() -> findWithSourceNAO(nickname, r)).start();
+        new Thread(() -> findWithAscii2d(r.getNickname(), r)).start();
+        new Thread(() -> findWithSourceNAO(r.getNickname(), r)).start();
 
         return null;
     }

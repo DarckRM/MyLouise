@@ -168,11 +168,39 @@ public class MyLouiseApi implements ErrorController {
      */
     @RequestMapping("/find")
     private JSONObject findPicture(@RequestBody JSONObject message) {
+
+        R r = new R();
+
         //返回值
         JSONObject returnJson = new JSONObject();
+        //解析上传的信息 拿到图片URL还有一些相关参数
+        String url = message.getString("message");
+        url = url.substring(url.indexOf("url=")+4, url.length()-1);
+        //获取请求元数据信息
+        String message_type = message.getString("message_type");
+        String number = "";
         String nickname = message.getJSONObject("sender").getString("nickname");
 
-        new Thread(() -> searchPictureApi.searchPictureCenter(message)).start();
+        //判断私聊或是群聊
+        String senderType = "";
+        if (message_type.equals("group")) {
+            number = message.getString("group_id");
+            senderType = "group_id";
+
+        } else if (message_type.equals("private")) {
+            number = message.getString("user_id");
+            senderType = "user_id";
+        }
+
+        r.setNickname(nickname);
+        r.setSenderType(senderType);
+        r.setNumber(number);
+
+        //封装信息
+        r.put("url", url);
+        r.put(r.getSenderType(), r.getNumber());
+
+        new Thread(() -> searchPictureApi.searchPictureCenter(message, r)).start();
 
         returnJson.put("reply", nickname+"!露易丝在搜索了哦！" +
                 "\n目前Ascii2d搜索引擎仍在测试中，受网络影响较大！");
