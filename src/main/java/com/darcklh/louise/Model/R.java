@@ -1,7 +1,10 @@
 package com.darcklh.louise.Model;
 
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Service.FileControlApi;
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -33,6 +36,10 @@ public class R {
     @Value("${LOUISE.banned_user}")
     public String BANNED_USER;
 
+    private String nickname;
+    private String senderType;
+    private String number;
+
     private JSONObject message = new JSONObject();
 
     //请求go-cqhhtp的请求头
@@ -40,6 +47,8 @@ public class R {
 
     //构造Rest请求模板
     private RestTemplate restTemplate = new RestTemplate();
+
+    Logger logger = LoggerFactory.getLogger(R.class);
 
     /**
      * 根据参数向cqhttp发送消息
@@ -51,8 +60,8 @@ public class R {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> cqhttp = new HttpEntity<>(sendJson.toString(), headers);
         //让Bot发送信息
+        logger.info("发送报文: " + sendJson);
         String response = restTemplate.postForObject("http://localhost:5700/send_msg", cqhttp, String.class);
-
         return response;
     }
 
