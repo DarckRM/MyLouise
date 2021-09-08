@@ -10,6 +10,7 @@ spring:
         username: root
         password: RMTouHou.18
 
+
 #配饰mybatisPlus
 mybatis-plus:
     configuration:
@@ -20,3 +21,30 @@ mybatis-plus:
         db-config:
             #表名前缀
             table-prefix: t_
+
+#Louise相关配置
+LOUISE:
+    HELP_PAGE: https://chenjie.ink:8096/file/images/Image_20210814200900036_WUuK.jpg
+    ADMIN_NUMBER: 412543224
+    #图片缓存位置
+    CACHE:
+        IMAGE_LOCATION: cache/images/
+    #报错信息
+    ERROR:
+        UNKNOWN_COMMAND: 露易丝没有听懂诶，如果需要帮助的话请说!help
+        THIRD_API_REQUEST_FAILED: 露易丝请求失败了！
+        UNKNOWN_USER: 你还没有在露易丝这里留下你的记录哦，请使用!join
+        BANNED_USER: 你的权限暂时被禁用了哦
+        UPLOAD_IMAGE_FAILED: 上传图片失败！请检查你的参数是否正确，以这种格式使用哦!find [图片]
+#CQ-HTTP相关配置
+BOT:
+    LOUISE_CACHE_IMAGE: ../../../../MyLouise/cache/images/
+    BASE_URL: http://127.0.0.1:5700
+    HTTP_POST_KEY: Ac0mq5WxAVVIMAyj8Dx0TYKXjwNiKlbn
+#第三方API相关配置
+API:
+    SOURCENAO:
+        URL: https://saucenao.com/search.php
+        API_KEY: 1b1b6103a6503e94cc5dcef861f041aadd72ec49
+        ERROR:
+            REQUEST_FAILED: SourceNAO出问题了，不关咱的事

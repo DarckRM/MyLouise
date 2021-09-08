@@ -4,8 +4,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Api.MyLouiseApi;
 import com.darcklh.louise.Utils.HttpContextUtils;
 import com.darcklh.louise.Utils.HttpServletWrapper;
+import com.darcklh.louise.Utils.isEmpty;
+import org.jsoup.select.Evaluator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -26,6 +32,7 @@ import java.util.Date;
  * @date 2021/8/12 12:16
  * @Description
  */
+@Component
 public class LouiseFilter implements Filter {
 
     Logger logger = LoggerFactory.getLogger(LouiseFilter.class);
@@ -42,26 +49,47 @@ public class LouiseFilter implements Filter {
         String ip = request.getRemoteHost();
         String url = request.getRequestURL().toString();
 
-        //获取相关信息
-        //byte[] bodyBytes = StreamUtils.copyToByteArray(request.getInputStream());
-        //String body = new String(bodyBytes, request.getCharacterEncoding());
+        //获取请求Body
         HttpServletWrapper wrapper = new HttpServletWrapper(request);
         String body = wrapper.getBody();
-        //获取请求中的流如何，将取出来的字符串，再次转换成流，然后把它放入到新request对象中
+
+        //获取请求中的流，将取出来的字符串，再次转换成流，然后把它放入到新request对象中
         JSONObject jsonObject = JSONObject.parseObject(body);
-        String post_type = jsonObject.getString("post_type");
-        //排除心跳检测
-        if (post_type.equals("meta_event")) {
-            logger.debug("心跳检测");
-            return;
-        } else if (post_type.equals("notice")) {
-            logger.debug("暂不处理notice消息");
+        String post_type = "";
+
+        //判断请求来源
+        if (isEmpty.isEmpty(jsonObject)) {
+            logger.info("请求后台");
+        } else {
+            post_type = jsonObject.getString("post_type");
+            if (isEmpty.isEmpty(post_type))
+                logger.info("请求前台");
+        }
+
+
+        //TODO 端口号可能会导致字符串裁剪错误
+        String urlCopy = url.substring(22, 26);
+        if (urlCopy.equals("favi")) {
             return;
         }
-        logger.info("请求过滤"); // 调用filter链中的下一个filter
-        logger.info(ip + " 访问了 " + url);
-        // 在chain.doFiler方法中传递新的request对象
-        filterChain.doFilter(wrapper, servletResponse);
+        //如果请求的是后台API则跳过请求解析
+        if (urlCopy.equals("loui") || urlCopy.equals("refr")) {
+            filterChain.doFilter(servletRequest, servletResponse);
+        } else {
+
+            //排除心跳检测
+            if (post_type.equals("meta_event")) {
+                logger.debug("心跳检测");
+                return;
+            } else if (post_type.equals("notice")) {
+                logger.debug("暂不处理notice消息");
+                return;
+            }
+            logger.info("请求过滤"); // 调用filter链中的下一个filter
+            logger.info(ip + " 访问了 " + url);
+            // 在chain.doFiler方法中传递新的request对象
+            filterChain.doFilter(wrapper, servletResponse);
+        }
 
     }
 

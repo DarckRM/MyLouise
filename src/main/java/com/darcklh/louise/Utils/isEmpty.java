@@ -16,6 +16,9 @@ public class isEmpty {
      */
     public static boolean isEmpty(Object object){
 
+        if (object == null)
+            return true;
+
         Class clazz = (Class)object.getClass(); // 得到类对象
         Field fields[] = clazz.getDeclaredFields(); // 得到所有属性
         boolean flag = true; //定义返回结果，默认为true

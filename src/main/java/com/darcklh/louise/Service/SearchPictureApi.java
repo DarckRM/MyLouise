@@ -1,26 +1,23 @@
 package com.darcklh.louise.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.annotation.JSONPOJOBuilder;
+import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.R;
+import com.darcklh.louise.Utils.UniqueGenerator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.async.DeferredResult;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,19 +29,8 @@ public class SearchPictureApi {
 
     Logger logger = LoggerFactory.getLogger(SearchPictureApi.class);
 
-    //BOT运行接口
-    @Value("${BASE_BOT_URL}")
-    String BASE_BOT_URL;
-
-    @Value("${SOURCENAO_API}")
-    private String SOURCENAO_API;
-
-    @Value("${SOURCENAO_API_KEY}")
-    private String SOURCENAO_API_KEY;
-
-    //BOT访问Louise图片的路径
-    @Value("${BOT_LOUISE_CACHE_IMAGE}")
-    private String BOT_LOUISE_CACHE_IMAGE;
+    @Autowired
+    LouiseConfig louiseConfig;
 
     @Autowired
     FileControlApi fileControlApi;
@@ -60,8 +46,9 @@ public class SearchPictureApi {
         logger.debug(message.toString());
         logger.info("上传图片的地址:"+r.getMessage().getString("url"));
 
-        new Thread(() -> findWithAscii2d(r.getNickname(), r)).start();
-        new Thread(() -> findWithSourceNAO(r.getNickname(), r)).start();
+        //TODO 线程名过长
+        new Thread(() -> findWithAscii2d(r.getNickname(), r), UniqueGenerator.uniqueThreadName("", "A2d")).start();
+        new Thread(() -> findWithSourceNAO(r.getNickname(), r), UniqueGenerator.uniqueThreadName("", "NAO")).start();
 
         return null;
     }
@@ -148,21 +135,21 @@ public class SearchPictureApi {
             //构造请求SourceNAO的请求体
             Map<String, String> map = new HashMap<>();
             map.put("url", url);
-            map.put("api_key", SOURCENAO_API_KEY);
+            map.put("api_key", louiseConfig.getSOURCENAO_API_KEY());
             map.put("db", "999");
             map.put("output_type", "2");
             map.put("numres", "1");
 
-            JSONObject result = JSON.parseObject(restTemplate.getForObject(SOURCENAO_API+"?url={url}&db={db}&api_key={api_key}&output_type={output_type}&numres={numres}", String.class, map));
+            JSONObject result = JSON.parseObject(restTemplate.getForObject(louiseConfig.getSOURCENAO_URL()+"?url={url}&db={db}&api_key={api_key}&output_type={output_type}&numres={numres}", String.class, map));
             logger.debug("查询到的结果: "+result);
 
             //判断结果
             int status = result.getJSONObject("header").getInteger("status");
             if (status != 0) {
                 if (status > 0) {
-                    r.put("message", "sourceNAO出问题了，不关咱的事");
+                    r.put("message", louiseConfig.getLOUISE_ERROR_THIRD_API_REQUEST_FAILED());
                 } else {
-                    r.put("message", "上传图片失败！请检查你的参数是否正确，以这种格式使用哦!find [图片]");
+                    r.put("message", louiseConfig.getLOUISE_ERROR_UPLOAD_IMAGE_FAILED());
                 }
                 r.sendMessage(r.getMessage());
                 return;
@@ -226,7 +213,7 @@ public class SearchPictureApi {
         String title = resultData.getString("title");
         String member_name = resultData.getString("member_name");
         String ext_urls = resultData.getJSONArray("ext_urls").toArray()[0].toString();
-        String url = BOT_LOUISE_CACHE_IMAGE + pixiv_id + ".jpg";
+        String url = louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION() + pixiv_id + ".jpg";
 
         //牺牲速度获得更好的图片显示 后台预解析图片信息
         try {
@@ -276,7 +263,7 @@ public class SearchPictureApi {
             for (int i = start; i <= end; i++) {
                 //下载图片到本地
                 fileControlApi.downloadPicture("https://pixiv.cat/" + pixiv_id + "-" + i + ".jpg", pixiv_id + "-" + i);
-                images += "[CQ:image,file=" + BOT_LOUISE_CACHE_IMAGE + pixiv_id + "-" + i + ".jpg]";
+                images += "[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + pixiv_id + "-" + i + ".jpg]";
             }
             reply.put("message",
                     nickname + "，查询出来咯，有" + count + "张结果" + "，精确结果在第" + index + "张" +
@@ -375,7 +362,7 @@ public class SearchPictureApi {
                     "\n作者:"+creator+
                     "\n相似度:"+similarity+
                     "\n可能的图片地址:" + sourceNaoArray +
-                    "\n[CQ:image,file=" + BOT_LOUISE_CACHE_IMAGE + imageUrl + ".jpg]" +
+                    "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + imageUrl + ".jpg]" +
                     "\n信息来自Yande.re，结果可能不准确，请通过上面的链接访问");
         } else {
             reply.put("message",
@@ -385,7 +372,7 @@ public class SearchPictureApi {
                     "\n作者:"+creator+
                     "\n相似度:"+similarity+
                     "\n可能的图片地址:" + sourceNaoArray +
-                    "\n[CQ:image,file=" + BOT_LOUISE_CACHE_IMAGE + imageUrl +".jpg]");
+                    "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + imageUrl +".jpg]");
         }
 
         logger.info("图片地址1:"+finalUrl);

@@ -2,8 +2,10 @@ package com.darcklh.louise.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Config.LouiseConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,11 +19,18 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class SendPictureApi {
 
+    @Autowired
+    LouiseConfig louiseConfig;
+
     //BOT运行接口
     @Value("${BASE_BOT_URL}")
     String BASE_BOT_URL;
 
     Logger logger = LoggerFactory.getLogger(SendPictureApi.class);
+
+    public String test() {
+        return louiseConfig.getBOT_BASE_URL();
+    }
 
     public JSONObject sendPicture(String id, String nickname, String senderType, JSONObject message) {
 

@@ -2,6 +2,7 @@ package com.darcklh.louise.Api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Mapper.UserDao;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Service.SearchPictureApi;
@@ -13,10 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.cloud.context.refresh.ContextRefresher;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 
@@ -27,14 +31,17 @@ public class MyLouiseApi implements ErrorController {
     @Autowired
     private SendPictureApi sendPictureApi;
 
+    @Resource
+    private ContextRefresher contextRefresher;
+
     @Autowired
     private SearchPictureApi searchPictureApi;
 
     @Autowired
-    private UserApi userApi;
+    LouiseConfig louiseConfig;
 
     @Autowired
-    private EncryptUtils encryptUtils;
+    private UserApi userApi;
 
     //机器人上报密钥
     @Value("${HTTP_POST_KEY}")
@@ -51,6 +58,21 @@ public class MyLouiseApi implements ErrorController {
     @RequestMapping("/error")
     public JSONObject commandError() {
         return null;
+    }
+
+    /**
+     * 刷新配置的接口
+     */
+    @RequestMapping("/louise/show")
+    public String RefreshConfig() {
+        return "API: " + louiseConfig.getBOT_LOUISE_CACHE_IMAGE();
+    }
+
+    @RequestMapping("/louise/refresh")
+    public String refresh() {
+        louiseConfig.setBOT_LOUISE_CACHE_IMAGE("aaaa");
+        //contextRefresher.refresh();
+        return louiseConfig.toString();
     }
 
     /**
@@ -83,18 +105,12 @@ public class MyLouiseApi implements ErrorController {
         return reply;
     }
 
-    @RequestMapping("/test")
-    public JSONObject testRequestProcessCenter(HttpServletRequest request, @RequestBody String message) throws NoSuchAlgorithmException {
-
-        String cryptCode = request.getHeader("X-signature");
-        String encryptCode = encryptUtils.hamcsha1(message +"\n", HTTP_POST_KEY);
-        logger.info("HTTP明文: " + message);
-        logger.info(cryptCode);
-        logger.info(encryptCode);
-
+    @RequestMapping("louise/test")
+    public String testRequestProcessCenter(HttpServletRequest request, @RequestBody String message) throws NoSuchAlgorithmException {
+        R r = new R();
         JSONObject result = new JSONObject();
         result.put("reply","现在测试中");
-        return result;
+        return result.toString() + louiseConfig.getLOUISE_ERROR_UNKNOWN_COMMAND();
 
     }
 
