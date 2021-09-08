@@ -1,26 +1,17 @@
 package com.darcklh.louise.Api;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
-import com.darcklh.louise.Mapper.UserDao;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Service.SearchPictureApi;
 import com.darcklh.louise.Service.SendPictureApi;
 import com.darcklh.louise.Service.UserApi;
-import com.darcklh.louise.Utils.EncryptUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.cloud.context.refresh.ContextRefresher;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.async.DeferredResult;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 
@@ -31,8 +22,8 @@ public class MyLouiseApi implements ErrorController {
     @Autowired
     private SendPictureApi sendPictureApi;
 
-    @Resource
-    private ContextRefresher contextRefresher;
+    @Autowired
+    private R r;
 
     @Autowired
     private SearchPictureApi searchPictureApi;
@@ -43,21 +34,14 @@ public class MyLouiseApi implements ErrorController {
     @Autowired
     private UserApi userApi;
 
-    //机器人上报密钥
-    @Value("${HTTP_POST_KEY}")
-    String HTTP_POST_KEY;
-
-    //帮助页地址
-    @Value("${LOUISE_HELP_PAGE}")
-    String LOUISE_HELP_PAGE;
-
-    //管理员QQ
-    @Value("${LOUISE_ADMIN_NUMBER}")
-    String LOUISE_ADMIN_NUMBER;
-
+    //TODO 接管了所有的请求错误 需要修改
     @RequestMapping("/error")
-    public JSONObject commandError() {
-        return null;
+    public JSONObject Error() {
+        JSONObject returnJson = new JSONObject();
+        //如果请求失败了
+        logger.debug("未知的命令请求");
+        returnJson.put("reply", louiseConfig.getLOUISE_ERROR_UNKNOWN_COMMAND());
+        return r.fastResponse(returnJson);
     }
 
     /**
@@ -79,11 +63,11 @@ public class MyLouiseApi implements ErrorController {
      * 返回帮助信息
      * @return
      */
-    @RequestMapping("/help")
+    @RequestMapping("louise/help")
     public JSONObject help() {
         JSONObject returnJson = new JSONObject();
         //TODO 暂时先请求网络图片 Linux和Windows对于本地路径的解析不同 很烦
-        returnJson.put("reply","[CQ:image,file="+LOUISE_HELP_PAGE+"]");
+        returnJson.put("reply","[CQ:image,file="+louiseConfig.getLOUISE_HELP_PAGE()+"]");
         return returnJson;
     }
 
@@ -92,12 +76,12 @@ public class MyLouiseApi implements ErrorController {
      * @param message
      * @return
      */
-    @RequestMapping("/ban")
+    @RequestMapping("louise/ban")
     public JSONObject banUser(@RequestBody JSONObject message) {
         JSONObject reply = new JSONObject();
         String admin = message.getString("user_id");
-        if (!admin.equals(LOUISE_ADMIN_NUMBER)) {
-            reply.put("reply", "我只认"+LOUISE_ADMIN_NUMBER+"这个账号哦");
+        if (!admin.equals(louiseConfig.getLOUISE_ADMIN_NUMBER())) {
+            reply.put("reply", "我只认"+louiseConfig.getLOUISE_ADMIN_NUMBER()+"这个账号哦");
             return reply;
         }
         String user_id = message.getString("message").substring(5);
@@ -114,7 +98,7 @@ public class MyLouiseApi implements ErrorController {
 
     }
 
-    @RequestMapping("/meta")
+    @RequestMapping("louise/meta")
     public JSONObject requestProcessCenter() {
         return null;
     }
@@ -124,7 +108,7 @@ public class MyLouiseApi implements ErrorController {
      * @param jsonObject
      * @return
      */
-    @RequestMapping("/join")
+    @RequestMapping("louise/join")
     public JSONObject Join(@RequestBody JSONObject jsonObject) {
 
         String user_id = jsonObject.getString("user_id");
@@ -151,7 +135,7 @@ public class MyLouiseApi implements ErrorController {
      * @param message
      * @return JSONObject
      */
-    @RequestMapping("/setu")
+    @RequestMapping("louise/setu")
     private JSONObject sendRandomSetu(@RequestBody JSONObject message) {
 
         //获取请求元数据信息
@@ -182,7 +166,7 @@ public class MyLouiseApi implements ErrorController {
      * @param message
      * @return
      */
-    @RequestMapping("/find")
+    @RequestMapping("louise/find")
     private JSONObject findPicture(@RequestBody JSONObject message) {
 
         R r = new R();
@@ -224,7 +208,7 @@ public class MyLouiseApi implements ErrorController {
 
     }
 
-    @RequestMapping("/pixiv/{pixiv_id}")
+    @RequestMapping("louise/pixiv/{pixiv_id}")
     private JSONObject findPixivId(@PathVariable String pixiv_id, @RequestBody JSONObject message) {
         //返回值
         JSONObject returnJson = new JSONObject();
@@ -260,7 +244,7 @@ public class MyLouiseApi implements ErrorController {
      * @param message
      * @return
      */
-    @RequestMapping("/myinfo")
+    @RequestMapping("louise/myinfo")
     public JSONObject myInfo(@RequestBody JSONObject message) {
 
         String user_id = message.getString("user_id");

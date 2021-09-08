@@ -7,8 +7,6 @@ import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,7 +24,6 @@ import java.util.Date;
  */
 @Data
 @Component
-@RefreshScope
 public class R {
 
     //自动注入信息载体
@@ -60,8 +57,17 @@ public class R {
         HttpEntity<String> cqhttp = new HttpEntity<>(sendJson.toString(), headers);
         //让Bot发送信息
         logger.info("发送报文: " + sendJson);
-        String response = restTemplate.postForObject("http://localhost:5700/send_msg", cqhttp, String.class);
-        return response;
+        return restTemplate.postForObject("http://localhost:5700/send_msg", cqhttp, String.class);
+    }
+
+    /**
+     * 快速操作
+     * @param fastJson
+     * @return
+     */
+    public JSONObject fastResponse(JSONObject fastJson) {
+        logger.info("快速操作: " + fastJson);
+        return fastJson;
     }
 
     /**
