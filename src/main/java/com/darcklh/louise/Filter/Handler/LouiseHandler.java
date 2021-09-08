@@ -1,6 +1,7 @@
 package com.darcklh.louise.Filter.Handler;
 
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Service.UserApi;
 import com.darcklh.louise.Utils.HttpServletWrapper;
@@ -27,6 +28,9 @@ public class LouiseHandler implements HandlerInterceptor {
     Logger logger = LoggerFactory.getLogger(LouiseHandler.class);
 
     @Autowired
+    LouiseConfig louiseConfig;
+
+    @Autowired
     UserApi userApi;
     @Autowired
     R r;
@@ -41,7 +45,7 @@ public class LouiseHandler implements HandlerInterceptor {
         if (command.equals("/error")) {
             PrintWriter writer = response.getWriter();
             logger.debug("未知的命令请求: "+command);
-            returnJson.put("reply", r.UNKNOWN_COMMAND);
+            returnJson.put("reply", louiseConfig.getLOUISE_ERROR_UNKNOWN_COMMAND());
             writer.print(returnJson);
             writer.close();
             return false;
@@ -61,7 +65,7 @@ public class LouiseHandler implements HandlerInterceptor {
         if (!userApi.isUserExist(user_id)) {
             PrintWriter writer = response.getWriter();
             logger.debug("未登记的用户: " + user_id);
-            returnJson.put("reply", r.UNKNOWN_USER);
+            returnJson.put("reply", louiseConfig.getLOUISE_ERROR_UNKNOWN_USER());
             writer.print(returnJson);
             writer.close();
             return false;
@@ -70,7 +74,7 @@ public class LouiseHandler implements HandlerInterceptor {
         if (!userApi.isUserEnabled(user_id)) {
             PrintWriter writer = response.getWriter();
             logger.debug("未启用的用户: " + user_id);
-            returnJson.put("reply", r.BANNED_USER);
+            returnJson.put("reply", louiseConfig.getLOUISE_ERROR_UNKNOWN_COMMAND());
             writer.print(returnJson);
             writer.close();
             return false;

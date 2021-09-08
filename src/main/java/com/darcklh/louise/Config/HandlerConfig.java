@@ -20,7 +20,7 @@ public class HandlerConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(louiseHandler).addPathPatterns("/**");
+        registry.addInterceptor(louiseHandler).addPathPatterns("/**").excludePathPatterns("/louise/**").excludePathPatterns("/refresh");
         super.addInterceptors(registry);
     }
 }

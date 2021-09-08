@@ -1,12 +1,14 @@
 package com.darcklh.louise.Model;
 
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Service.FileControlApi;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,26 +22,23 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
- * 请求cqhttp的实体
+ * 和Cqhttp通信的实体
  */
 @Data
 @Component
+@RefreshScope
 public class R {
 
-    //各种信息
-    @Value("${LOUISE.unknown_command}")
-    public String UNKNOWN_COMMAND;
-    @Value("${LOUISE.thirdApi_request_failed}")
-    public String THIRDAPI_REQUEST_FAILED;
-    @Value("${LOUISE.unknown_user}")
-    public String UNKNOWN_USER;
-    @Value("${LOUISE.banned_user}")
-    public String BANNED_USER;
+    //自动注入信息载体
+    @Autowired
+    LouiseConfig louiseConfig;
 
+    //发送报文的基础信息
     private String nickname;
     private String senderType;
     private String number;
 
+    //报文体
     private JSONObject message = new JSONObject();
 
     //请求go-cqhhtp的请求头
