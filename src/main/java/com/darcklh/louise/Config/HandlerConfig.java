@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
@@ -13,14 +15,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * @Description
  */
 @Configuration
-public class HandlerConfig extends WebMvcConfigurerAdapter {
+public class HandlerConfig implements WebMvcConfigurer {
 
     @Autowired
     LouiseHandler louiseHandler;;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(louiseHandler).addPathPatterns("/**").excludePathPatterns("/louise/**").excludePathPatterns("/refresh");
-        super.addInterceptors(registry);
+        registry.addInterceptor(louiseHandler).addPathPatterns("/**").excludePathPatterns("/saito/**", "/error", "/static/**", "/favicon.ico");
     }
 }

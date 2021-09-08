@@ -18,8 +18,7 @@ public class FilterConfig {
 
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new LouiseFilter());
-        registrationBean.addUrlPatterns("/*");
-        registrationBean.setName("CommandLegalityCheckFilter");
+        registrationBean.addUrlPatterns("/louise/*");
         registrationBean.setOrder(1);
         return registrationBean;
 

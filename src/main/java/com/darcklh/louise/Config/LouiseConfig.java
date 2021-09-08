@@ -3,7 +3,6 @@ package com.darcklh.louise.Config;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 @PropertySource(value = "classpath:application.yml")
 @Data
-@RefreshScope
 public class LouiseConfig {
 
     @Value("${server.port}")

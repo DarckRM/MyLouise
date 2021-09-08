@@ -9,6 +9,9 @@ spring:
         url: jdbc:mysql://121.4.179.240:3306/mylouise?serverTimezone=GMT%2B8
         username: root
         password: RMTouHou.18
+    #静态资源路径
+    mvc:
+        static-path-pattern: /static/**
 
 
 #配饰mybatisPlus

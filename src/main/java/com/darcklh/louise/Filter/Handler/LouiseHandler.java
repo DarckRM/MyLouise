@@ -41,15 +41,7 @@ public class LouiseHandler implements HandlerInterceptor {
         String command = request.getRequestURI();
 
         response.setContentType("application/json; charset=utf-8");
-        //如果请求失败了
-        if (command.equals("/error")) {
-            PrintWriter writer = response.getWriter();
-            logger.debug("未知的命令请求: "+command);
-            returnJson.put("reply", louiseConfig.getLOUISE_ERROR_UNKNOWN_COMMAND());
-            writer.print(returnJson);
-            writer.close();
-            return false;
-        }
+
         //获取相关信息
         HttpServletWrapper wrapper = new HttpServletWrapper(request);
         String body = wrapper.getBody();
