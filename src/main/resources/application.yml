@@ -19,6 +19,7 @@ mybatis-plus:
     configuration:
         #关闭表字段下划线自动转驼峰导致实体类字段无法匹配
         map-underscore-to-camel-case: false
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     mapper-locations: classpath*:xml
     global-config:
         db-config:

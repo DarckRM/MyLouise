@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
-import App from './App.vue'
+import App from './App.vue' 
 
-createApp(App).mount('#app')
-
-import Axios from './utils/request.js'
-app.config.globalProperties.$axios = Axios
+const app = createApp(App)
+app.mount('#app')
+import axios from './utils/request'
+app.config.globalProperties.$axios = axios

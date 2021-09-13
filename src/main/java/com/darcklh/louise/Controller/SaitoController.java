@@ -1,7 +1,13 @@
 package com.darcklh.louise.Controller;
 
+import com.darcklh.louise.Model.Result;
+import com.darcklh.louise.Model.SysUser;
+import com.darcklh.louise.Service.SysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -14,6 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("saito/")
 public class SaitoController {
 
+    @Autowired
+    SysUserService sysUserService;
+
     @RequestMapping("loginPage")
     public ModelAndView login(){
         ModelAndView mv = new ModelAndView();
@@ -21,9 +30,12 @@ public class SaitoController {
         return mv;
     }
 
-    @RequestMapping("test")
-    public String test() {
-        return "whuhhu";
+    @RequestMapping("login")
+    public Result<SysUser> Login(@RequestBody SysUser sysUser) {
+
+        Result<SysUser> result = sysUserService.Login(sysUser);
+
+        return result;
     }
 
 }

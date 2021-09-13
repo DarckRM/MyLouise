@@ -1,21 +1,17 @@
-package com.darcklh.louise.Service;
+package com.darcklh.louise.Service.Impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.darcklh.louise.Api.MyLouiseApi;
 import com.darcklh.louise.Mapper.UserDao;
 import com.darcklh.louise.Model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import static com.darcklh.louise.Utils.isEmpty.isEmpty;
@@ -26,9 +22,9 @@ import static com.darcklh.louise.Utils.isEmpty.isEmpty;
  * @Description 用户信息相关接口
  */
 @Service
-public class UserApi {
+public class UserImpl {
 
-    Logger logger = LoggerFactory.getLogger(UserApi.class);
+    Logger logger = LoggerFactory.getLogger(UserImpl.class);
 
     @Autowired
     public UserDao userDao;
