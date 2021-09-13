@@ -3,13 +3,12 @@ package com.darcklh.louise.Filter.Handler;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.R;
-import com.darcklh.louise.Service.UserApi;
+import com.darcklh.louise.Service.Impl.UserImpl;
 import com.darcklh.louise.Utils.HttpServletWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -31,7 +30,7 @@ public class LouiseHandler implements HandlerInterceptor {
     LouiseConfig louiseConfig;
 
     @Autowired
-    UserApi userApi;
+    UserImpl userImpl;
     @Autowired
     R r;
     @Override
@@ -54,7 +53,7 @@ public class LouiseHandler implements HandlerInterceptor {
             return true;
         }
 
-        if (!userApi.isUserExist(user_id)) {
+        if (!userImpl.isUserExist(user_id)) {
             PrintWriter writer = response.getWriter();
             logger.debug("未登记的用户: " + user_id);
             returnJson.put("reply", louiseConfig.getLOUISE_ERROR_UNKNOWN_USER());
@@ -63,7 +62,7 @@ public class LouiseHandler implements HandlerInterceptor {
             return false;
         }
         //判断用户是否启用
-        if (!userApi.isUserEnabled(user_id)) {
+        if (!userImpl.isUserEnabled(user_id)) {
             PrintWriter writer = response.getWriter();
             logger.debug("未启用的用户: " + user_id);
             returnJson.put("reply", louiseConfig.getLOUISE_ERROR_UNKNOWN_COMMAND());

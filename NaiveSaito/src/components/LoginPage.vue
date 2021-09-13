@@ -1,15 +1,22 @@
 <template>
     <n-card v-bind:title="loginPageTitle">
-        <n-input
-            v-model:value="value"
-            placeholder="用户名"
-        />
-        <n-input
-            type="password"
-            show-password-on="mousedown"
-            placeholder="密码"
-            :maxlength="8"
-        />
+        <n-form :model="loginForm">    
+            <n-form-item>
+                <n-input
+                    v-model:value="loginForm.username"
+                    placeholder="用户名"
+                />
+            </n-form-item>
+            <n-form-item>
+                <n-input
+                    type="password"
+                    show-password-on="mousedown"
+                    placeholder="密码"
+                    :maxlength="8"
+                    v-model:value="loginForm.password"
+                />
+            </n-form-item>
+        </n-form>
         <n-button>Sign in</n-button>
         <n-button @click="signUp()" type="primary">Sign up</n-button>
     </n-card>
@@ -30,25 +37,45 @@
 
 <script>
   import { defineComponent } from 'vue'
-  import { NCard, NButton, NInput } from 'naive-ui'
-  import { axios } from 'axios'
+  import { NCard, NButton, NInput, NForm, useMessage } from 'naive-ui'
 
   export default defineComponent({
+    setup() {
+        window.$message = useMessage()
+    },
     data() {
         return {
-            loginPageTitle: "Login"
+            loginPageTitle: "Login",
+            loginForm: {
+                username: "",
+                password: ""
+            }
+            
         }
     },
     components: {
       NCard,
       NButton,
-      NInput
+      NInput,
+      NForm,
+      useMessage
     },
     methods: {
         signUp() {
+            window.$message.loading("登录中")
             this.loginPageTitle = "Sign Up"
-            axios.post('test').then(result => {
-                console.log(result)
+            this.$axios.post('login', this.loginForm).then(result => {
+                let data = result.data
+                if(data.code == 200) {
+                    window.$message.destroyAll()
+                    window.$message.success('登录成功')
+                } else if(data.code == 403) {
+                    window.$message.destroyAll()
+                    window.$message.warning('用户已被禁用')
+                } else {
+                    window.$message.destroyAll()
+                    window.$message.error('用户名或密码错误')
+                }
             })
         }
     }

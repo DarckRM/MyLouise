@@ -5,7 +5,7 @@ import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Service.SearchPictureApi;
 import com.darcklh.louise.Service.SendPictureApi;
-import com.darcklh.louise.Service.UserApi;
+import com.darcklh.louise.Service.Impl.UserImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class MyLouiseApi implements ErrorController {
     LouiseConfig louiseConfig;
 
     @Autowired
-    private UserApi userApi;
+    private UserImpl userImpl;
 
     //TODO 接管了所有的请求错误 需要修改
     @RequestMapping("/error")
@@ -85,7 +85,7 @@ public class MyLouiseApi implements ErrorController {
             return reply;
         }
         String user_id = message.getString("message").substring(5);
-        reply.put("reply",userApi.banUser(user_id));
+        reply.put("reply", userImpl.banUser(user_id));
         return reply;
     }
 
@@ -125,7 +125,7 @@ public class MyLouiseApi implements ErrorController {
                 returnJson.put("reply","露易丝不支持私聊注册哦，\n请在群聊里使用吧");
                 return returnJson;
             }
-            return userApi.joinLouise(user_id, group_id);
+            return userImpl.joinLouise(user_id, group_id);
         }
         return null;
     }
@@ -157,7 +157,7 @@ public class MyLouiseApi implements ErrorController {
         }
 
         //调用LoliconAPI随机或根据参数请求色图
-        userApi.updateCount(user_id,1);
+        userImpl.updateCount(user_id,1);
         return sendPictureApi.sendPicture(number, nickname, senderType, message);
     }
 
@@ -248,7 +248,7 @@ public class MyLouiseApi implements ErrorController {
     public JSONObject myInfo(@RequestBody JSONObject message) {
 
         String user_id = message.getString("user_id");
-        return userApi.myInfo(user_id);
+        return userImpl.myInfo(user_id);
 
     }
 
