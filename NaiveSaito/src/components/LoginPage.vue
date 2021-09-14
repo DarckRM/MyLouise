@@ -1,4 +1,5 @@
 <template>
+    <router-view :key="key"></router-view>
     <n-card v-bind:title="loginPageTitle">
         <n-form :model="loginForm">    
             <n-form-item>
@@ -38,6 +39,8 @@
 <script>
   import { defineComponent } from 'vue'
   import { NCard, NButton, NInput, NForm, useMessage } from 'naive-ui'
+  import { useRoute, useRouter } from 'vue-router'
+  import { router } from '../router'
 
   export default defineComponent({
     setup() {
@@ -58,7 +61,7 @@
       NButton,
       NInput,
       NForm,
-      useMessage
+      useMessage,
     },
     methods: {
         signUp() {
@@ -75,6 +78,7 @@
                 } else {
                     window.$message.destroyAll()
                     window.$message.error('用户名或密码错误')
+                    router.push('/hello')
                 }
             })
         }

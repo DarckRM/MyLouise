@@ -7,9 +7,10 @@ defineProps({
 
 const count = ref(0)
 </script>
-
 <template>
+<router-view>
   <n-button>naive-ui</n-button>
+</router-view>
 </template>
 
 <script>
@@ -21,6 +22,7 @@ const count = ref(0)
       NButton
     }
   })
+
 </script>
 
 <style scoped>
