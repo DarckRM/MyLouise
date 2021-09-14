@@ -2,6 +2,7 @@ package com.darcklh.louise.Api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Model.Plugin;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Service.SearchPictureApi;
 import com.darcklh.louise.Service.SendPictureApi;
@@ -14,10 +15,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @RestController
 public class MyLouiseApi implements ErrorController {
     Logger logger = LoggerFactory.getLogger(MyLouiseApi.class);
+
+    @Autowired
+    List<Plugin> pluginList;
 
     @Autowired
     private SendPictureApi sendPictureApi;
@@ -33,6 +38,19 @@ public class MyLouiseApi implements ErrorController {
 
     @Autowired
     private UserImpl userImpl;
+
+    /**
+     * 插件调用中心
+     * @param plugin
+     * @param message
+     * @return
+     */
+    @RequestMapping("/louise/p/{plugin}")
+    public JSONObject PluginsCenter(@PathVariable String plugin, @RequestBody JSONObject message) {
+        logger.info("rua");
+
+        return null;
+    }
 
     //TODO 接管了所有的请求错误 需要修改
     @RequestMapping("/error")
