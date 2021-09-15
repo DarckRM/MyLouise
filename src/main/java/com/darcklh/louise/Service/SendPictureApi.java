@@ -22,10 +22,6 @@ public class SendPictureApi {
     @Autowired
     LouiseConfig louiseConfig;
 
-    //BOT运行接口
-    @Value("${BASE_BOT_URL}")
-    String BASE_BOT_URL;
-
     Logger logger = LoggerFactory.getLogger(SendPictureApi.class);
 
     public String test() {

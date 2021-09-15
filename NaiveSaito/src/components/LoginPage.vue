@@ -1,5 +1,7 @@
 <template>
-    
+    <img style="width: 150px" alt="Vue logo" src="../assets/logo.png">
+    MyLouise Backfront Alpha
+    <n-divider />
     <n-card v-bind:title="loginPageTitle">
         <n-form :model="loginForm">    
             <n-form-item>
@@ -21,7 +23,6 @@
         <n-button>Sign in</n-button>
         <n-button @click="signUp()" type="primary">Sign up</n-button>
     </n-card>
-    <router-view></router-view>
 </template>
 
 <style>
@@ -39,7 +40,7 @@
 
 <script>
   import { defineComponent } from 'vue'
-  import { NCard, NButton, NInput, NForm, useMessage } from 'naive-ui'
+  import { NCard, NButton, NInput, NForm, useMessage, NFormItem } from 'naive-ui'
   import { useRoute, useRouter } from 'vue-router'
   import { router } from '../router'
 
@@ -64,6 +65,7 @@
       NButton,
       NInput,
       NForm,
+      NFormItem,
       useMessage,
     },
     methods: {
@@ -81,7 +83,9 @@
                 } else {
                     window.$message.destroyAll()
                     window.$message.error('用户名或密码错误')
-                    router.push('/hello')
+                    router.push({
+                        path: '/hello'
+                    })
                 }
             })
         }

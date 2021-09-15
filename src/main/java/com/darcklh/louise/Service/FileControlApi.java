@@ -1,7 +1,9 @@
 package com.darcklh.louise.Service;
 
+import com.darcklh.louise.Config.LouiseConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +19,8 @@ import java.net.URL;
 @Service
 public class FileControlApi {
 
-    //Louise存放图片的路径
-    @Value("${LOUISE_CACHE_IMAGE_LOCATION}")
-    private String LOUISE_IMAGE_CACHE;
+    @Autowired
+    LouiseConfig louiseConfig;
 
     Logger logger = LoggerFactory.getLogger(FileControlApi.class);
 
@@ -27,10 +28,12 @@ public class FileControlApi {
      * 根据传入的URL下载图片到本地
      * @param urlList
      */
-    public void downloadPicture(String urlList, String fileName) {
+    public void downloadPicture(String urlList, String fileName, String fileOrigin) {
         URL url = null;
         //判断目录是否存在
-        File folder = new File(LOUISE_IMAGE_CACHE);
+        String filePath = louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION() + fileOrigin + "/";
+        File folder = new File(filePath);
+
         if (!folder.exists() && !folder.isDirectory()) {
 
             logger.info("创建了图片缓存文件夹");
@@ -38,7 +41,7 @@ public class FileControlApi {
 
         }
 
-        String imageName = LOUISE_IMAGE_CACHE + fileName + ".jpg";
+        String imageName = filePath + fileName + ".jpg";
         try {
             url = new URL(urlList);
             DataInputStream dataInputStream = new DataInputStream(url.openStream());
@@ -48,7 +51,7 @@ public class FileControlApi {
                 logger.info("文件" + imageName + "已存在");
                 return;
             }
-
+            logger.info("开始下载" + imageName);
             FileOutputStream fileOutputStream = new FileOutputStream(new File(imageName));
             ByteArrayOutputStream output = new ByteArrayOutputStream();
 

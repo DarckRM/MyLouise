@@ -61,6 +61,16 @@ public class R {
     }
 
     /**
+     * 像管理员发送消息
+     * @param msg
+     */
+    public void sendAdminMessage(String msg, R r) {
+        r.put("user_id", louiseConfig.getLOUISE_ADMIN_NUMBER());
+        r.put("message", msg);
+        r.sendMessage(getMessage());
+    }
+
+    /**
      * 快速操作
      * @param fastJson
      * @return
