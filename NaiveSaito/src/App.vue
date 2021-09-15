@@ -7,11 +7,10 @@ import LoginPage from './components/LoginPage.vue';
 
 <template>
 <n-message-provider>
-<img style="width: 150px" alt="Vue logo" src="./assets/logo.png">
-MyLouise Backfront Alpha
-<n-divider />
-<LoginPage></LoginPage>
+<router-view>
+</router-view>
 </n-message-provider>
+
 </template>
 
 <style>
@@ -30,6 +29,7 @@ MyLouise Backfront Alpha
 <script>
 import { defineComponent } from 'vue'
 import { NDivider, NMessageProvider } from 'naive-ui'
+  import { router } from './router'
 
 export default defineComponent({
   components: {

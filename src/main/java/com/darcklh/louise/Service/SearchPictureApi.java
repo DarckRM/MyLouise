@@ -181,7 +181,8 @@ public class SearchPictureApi {
             switch (indexId) {
                 //来自Pixiv
                 case 5: returnJson = handleFromPixiv(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
-                case 41: returnJson = handleFromTwitter(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
+                //TODO 暂时禁用推特来源 未解决图片缓存路径问题
+                //case 41: returnJson = handleFromTwitter(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 case 9:
                 case 12:
                     returnJson = handleFromDanbooru(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
@@ -213,7 +214,7 @@ public class SearchPictureApi {
         String title = resultData.getString("title");
         String member_name = resultData.getString("member_name");
         String ext_urls = resultData.getJSONArray("ext_urls").toArray()[0].toString();
-        String url = louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION() + pixiv_id + ".jpg";
+        String url = louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "pixiv/" + pixiv_id + ".jpg";
 
         //牺牲速度获得更好的图片显示 后台预解析图片信息
         try {
@@ -262,8 +263,8 @@ public class SearchPictureApi {
             String images = "";
             for (int i = start; i <= end; i++) {
                 //下载图片到本地
-                fileControlApi.downloadPicture("https://pixiv.cat/" + pixiv_id + "-" + i + ".jpg", pixiv_id + "-" + i);
-                images += "[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + pixiv_id + "-" + i + ".jpg]";
+                fileControlApi.downloadPicture("https://pixiv.cat/" + pixiv_id + "-" + i + ".jpg", pixiv_id + "-" + i, "pixiv");
+                images += "[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "pixiv/" + pixiv_id + "-" + i + ".jpg]";
             }
             reply.put("message",
                     nickname + "，查询出来咯，有" + count + "张结果" + "，精确结果在第" + index + "张" +
@@ -279,7 +280,7 @@ public class SearchPictureApi {
 
         } catch (Exception e) {
             logger.info(e.getLocalizedMessage());
-            fileControlApi.downloadPicture("https://pixiv.cat/" + pixiv_id + ".jpg", pixiv_id);
+            fileControlApi.downloadPicture("https://pixiv.cat/" + pixiv_id + ".jpg", pixiv_id, "pixiv");
             reply.put("message",
                     nickname+"，查询出来咯"+
                             "\n来源Pixiv"+
@@ -351,8 +352,8 @@ public class SearchPictureApi {
         String finalUrl = "https://img3.gelbooru.com//images/" + imageFinalUrlPrefix + imageUrl + imageUrlEndfix;
         String exampleUrl = "https://img3.gelbooru.com//samples/" + imageExampleUrlPrefix + imageUrl + imageUrlEndfix;
 
-        fileControlApi.downloadPicture(finalUrl, imageUrl);
-        fileControlApi.downloadPicture(exampleUrl, imageUrl);
+        fileControlApi.downloadPicture(finalUrl, imageUrl, "Gelbooru");
+        fileControlApi.downloadPicture(exampleUrl, imageUrl, "Gelbooru");
 
         if (index_id == 12) {
             reply.put("message",
@@ -362,17 +363,17 @@ public class SearchPictureApi {
                     "\n作者:"+creator+
                     "\n相似度:"+similarity+
                     "\n可能的图片地址:" + sourceNaoArray +
-                    "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + imageUrl + ".jpg]" +
+                    "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "Gelbooru/" + imageUrl + ".jpg]" +
                     "\n信息来自Yande.re，结果可能不准确，请通过上面的链接访问");
         } else {
             reply.put("message",
                     nickname+"，查询出来咯"+
-                    "\n来源Danbooru"+
+                    "\n来源Gelbooru"+
                     "\n角色:"+characters+
                     "\n作者:"+creator+
                     "\n相似度:"+similarity+
                     "\n可能的图片地址:" + sourceNaoArray +
-                    "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + imageUrl +".jpg]");
+                    "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "Gelbooru/" + imageUrl +".jpg]");
         }
 
         logger.info("图片地址1:"+finalUrl);

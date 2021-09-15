@@ -99,7 +99,7 @@ public class MyLouiseApi implements ErrorController {
         JSONObject reply = new JSONObject();
         String admin = message.getString("user_id");
         if (!admin.equals(louiseConfig.getLOUISE_ADMIN_NUMBER())) {
-            reply.put("reply", "我只认"+louiseConfig.getLOUISE_ADMIN_NUMBER()+"这个账号哦");
+            reply.put("reply", "管理员限定");
             return reply;
         }
         String user_id = message.getString("message").substring(5);
@@ -107,9 +107,28 @@ public class MyLouiseApi implements ErrorController {
         return reply;
     }
 
+    @RequestMapping("louise/config/{type}")
+    public JSONObject modifyConfig(@RequestBody JSONObject message, @PathVariable Integer type) {
+        JSONObject reply = new JSONObject();
+        String admin = message.getString("user_id");
+        if (!admin.equals(louiseConfig.getLOUISE_ADMIN_NUMBER())) {
+            reply.put("reply", "管理员限定");
+            return reply;
+        }
+        if (type == 0) {
+            louiseConfig.setBOT_LOUISE_CACHE_IMAGE("../../../../MyLouise/cache/images/");
+            logger.info("切换至 本地开发 配置");
+            reply.put("reply", "切换到本地开发环境");
+        } else {
+            louiseConfig.setBOT_LOUISE_CACHE_IMAGE("../../MyLouise/cache/images/");
+            logger.info("切换至 线上部署 配置");
+            reply.put("reply", "切换到服务部署环境");
+        }
+        return reply;
+    }
+
     @RequestMapping("louise/test")
     public String testRequestProcessCenter(HttpServletRequest request, @RequestBody String message) throws NoSuchAlgorithmException {
-        R r = new R();
         JSONObject result = new JSONObject();
         result.put("reply","现在测试中");
         return result.toString() + louiseConfig.getLOUISE_ERROR_UNKNOWN_COMMAND();
@@ -226,7 +245,7 @@ public class MyLouiseApi implements ErrorController {
 
     }
 
-    @RequestMapping("louise/pixiv/{pixiv_id}")
+    @RequestMapping("louise/pid/{pixiv_id}")
     private JSONObject findPixivId(@PathVariable String pixiv_id, @RequestBody JSONObject message) {
         //返回值
         JSONObject returnJson = new JSONObject();
