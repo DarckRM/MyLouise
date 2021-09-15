@@ -1,5 +1,5 @@
 <template>
-    <router-view :key="key"></router-view>
+    
     <n-card v-bind:title="loginPageTitle">
         <n-form :model="loginForm">    
             <n-form-item>
@@ -21,6 +21,7 @@
         <n-button>Sign in</n-button>
         <n-button @click="signUp()" type="primary">Sign up</n-button>
     </n-card>
+    <router-view></router-view>
 </template>
 
 <style>
@@ -43,6 +44,8 @@
   import { router } from '../router'
 
   export default defineComponent({
+
+    name: 'LoginPage',
     setup() {
         window.$message = useMessage()
     },

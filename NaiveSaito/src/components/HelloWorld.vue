@@ -18,6 +18,7 @@ const count = ref(0)
   import { NButton } from 'naive-ui'
 
   export default defineComponent({
+    name: 'Hello',
     components: {
       NButton
     }
