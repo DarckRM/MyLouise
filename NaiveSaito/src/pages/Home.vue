@@ -1,10 +1,11 @@
 <template>
     <div id="homeDiv">
-        <n-layout-header bordered style="padding: 0 30px;">
-            <div style="width: 200px; margin: 15px 10px">
-                <img style="width: 80px;" alt="Vue logo" src="../assets/logo.png">
+        <n-layout-header bordered style="padding: 0 30px; height: 110px">
+            <div style="width: 200px; margin: 15px 0 15px 30px; position: absolute">
+                <img style="width: 60px;" alt="Vue logo" src="../assets/logo.png">
+                <span>MyLouise V1.6</span>
             </div>
-            <Top style="width: 100%; height: 50px" ></Top>
+            <Top style="width: 100%; margin: 35px 240px" ></Top>
         </n-layout-header>
         <n-layout has-sider>
         <n-layout-sider bordered content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80" :width="280" show-trigger="bar">

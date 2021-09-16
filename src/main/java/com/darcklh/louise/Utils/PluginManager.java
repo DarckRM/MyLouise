@@ -4,6 +4,7 @@ import com.darcklh.louise.Model.Plugin;
 import com.darcklh.louise.Service.PluginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,13 +14,17 @@ import java.util.List;
 /**
  * 插件管理类
  */
+@Component
 public class PluginManager {
 
     Logger logger = LoggerFactory.getLogger(PluginManager.class);
 
+    public List<Plugin> plugins;
+
     private URLClassLoader urlClassLoader;
 
-    public PluginManager(List<Plugin> plugins) throws MalformedURLException {
+    public void loadPlugins(List<Plugin> plugins) throws MalformedURLException {
+        this.plugins = plugins;
         init(plugins);
     }
 

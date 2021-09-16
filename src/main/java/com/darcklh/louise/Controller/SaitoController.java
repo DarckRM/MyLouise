@@ -5,6 +5,7 @@ import com.darcklh.louise.Model.Result;
 import com.darcklh.louise.Model.SysUser;
 import com.darcklh.louise.Service.PluginService;
 import com.darcklh.louise.Service.SysUserService;
+import com.darcklh.louise.Utils.PluginManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,14 +27,8 @@ public class SaitoController {
     SysUserService sysUserService;
 
 
-    List<PluginService> pluginServiceList;
-
-//    @RequestMapping("loginPage")
-//    public ModelAndView login(){
-//        ModelAndView mv = new ModelAndView();
-//        mv.setViewName("login");
-//        return mv;
-//    }
+    @Autowired
+    PluginManager pluginManager;
 
     @RequestMapping("login")
     public Result<SysUser> Login(@RequestBody SysUser sysUser) {
@@ -45,9 +40,12 @@ public class SaitoController {
 
     @RequestMapping("test")
     public void test() {
+        try {
+            PluginService pluginService = pluginManager.getInstance(pluginManager.plugins.get(1).getClass_name());
+            pluginService.service();
+        } catch (Exception e) {
 
-        BootApplication.pluginServiceList.get(2).service();
-
+        }
     }
 
 }
