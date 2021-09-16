@@ -10,8 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.ResourceAccessException;
 
 import javax.annotation.PostConstruct;
+import java.net.ConnectException;
 import java.util.List;
 
 @Component
@@ -50,7 +52,12 @@ public class BootApplication {
         R r = new R();
         r.put("user_id", louiseConfig.getLOUISE_ADMIN_NUMBER());
         r.put("message", "露易丝启动了哦");
-        r.sendMessage(r.getMessage());
+        try {
+            r.sendMessage(r.getMessage());
+        } catch (ResourceAccessException e) {
+            logger.info("与BOT建立连接失败");
+        }
+
         logger.info("插件加载完毕，共" + i + "个");
 
     }

@@ -1,28 +1,30 @@
 <template>
+    <div id="loginDiv">
     <img style="width: 150px" alt="Vue logo" src="../assets/logo.png">
-    MyLouise Backfront Alpha
-    <n-divider />
-    <n-card v-bind:title="loginPageTitle">
-        <n-form :model="loginForm">    
-            <n-form-item>
-                <n-input
-                    v-model:value="loginForm.username"
-                    placeholder="用户名"
-                />
-            </n-form-item>
-            <n-form-item>
-                <n-input
-                    type="password"
-                    show-password-on="mousedown"
-                    placeholder="密码"
-                    :maxlength="8"
-                    v-model:value="loginForm.password"
-                />
-            </n-form-item>
-        </n-form>
-        <n-button>Sign in</n-button>
-        <n-button @click="signUp()" type="primary">Sign up</n-button>
-    </n-card>
+        MyLouise Backfront Alpha
+        <n-divider />
+        <n-card v-bind:title="loginPageTitle">
+            <n-form :model="loginForm">    
+                <n-form-item>
+                    <n-input
+                        v-model:value="loginForm.username"
+                        placeholder="用户名"
+                    />
+                </n-form-item>
+                <n-form-item>
+                    <n-input
+                        type="password"
+                        show-password-on="mousedown"
+                        placeholder="密码"
+                        :maxlength="8"
+                        v-model:value="loginForm.password"
+                    />
+                </n-form-item>
+            </n-form>
+            <n-button>Sign in</n-button>
+            <n-button @click="signUp()" type="primary">Sign up</n-button>
+        </n-card>
+    </div>
 </template>
 
 <style>
@@ -36,11 +38,14 @@
 .n-button {
     margin: 20px 25px;
 }
+#loginDiv {
+    margin-top: 60px;
+}
 </style>
 
 <script>
   import { defineComponent } from 'vue'
-  import { NCard, NButton, NInput, NForm, useMessage, NFormItem } from 'naive-ui'
+  import { useMessage } from 'naive-ui'
   import { useRoute, useRouter } from 'vue-router'
   import { router } from '../router'
 
@@ -61,11 +66,6 @@
         }
     },
     components: {
-      NCard,
-      NButton,
-      NInput,
-      NForm,
-      NFormItem,
       useMessage,
     },
     methods: {
@@ -84,7 +84,7 @@
                     window.$message.destroyAll()
                     window.$message.error('用户名或密码错误')
                     router.push({
-                        path: '/hello'
+                        path: '/home'
                     })
                 }
             })
