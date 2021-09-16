@@ -20,9 +20,10 @@ import java.util.List;
 public class BootApplication {
 
     Logger logger = LoggerFactory.getLogger(BootApplication.class);
+    @Autowired
+    PluginManager pluginManager;
 
-
-    public static List<PluginService> pluginServiceList;
+    List<PluginService> pluginServiceList;
 
     @Autowired
     PluginDao pluginDao;
@@ -40,10 +41,9 @@ public class BootApplication {
         }
         int i = 0;
         try {
-            PluginManager pluginManager = new PluginManager(plugins);
+            pluginManager.loadPlugins(plugins);
             for (Plugin plugin: plugins) {
                 logger.info("加载插件 <--" + plugin.getName() + "---" + plugin.getAuthor() +"-- >");
-                pluginServiceList.add(pluginManager.getInstance(plugin.getClass_name()));
                 i++;
             }
         } catch (Exception e) {

@@ -46,7 +46,6 @@
 <script>
   import { defineComponent } from 'vue'
   import { useMessage } from 'naive-ui'
-  import { useRoute, useRouter } from 'vue-router'
   import { router } from '../router'
 
   export default defineComponent({
@@ -77,15 +76,15 @@
                 if(data.code == 200) {
                     window.$message.destroyAll()
                     window.$message.success('登录成功')
+                    router.push({
+                        path: '/home'
+                    })
                 } else if(data.code == 403) {
                     window.$message.destroyAll()
                     window.$message.warning('用户已被禁用')
                 } else {
                     window.$message.destroyAll()
                     window.$message.error('用户名或密码错误')
-                    router.push({
-                        path: '/home'
-                    })
                 }
             })
         }
