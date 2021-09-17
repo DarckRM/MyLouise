@@ -1,7 +1,9 @@
 <template>
     <div id="loginDiv">
-    <img style="width: 150px" alt="Vue logo" src="../assets/logo.png">
+    <div style="margin: 0 auto; width: 400px">
+        <img style="width: 150px" alt="Vue logo" src="../assets/logo.png">
         MyLouise Backfront Alpha
+    </div>
         <n-divider />
         <n-card v-bind:title="loginPageTitle">
             <n-form :model="loginForm">    
