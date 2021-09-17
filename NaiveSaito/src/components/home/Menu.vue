@@ -22,7 +22,7 @@ export default defineComponent({
     const message = useMessage()
     return {
       menuOptions,
-      defaultExpandedKeys: ['saito-sys-config', 'louise-sys-config'],
+      defaultExpandedKeys: ['louise-sys', 'saito-sys']
     }
   }
 })
@@ -33,25 +33,28 @@ function renderIcon (icon) {
 
 const menuOptions = [
   {
-    label: 'Louise系统配置',
-    key: 'louise-sys-config',
-    icon: renderIcon(CogIcon),
+    label: '系统配置',
+    key: 'louise-config',
+    icon: renderIcon(CogIcon)
+  },
+  {
+    
+    label: 'Louise系统',
+    key: 'louise-sys',
+    icon: renderIcon(BookIcon),
     children: [
         {
             type: 'group',
             label: '基础项',
             key: 'louise-basic',
             children: [
-                {
-
-                }
             ]
         }
     ]
   },
   {
-    label: 'Saito系统配置   ',
-    key: 'saito-sys-config',
+    label: 'Saito系统   ',
+    key: 'saito-sys',
     icon: renderIcon(BookIcon),
     children: [
       {
@@ -60,32 +63,17 @@ const menuOptions = [
         key: 'people',
         children: [
           {
-            label: '叙事者',
-            key: 'narrator',
-            icon: renderIcon(PersonIcon)
+            label: '插件管理',
+            key: 'plugin-management',
+            icon: renderIcon(CogIcon)
           },
           {
-            label: '羊男',
-            key: 'sheep-man',
-            icon: renderIcon(PersonIcon)
-          }
+            label: '权限管理',
+            key: 'power-management',
+            icon: renderIcon(CogIcon)
+          },
         ]
       },
-      {
-        label: '饮品',
-        key: 'beverage',
-        icon: renderIcon(WineIcon),
-        children: [
-          {
-            label: '威士忌',
-            key: 'whisky'
-          }
-        ]
-      },
-      {
-        label: '过去增多，未来减少',
-        key: 'the-past-increases-the-future-recedes'
-      }
     ]
   }
 ]
