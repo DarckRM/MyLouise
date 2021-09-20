@@ -1,9 +1,4 @@
 <template>
-    <n-menu
-    :options="menuOptions"
-    mode="horizontal"
-    style="margin: auto 0"
-    ></n-menu>
 </template>
 
 <script>

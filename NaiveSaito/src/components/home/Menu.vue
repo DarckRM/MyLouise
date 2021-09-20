@@ -1,5 +1,6 @@
 <template>
     <n-menu
+    @update:value="menuClick"
     :options="menuOptions"
     :root-indent="36"
     :indent="12"
@@ -13,16 +14,22 @@ import {
   BookOutline as BookIcon,
   PersonOutline as PersonIcon,
   WineOutline as WineIcon,
-  CogOutline as CogIcon
+  CogOutline as CogIcon,
+  HardwareChipOutline as ChipIcon,
+  HomeOutline as HomeIcon
 } from '@vicons/ionicons5'
 import  { useMessage, NIcon } from 'naive-ui'
+import { router } from '../../router'
 
 export default defineComponent({
   setup () {
     const message = useMessage()
     return {
       menuOptions,
-      defaultExpandedKeys: ['louise-sys', 'saito-sys']
+      defaultExpandedKeys: ['louise-sys', 'saito-sys'],
+      menuClick(menu) {
+         router.push('/home/' + menu)
+      }
     }
   }
 })
@@ -33,9 +40,14 @@ function renderIcon (icon) {
 
 const menuOptions = [
   {
-    label: '系统配置',
-    key: 'louise-config',
-    icon: renderIcon(CogIcon)
+    label: '主页',
+    key: 'index',
+    icon: renderIcon(HomeIcon)
+  },
+  {
+    label: '配置信息',
+    key: 'config-info',
+    icon: renderIcon(ChipIcon)
   },
   {
     

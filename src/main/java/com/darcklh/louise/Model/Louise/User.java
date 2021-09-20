@@ -1,4 +1,4 @@
-package com.darcklh.louise.Model;
+package com.darcklh.louise.Model.Louise;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
@@ -22,5 +22,7 @@ public class User {
     private Integer count_setu;
     private Integer count_upload;
     private Integer isEnabled;
+    private Integer credit;
+    private Integer credit_buff;
 
 }

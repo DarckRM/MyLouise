@@ -7,8 +7,7 @@ import LoginPage from './components/LoginPage.vue';
 
 <template>
 <n-message-provider>
-<router-view>
-</router-view>
+<router-view></router-view>
 </n-message-provider>
 
 </template>
@@ -16,7 +15,7 @@ import LoginPage from './components/LoginPage.vue';
 <style>
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: v-sans, v-mono, other-fallbacks;;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;

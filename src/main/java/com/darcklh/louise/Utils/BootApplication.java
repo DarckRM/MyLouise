@@ -1,11 +1,9 @@
 package com.darcklh.louise.Utils;
 
-import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
-import com.darcklh.louise.Mapper.PluginDao;
-import com.darcklh.louise.Model.Plugin;
+import com.darcklh.louise.Mapper.PluginInfoDao;
+import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
-import com.darcklh.louise.Service.PluginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 
 import javax.annotation.PostConstruct;
-import java.net.ConnectException;
 import java.util.List;
 
 @Component
@@ -23,10 +20,8 @@ public class BootApplication {
     @Autowired
     PluginManager pluginManager;
 
-    List<PluginService> pluginServiceList;
-
     @Autowired
-    PluginDao pluginDao;
+    PluginInfoDao pluginInfoDao;
 
     @Autowired
     LouiseConfig louiseConfig;
@@ -34,16 +29,16 @@ public class BootApplication {
     @PostConstruct
     public void run() {
         logger.info("<--加载MyLouise插件-->");
-        List<Plugin> plugins = pluginDao.selectList(null);
-        if (plugins == null) {
+        List<PluginInfo> pluginInfos = pluginInfoDao.selectList(null);
+        if (pluginInfos == null) {
             logger.info("MyLouise未安装插件");
             return;
         }
         int i = 0;
         try {
-            pluginManager.loadPlugins(plugins);
-            for (Plugin plugin: plugins) {
-                logger.info("加载插件 <--" + plugin.getName() + "---" + plugin.getAuthor() +"-- >");
+            pluginManager.loadPlugins(pluginInfos);
+            for (PluginInfo pluginInfo : pluginInfos) {
+                logger.info("加载插件 <--" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"-- >");
                 i++;
             }
         } catch (Exception e) {

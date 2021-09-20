@@ -1,5 +1,6 @@
-package com.darcklh.louise.Model;
+package com.darcklh.louise.Model.Louise;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 /**
@@ -9,6 +10,8 @@ import lombok.Data;
  */
 @Data
 public class UploadInfo {
+
+    @TableId
     private String id;
     private String user_id;
     private String file_name;
@@ -16,4 +19,5 @@ public class UploadInfo {
     private Integer file_size;
     private String file_info;
     private String password;
+
 }

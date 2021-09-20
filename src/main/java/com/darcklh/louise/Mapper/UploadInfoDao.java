@@ -1,9 +1,8 @@
 package com.darcklh.louise.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.darcklh.louise.Model.UploadInfo;
+import com.darcklh.louise.Model.Louise.UploadInfo;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
 /**
  * @author DarckLH

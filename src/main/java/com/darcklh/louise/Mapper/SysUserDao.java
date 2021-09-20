@@ -2,7 +2,7 @@ package com.darcklh.louise.Mapper;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.darcklh.louise.Model.SysUser;
+import com.darcklh.louise.Model.Saito.SysUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
