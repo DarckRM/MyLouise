@@ -4,8 +4,11 @@
         <img style="width: 150px" alt="Vue logo" src="../assets/logo.png">
         MyLouise Backfront Alpha
     </div>
+
         <n-divider />
-        <n-card v-bind:title="loginPageTitle">
+        <n-card v-bind:title="loginPageTitle" id="loginCard">
+        <n-tabs default-value='signin'>
+            <n-tab-pane name="signin" tab='登录'>
             <n-form :model="loginForm">    
                 <n-form-item>
                     <n-input
@@ -23,14 +26,20 @@
                     />
                 </n-form-item>
             </n-form>
-            <n-button>Sign in</n-button>
-            <n-button @click="signUp()" type="primary">Sign up</n-button>
+            <n-button>Reset</n-button>
+            <n-button @click="signUp()" type="primary">Confirm</n-button>
+            </n-tab-pane>
+            <n-tab-pane name="signup" tab="注册">
+            <n-button>Reset</n-button>
+            <n-button @click="signUp()" type="primary">Confirm</n-button>
+            </n-tab-pane>
+        </n-tabs>
         </n-card>
     </div>
 </template>
 
 <style>
-.n-card {
+#loginCard {
   max-width: 300px;
   margin: 50px auto;
 }
@@ -58,7 +67,7 @@
     },
     data() {
         return {
-            loginPageTitle: "Login",
+            loginPageTitle: "十年饮冰 难凉热血",
             loginForm: {
                 username: "",
                 password: ""
@@ -79,7 +88,7 @@
                     window.$message.destroyAll()
                     window.$message.success('登录成功')
                     router.push({
-                        path: '/home'
+                        path: '/home/index'
                     })
                 } else if(data.code == 403) {
                     window.$message.destroyAll()

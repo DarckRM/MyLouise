@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import router from './router'
+import 'vfonts/Lato.css'
 import App from './App.vue' 
 import {
         create,
@@ -27,7 +28,16 @@ import {
         NLayoutSider,
         NMenu,
         NIcon,
-        NText
+        NText,
+        NPopover,
+        NH1,
+        NH2,
+        NH3,
+        NH4,
+        NH5,
+        NTabs,
+        NTabPane,
+        NResult
 } from 'naive-ui'
 const naive = create({
     components: [
@@ -55,7 +65,16 @@ const naive = create({
         NLayoutSider,
         NMenu,
         NIcon,
-        NText
+        NText,
+        NPopover,
+        NH1,
+        NH2,
+        NH3,
+        NH4,
+        NH5,
+        NTabs,
+        NTabPane,
+        NResult
     ]
 })
 const app = createApp(App)

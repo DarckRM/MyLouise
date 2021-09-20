@@ -8,14 +8,14 @@
             <Top style="width: 100%; margin: 35px 240px" ></Top>
         </n-layout-header>
         <n-layout has-sider>
-        <n-layout-sider bordered content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80" :width="280" show-trigger="bar">
+        <n-layout-sider bordered content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80" :width="280" show-trigger="arrow-circle">            
             <Menu></Menu>
         </n-layout-sider>
         <n-layout-content content-style="padding: 24px;">
-            <Header></Header>
+            <router-view>
+            </router-view>
         </n-layout-content>
         </n-layout>
-        <n-layout-footer bordered>成府路</n-layout-footer>
     </div>
 
 </template>
@@ -42,4 +42,5 @@ export default defineComponent({
 #homeDiv {
     height: 100%;
 }
+
 </style>

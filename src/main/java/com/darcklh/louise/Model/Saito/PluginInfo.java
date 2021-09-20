@@ -1,4 +1,4 @@
-package com.darcklh.louise.Model;
+package com.darcklh.louise.Model.Saito;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,19 +16,20 @@ import java.util.List;
  */
 @Data
 @Component
-public class Plugin {
+public class PluginInfo {
 
     @TableField(exist = false)
     PluginService pluginServices;
 
     @TableId
-    private Integer id;
+    private Integer plugin_id;
     private String author;
     private String name;
     private String path;
     private String class_name;
     private Timestamp create_time;
-    private Integer isEnabled;
+    private Integer is_enabled;
     private String info;
+    private String description;
 
 }

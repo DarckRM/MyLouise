@@ -1,6 +1,6 @@
 package com.darcklh.louise.Utils;
 
-import com.darcklh.louise.Model.Plugin;
+import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Service.PluginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,22 +19,22 @@ public class PluginManager {
 
     Logger logger = LoggerFactory.getLogger(PluginManager.class);
 
-    public List<Plugin> plugins;
+    public List<PluginInfo> pluginInfos;
 
     private URLClassLoader urlClassLoader;
 
-    public void loadPlugins(List<Plugin> plugins) throws MalformedURLException {
-        this.plugins = plugins;
-        init(plugins);
+    public void loadPlugins(List<PluginInfo> pluginInfos) throws MalformedURLException {
+        this.pluginInfos = pluginInfos;
+        init(pluginInfos);
     }
 
-    private void init(List<Plugin> plugins) throws MalformedURLException {
-        int size = plugins.size();
+    private void init(List<PluginInfo> pluginInfos) throws MalformedURLException {
+        int size = pluginInfos.size();
         URL[] urls = new URL[size];
 
         for (int i = 0; i < size; i++) {
-            Plugin plugin = plugins.get(i);
-            String filePath = plugin.getPath();
+            PluginInfo pluginInfo = pluginInfos.get(i);
+            String filePath = pluginInfo.getPath();
             urls[i] = new URL("jar:file:" +filePath+ "!/");
         }
 

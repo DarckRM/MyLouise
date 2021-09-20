@@ -1,4 +1,4 @@
-package com.darcklh.louise.Model;
+package com.darcklh.louise.Model.Saito;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;

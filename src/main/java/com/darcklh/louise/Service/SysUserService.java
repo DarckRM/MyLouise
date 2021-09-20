@@ -1,8 +1,7 @@
 package com.darcklh.louise.Service;
 
 import com.darcklh.louise.Model.Result;
-import com.darcklh.louise.Model.SysUser;
-import org.springframework.stereotype.Service;
+import com.darcklh.louise.Model.Saito.SysUser;
 
 import java.util.List;
 

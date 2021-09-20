@@ -2,13 +2,12 @@ package com.darcklh.louise.Service.Impl;
 
 import com.darcklh.louise.Mapper.SysUserDao;
 import com.darcklh.louise.Model.Result;
-import com.darcklh.louise.Model.SysUser;
+import com.darcklh.louise.Model.Saito.SysUser;
 import com.darcklh.louise.Service.SysUserService;
 import com.darcklh.louise.Utils.isEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.print.DocFlavor;
 import java.util.List;
 
 /**

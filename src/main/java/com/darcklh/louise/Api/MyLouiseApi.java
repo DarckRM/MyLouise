@@ -2,7 +2,7 @@ package com.darcklh.louise.Api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
-import com.darcklh.louise.Model.Plugin;
+import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Service.SearchPictureApi;
 import com.darcklh.louise.Service.SendPictureApi;
@@ -22,7 +22,7 @@ public class MyLouiseApi implements ErrorController {
     Logger logger = LoggerFactory.getLogger(MyLouiseApi.class);
 
     @Autowired
-    List<Plugin> pluginList;
+    List<PluginInfo> pluginInfoList;
 
     @Autowired
     private SendPictureApi sendPictureApi;
