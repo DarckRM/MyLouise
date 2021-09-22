@@ -37,7 +37,10 @@ import {
         NH5,
         NTabs,
         NTabPane,
-        NResult
+        NResult,
+        NAlert,
+        NDataTable,
+        NSwitch
 } from 'naive-ui'
 const naive = create({
     components: [
@@ -74,7 +77,11 @@ const naive = create({
         NH5,
         NTabs,
         NTabPane,
-        NResult
+        NResult,
+        NAlert,
+        NDataTable,
+        NSwitch
+
     ]
 })
 const app = createApp(App)

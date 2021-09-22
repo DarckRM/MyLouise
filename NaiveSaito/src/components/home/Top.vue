@@ -1,4 +1,8 @@
 <template>
+    <div style="width: 200px; margin: 15px 0 15px 30px">
+        <img style="width: 60px;" alt="Vue logo" src="../../assets/logo.png">
+        <span>MyLouise V1.6</span>
+    </div>
 </template>
 
 <script>

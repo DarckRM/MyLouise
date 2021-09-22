@@ -25,7 +25,8 @@ public class SysConfigImpl implements SysConfigService {
         int x = 0;
         switch (type) {
             case "louise": x = 0; break;
-            case "saito": x = 1; break;
+            case "bot": x = 1; break;
+            case "api": x = 2; break;
         }
         List<SysConfig> sysConfigs = sysConfigDao.findSysConfigByType(x);
         return sysConfigs;

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author DarckLH
  * @date 2021/9/8 18:42
@@ -22,6 +24,8 @@ public class SaitoController {
     @Autowired
     SysUserService sysUserService;
 
+    @Autowired
+    List<PluginService> pluginServices;
 
     @Autowired
     PluginManager pluginManager;
@@ -34,11 +38,13 @@ public class SaitoController {
         return result;
     }
 
-    @RequestMapping("test")
-    public void test() {
+    @RequestMapping("plugin-init")
+    public void PluginInit(Integer number) {
         try {
-            PluginService pluginService = pluginManager.getInstance(pluginManager.pluginInfos.get(1).getClass_name());
-            pluginService.service();
+            for (int i = 0; i < number; i++) {
+                pluginServices.add(pluginManager.getInstance(pluginManager.pluginInfos.get(i).getClass_name()));
+                pluginServices.get(i).service();
+            }
         } catch (Exception e) {
 
         }

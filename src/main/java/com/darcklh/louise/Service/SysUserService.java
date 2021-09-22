@@ -14,6 +14,7 @@ public interface SysUserService {
 
     public Result<SysUser> Login(SysUser sysUser);
     public SysUser findUserByNickname(String nickname);
+    public List<SysUser> findAll();
     public List<SysUser> SelectOne(SysUser sysUser);
 
 }

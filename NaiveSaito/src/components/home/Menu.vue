@@ -12,11 +12,12 @@
 import { defineComponent, h } from 'vue'
 import {
   BookOutline as BookIcon,
+  PeopleOutline as PeopleIcon,
   PersonOutline as PersonIcon,
-  WineOutline as WineIcon,
   CogOutline as CogIcon,
   HardwareChipOutline as ChipIcon,
-  HomeOutline as HomeIcon
+  HomeOutline as HomeIcon,
+  Cube as CubeIcon
 } from '@vicons/ionicons5'
 import  { useMessage, NIcon } from 'naive-ui'
 import { router } from '../../router'
@@ -53,14 +54,17 @@ const menuOptions = [
     
     label: 'Louise系统',
     key: 'louise-sys',
-    icon: renderIcon(BookIcon),
+    icon: renderIcon(CubeIcon),
     children: [
         {
-            type: 'group',
-            label: '基础项',
-            key: 'louise-basic',
-            children: [
-            ]
+            label: '个人管理',
+            key: 'user-manage',
+            icon: renderIcon(PersonIcon)
+        },
+        {
+            label: '群组管理',
+            key: 'config-info',
+            icon: renderIcon(PeopleIcon)
         }
     ]
   },

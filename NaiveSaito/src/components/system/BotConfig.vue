@@ -16,7 +16,7 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
 
-    name: 'LouiseConfig',
+    name: 'BotConfig',
 
     setup() {
         const message = useMessage()
@@ -25,7 +25,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.$axios.post('sys-config/louise').then(result => {
+        this.$axios.post('sys-config/bot').then(result => {
             
             this.configs = result.data.datas
 
@@ -34,11 +34,6 @@ export default defineComponent({
     data() {
         return {
             configs: ''
-        }
-    },
-    methods: {
-        updateConfig() {
-            
         }
     }
 
