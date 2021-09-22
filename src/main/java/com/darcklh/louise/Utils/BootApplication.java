@@ -1,6 +1,7 @@
 package com.darcklh.louise.Utils;
 
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Controller.SaitoController;
 import com.darcklh.louise.Mapper.PluginInfoDao;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
@@ -26,6 +27,9 @@ public class BootApplication {
     @Autowired
     LouiseConfig louiseConfig;
 
+    @Autowired
+    SaitoController saitoController;
+
     @PostConstruct
     public void run() {
         logger.info("<--加载MyLouise插件-->");
@@ -41,6 +45,7 @@ public class BootApplication {
                 logger.info("加载插件 <--" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"-- >");
                 i++;
             }
+            saitoController.PluginInit(i);
         } catch (Exception e) {
             logger.info("加载插件失败: " + e.getMessage());
         }

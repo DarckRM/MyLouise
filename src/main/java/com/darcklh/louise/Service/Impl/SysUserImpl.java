@@ -21,6 +21,10 @@ public class SysUserImpl implements SysUserService {
     @Autowired
     SysUserDao sysUserDao;
 
+    public List<SysUser> findAll() {
+        return sysUserDao.selectList(null);
+    }
+
     public Result<SysUser> Login(SysUser sysUser) {
 
         Result<SysUser> result = new Result<SysUser>();

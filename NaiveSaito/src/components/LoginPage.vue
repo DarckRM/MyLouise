@@ -63,11 +63,14 @@
 
     name: 'LoginPage',
     setup() {
-        window.$message = useMessage()
+        const message = useMessage()
+        return {
+            message
+        }
     },
     data() {
         return {
-            loginPageTitle: "十年饮冰 难凉热血",
+            loginPageTitle: "TECH OTAKU SAVE THE WORLD",
             loginForm: {
                 username: "",
                 password: ""
@@ -80,22 +83,22 @@
     },
     methods: {
         signUp() {
-            window.$message.loading("登录中")
+            this.message.loading("登录中")
             this.loginPageTitle = "Sign Up"
             this.$axios.post('login', this.loginForm).then(result => {
                 let data = result.data
                 if(data.code == 200) {
-                    window.$message.destroyAll()
-                    window.$message.success('登录成功')
+                    this.message.destroyAll()
+                    this.message.success('登录成功')
                     router.push({
                         path: '/home/index'
                     })
                 } else if(data.code == 403) {
-                    window.$message.destroyAll()
-                    window.$message.warning('用户已被禁用')
+                    this.message.destroyAll()
+                    this.message.warning('用户已被禁用')
                 } else {
-                    window.$message.destroyAll()
-                    window.$message.error('用户名或密码错误')
+                    this.message.destroyAll()
+                    this.message.error('用户名或密码错误')
                 }
             })
         }

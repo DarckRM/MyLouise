@@ -1,5 +1,5 @@
 <template>
-    <n-divider title-placement="left" >基础配置</n-divider>
+    <n-divider title-placement="left" >SourceNAO配置</n-divider>
     <n-form>
         <n-form-item :label="config.info" v-for="config in configs" :key="config.config_id">
             <n-input :value="config.config_value"></n-input>
@@ -16,7 +16,7 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
 
-    name: 'LouiseConfig',
+    name: 'APIConfig',
 
     setup() {
         const message = useMessage()
@@ -25,7 +25,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.$axios.post('sys-config/louise').then(result => {
+        this.$axios.post('sys-config/api').then(result => {
             
             this.configs = result.data.datas
 
@@ -34,11 +34,6 @@ export default defineComponent({
     data() {
         return {
             configs: ''
-        }
-    },
-    methods: {
-        updateConfig() {
-            
         }
     }
 

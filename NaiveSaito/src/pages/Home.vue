@@ -1,20 +1,18 @@
 <template>
-    <div id="homeDiv">
-        <n-layout-header bordered style="padding: 0 30px; height: 110px">
-            <div style="width: 200px; margin: 15px 0 15px 30px; position: absolute">
-                <img style="width: 60px;" alt="Vue logo" src="../assets/logo.png">
-                <span>MyLouise V1.6</span>
-            </div>
-            <Top style="width: 100%; margin: 35px 240px" ></Top>
-        </n-layout-header>
-        <n-layout has-sider>
-        <n-layout-sider bordered content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80" :width="280" show-trigger="arrow-circle">            
-            <Menu></Menu>
-        </n-layout-sider>
-        <n-layout-content content-style="padding: 24px;">
-            <router-view>
-            </router-view>
-        </n-layout-content>
+    <div id="homeDiv" style="height: auto">
+        <n-layout postion="absolute">
+            <n-layout-header bordered style="padding: 0 30px; height: 80px;">
+                <Top></Top>
+            </n-layout-header>
+            <n-layout has-sider style="height: 600px">
+                <n-layout-sider bordered content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80" :width="280" show-trigger="arrow-circle">            
+                    <Menu></Menu>
+                </n-layout-sider>
+                <n-layout content-style="padding: 24px;" :native-scrollbar="false">
+                    <router-view>
+                    </router-view>
+                </n-layout>
+            </n-layout>
         </n-layout>
     </div>
 
@@ -39,8 +37,5 @@ export default defineComponent({
 </script>
 
 <style>
-#homeDiv {
-    height: 100%;
-}
 
 </style>

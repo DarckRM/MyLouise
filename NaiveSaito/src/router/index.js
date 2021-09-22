@@ -13,7 +13,11 @@ const routes = [
             {
                 path: 'config-info',
                 component: () => import('../pages/ConfigInfo.vue')
-        } 
+            },
+            {
+                path: 'user-manage',
+                component: () => import('../pages/louise/UserManagement.vue')
+            } 
         ]
     },
     {
