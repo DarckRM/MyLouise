@@ -21,7 +21,7 @@ public class HandlerConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(louiseHandler).addPathPatterns("/**").excludePathPatterns("/saito/**", "/error", "/static/**", "/favicon.ico");
+        registry.addInterceptor(louiseHandler).addPathPatterns("/**").excludePathPatterns("/saito/**", "/error", "/static/**", "/favicon.ico", "/saito_ws/**");
     }
 
 
