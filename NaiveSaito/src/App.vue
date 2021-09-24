@@ -9,7 +9,6 @@ import LoginPage from './components/LoginPage.vue';
 <n-message-provider>
 <router-view></router-view>
 </n-message-provider>
-
 </template>
 
 <style>
@@ -19,6 +18,7 @@ import LoginPage from './components/LoginPage.vue';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  height: 100%;
 }
 
 </style>

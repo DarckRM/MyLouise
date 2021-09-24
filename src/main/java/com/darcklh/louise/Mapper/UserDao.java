@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author DarckLH
@@ -13,6 +14,7 @@ import org.apache.ibatis.annotations.Update;
  * @Description
  */
 @Mapper
+@Repository
 public interface UserDao extends BaseMapper<User> {
 
     //重写一下这个 涉及到获取创建时间丢到SQL里简单一些

@@ -4,8 +4,8 @@
             <n-layout-header bordered style="padding: 0 30px; height: 80px;">
                 <Top></Top>
             </n-layout-header>
-            <n-layout has-sider style="height: 600px">
-                <n-layout-sider bordered content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80" :width="280" show-trigger="arrow-circle">            
+            <n-layout has-sider>
+                <n-layout-sider bordered content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80" :width="280" show-trigger="bar">            
                     <Menu></Menu>
                 </n-layout-sider>
                 <n-layout content-style="padding: 24px;" :native-scrollbar="false">

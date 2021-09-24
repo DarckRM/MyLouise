@@ -8,7 +8,7 @@ const routes = [
         children: [
             {
                 path: 'index',
-                component: () => import('../components/home/Header.vue')
+                component: () => import('../pages/StatusPanel.vue')
             },
             {
                 path: 'config-info',

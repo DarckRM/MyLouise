@@ -56,6 +56,9 @@ public class UserImpl implements UserService {
         user.setGroup_id(group_id);
         user.setUser_id(user_id);
         user.setNickname(result.getString("nickname"));
+        user.setAvatar("https://q1.qlogo.cn/g?b=qq&nk=" + user_id + "&s=640");
+        user.setCredit(10000);
+        user.setCredit_buff(0);
         user.setCount_setu(0);
         user.setCount_upload(0);
         //TODO 没搞懂腾讯返回的时间格式 日后再搞
@@ -114,21 +117,23 @@ public class UserImpl implements UserService {
     }
 
     public String banUser(String user_id) {
-        String reply = isUserEnabled(user_id) ? "用户"+user_id+"已暂时烟了" : "用户"+user_id+"已解封";
-        userDao.banUser(user_id);
+        String reply = "变更状态失败";
+        if (userDao.banUser(user_id) == 1) {
+            reply = isUserEnabled(user_id) ? "用户"+user_id+"已解封" : "用户"+user_id+"已暂时烟了";
+        }
         return reply;
     }
 
     public boolean isUserExist(String user_id) {
         //判断用户是否已注册
-        if (0 == userDao.isUserExist(user_id))
+        if (userDao.isUserExist(user_id) == 0)
             return false;
         return true;
     }
 
     public boolean isUserEnabled(String user_id) {
         //判断用户是否启用
-        if (0 >= userDao.isUserEnabled(user_id))
+        if (userDao.isUserEnabled(user_id) <= 0)
             return false;
         return true;
     }

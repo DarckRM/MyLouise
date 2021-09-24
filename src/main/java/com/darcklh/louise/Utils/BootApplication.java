@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 
 import javax.annotation.PostConstruct;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -30,8 +32,14 @@ public class BootApplication {
     @Autowired
     SaitoController saitoController;
 
+    public static Date bootDate;
+
     @PostConstruct
     public void run() {
+
+        //获取系统启动时间
+        bootDate = new Date();// 获取当前时间
+
         logger.info("<--加载MyLouise插件-->");
         List<PluginInfo> pluginInfos = pluginInfoDao.selectList(null);
         if (pluginInfos == null) {

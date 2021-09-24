@@ -16,6 +16,7 @@ public class User {
     @TableId
     private String user_id;
     private String group_id;
+    private String avatar;
     private String nickname;
     private Timestamp join_time;
     private Timestamp create_time;

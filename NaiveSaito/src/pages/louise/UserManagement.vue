@@ -17,23 +17,94 @@
 </div>
 <n-divider />
 <n-card title="用户列表">
-    <n-data-table :columns="columns" :data="userList" :pagination="pagination" />
+    <n-data-table :columns="columns" :data="userList" :pagination="pagination" :row-key="row => row.user_id" @update:checked-row-keys="handleCheck" />
 </n-card>
 </template>
 
 <script>
-import { defineComponent, reactive, h } from 'vue'
+import { defineComponent, reactive, h, ref } from 'vue'
 import { router } from '../../router'
+import { NButton, useMessage } from 'naive-ui'
+import UserCard from '../../components/UserCard.vue'
+import axios from '../../utils/request'
 import {
     AlertCircleOutline as AlertIcon,
     HelpCircleOutline as HelpIcon
 } from '@vicons/ionicons5'
-import { NSwitch } from 'naive-ui'
+
+const creatColumns = ({ popMessage }) => {
+
+    return [
+    {
+        type: 'selection'
+    },
+    {
+        type: 'expand',
+        renderExpand: (rowData) => {
+            return h(
+                UserCard,
+                {
+                    avatar: rowData.avatar,
+                    credit: rowData.credit,
+                    credit_buff: rowData.credit_buff,
+                    invoke_count: rowData.count_setu
+                }
+            )
+        }
+    },
+    {
+        title: 'QQ',
+        key: 'user_id',
+        width: 200,
+        ellipsis: true
+    },
+    {
+        title: '昵称',
+        key: 'nickname',
+        width: 300,
+        ellipsis: true
+    },
+    {
+        title: '创建时间',
+        key: 'create_time',
+        ellipsis: true
+    },
+    {
+        title: '状态',
+        key: 'isEnabled',
+        render(row) {
+            return h(
+                NButton,
+                {
+                    circle: true,
+                    style: 'margin: 0; width: 80px',
+                    type: row.isEnabled == 1 ? 'primary' : 'error',
+                    ghost: row.isEnabled == 1 ? true : false,
+                    onClick() {
+                        
+                        axios.post('user/switchStatus', row).then(result => {
+                            let msg = result.data.msg
+                            //let code = result.data.code
+                            row.isEnabled = -row.isEnabled
+                            popMessage(msg, row.isEnabled)
+                        })
+                    }
+                },
+                {
+                    default: () => row.isEnabled == 1 ? '良好' : '禁用'
+                }
+            )
+        },
+    }
+    ]
+}
 
 export default defineComponent({
     setup() {
+        const checkedRowKeysRef = ref([])
+        const message = useMessage()
         const paginationReactive = reactive({
-                page: 2,
+                page: 1,
                 pageSize: 5,
                 showSizePicker: true,
                 pageSizes: [3, 5, 7],
@@ -45,45 +116,27 @@ export default defineComponent({
                     paginationReactive.page = 1
             }
         })
-    return {
-        pagination: paginationReactive,
-        switchStatus (row) {
-            row.isEnabled = !row.isEnabled
-            console.log("切换咯")
+        return {
+            pagination: paginationReactive,
+            columns: creatColumns({
+                popMessage (msg, type) {
+                    if(type == 1) {
+                        message.success(msg)
+                    } else {
+                        message.warning(msg)
+                    }
+                    
+                }
+            }),
+            checkedRowKeys: checkedRowKeysRef,
+            handleCheck(rowKeys) {
+                checkedRowKeysRef.value = rowKeys
+            }
         }
-    }
-        
     },
     data() {
         return {
-            userList: [],
-            columns: [
-            {
-                title: 'QQ',
-                key: 'user_id'
-            },
-            {
-                title: '昵称',
-                key: 'nickname'
-            },
-            {
-                title: '创建时间',
-                key: 'create_time'
-            },
-            {
-                title: '启用/禁用',
-                key: 'isEnabled',
-                render(row) {
-                    return h(
-                        NSwitch,
-                        {
-                            value: row.isEnabled == 1 ? true : false,
-                            onUpdateValue: () => switchStatus(row)
-                        }
-                    )
-                },
-            }
-            ]
+            userList: []
         }
     },
     mounted() {
