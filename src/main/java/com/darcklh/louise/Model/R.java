@@ -2,7 +2,6 @@ package com.darcklh.louise.Model;
 
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
-import com.darcklh.louise.Service.FileControlApi;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * 和Cqhttp通信的实体
@@ -58,6 +51,20 @@ public class R {
         //让Bot发送信息
         logger.info("发送报文: " + sendJson);
         return restTemplate.postForObject("http://localhost:5700/send_msg", cqhttp, String.class);
+    }
+
+    /**
+     * 根据参数请求cqhttp接口
+     * @param api
+     * @return
+     */
+    public JSONObject requestAPI(String api) {
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> cqhttp = new HttpEntity<>(headers);
+        //开始请求
+        logger.info("请求接口: " + api);
+        return restTemplate.postForObject("http://127.0.0.1:5700/" + api, cqhttp, JSONObject.class);
     }
 
     /**

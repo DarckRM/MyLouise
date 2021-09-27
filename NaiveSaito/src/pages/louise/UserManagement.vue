@@ -47,7 +47,8 @@ const creatColumns = ({ popMessage }) => {
                     avatar: rowData.avatar,
                     credit: rowData.credit,
                     credit_buff: rowData.credit_buff,
-                    invoke_count: rowData.count_setu
+                    invoke_count: rowData.count_setu,
+                    hoverable: true
                 }
             )
         }
