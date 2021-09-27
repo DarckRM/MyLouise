@@ -1,6 +1,7 @@
 package com.darcklh.louise.Controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Service.WebSocketService;
 import com.darcklh.louise.Utils.BootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -22,7 +23,7 @@ import java.text.SimpleDateFormat;
 public class WebSocketController {
 
     /**
-     * 检查各系统运行状况
+     * 心跳检测 检查各系统运行状况
      */
     @GetMapping("/system_check")
     @Scheduled(cron = "*/5 * * * * *")
@@ -31,8 +32,7 @@ public class WebSocketController {
         SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
         sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
         jsonObject.put("bootTime", sdf.format(BootApplication.bootDate));
-        System.out.println("系统启动时间: " + sdf.format(BootApplication.bootDate));
-        WebSocketService.sendMessage("badao",jsonObject.toString());
+        WebSocketService.sendMessage("status_conn",jsonObject.toString());
     }
 
 }

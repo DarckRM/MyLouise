@@ -8,7 +8,16 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
+    props: {
+        client_name: ''
+    },
     name: 'WebSocket',
+    setup(props) {
+        const client_name = props.client_name
+        return {
+            client_name
+        }
+    },
     data() {
         
         return {
@@ -21,7 +30,7 @@ export default defineComponent({
             // 定义ws对象
             webSocket: null,
             // ws请求链接（类似于ws后台地址）
-            ws: '',
+            ws: 'ws://127.0.0.1:8099/saito_ws/' + this.client_name,
             // ws定时器
             wsTimer: null,
         }
@@ -42,8 +51,7 @@ export default defineComponent({
          * 初始化ws
          */
         wsInit() {
-            const wsuri = 'ws://127.0.0.1:8099/saito_ws/badao'
-            this.ws = wsuri
+            
             if (!this.wsIsRun) return
             // 销毁ws
             this.wsDestroy()

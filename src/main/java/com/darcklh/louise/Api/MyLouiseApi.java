@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
-import com.darcklh.louise.Service.SearchPictureApi;
-import com.darcklh.louise.Service.SendPictureApi;
 import com.darcklh.louise.Service.Impl.UserImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

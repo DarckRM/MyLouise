@@ -51,7 +51,7 @@
     </n-gi>
   </n-grid>
 </n-card>
-<WebSocket ref="webSocket"></WebSocket>
+<WebSocket ref="webSocket" client_name="status_conn"></WebSocket>
 </template>
 
 <script>
@@ -71,8 +71,9 @@ import {
         mounted() {
             this.nowTimes()
         },
-        beforeUnmount() {
-            this.clear()
+        unmounted() {
+          console.log("清除计时器")
+          this.clear()
         },
         data() {
             return {
@@ -96,8 +97,8 @@ import {
                 this.clear()
             },
             clear(){
-                clearInterval(this.nowTimes)
                 this.nowTimes = null
+                clearInterval(this.nowTimes)
             }
         }
     })

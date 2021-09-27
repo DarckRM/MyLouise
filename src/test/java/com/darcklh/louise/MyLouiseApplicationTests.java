@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Mapper.UploadInfoDao;
 import com.darcklh.louise.Mapper.UserDao;
+import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Utils.UniqueGenerator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,7 +35,6 @@ class MyLouiseApplicationTests {
 
     @Test
     void test() {
-        System.out.println(UniqueGenerator.uniqueThreadName("Darck", "Ascii2d"));
     }
 
 }
