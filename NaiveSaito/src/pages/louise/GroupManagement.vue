@@ -1,8 +1,8 @@
 <template>
 <div>
     <n-h1 prefix="bar" style="font-weight: 400; font-size: 32px">
-        用户管理
-    <span style="font-weight: 200; font-size: 16px">(User management)</span>
+        群组管理
+    <span style="font-weight: 200; font-size: 16px">(Group management)</span>
     <n-popover trigger="click">
         <template #trigger>
             <n-button text style="font-size: 26px">
@@ -11,21 +11,21 @@
                 </n-icon>
             </n-button>
         </template>
-        <p>可以对QQ用户进行一些基础管理</p>
+        <p>对已经注册的群组进行管理</p>
     </n-popover>
     </n-h1>
 </div>
 <n-divider />
-<n-card title="用户列表">
-    <n-data-table :columns="columns" :data="userList" :pagination="pagination" :row-key="row => row.user_id" @update:checked-row-keys="handleCheck" />
+<n-card title="功能列表">
+    <n-data-table :columns="columns" :data="dataList" :pagination="pagination" :row-key="row => row.group_id" @update:checked-row-keys="handleCheck" />
 </n-card>
 </template>
 
 <script>
 import { defineComponent, reactive, h, ref } from 'vue'
 import { router } from '../../router'
-import { NButton, useMessage, NTag } from 'naive-ui'
-import UserCard from '../../components/UserCard.vue'
+import { NButton, NTag, useMessage } from 'naive-ui'
+import GroupCard from '../../components/GroupCard.vue'
 import axios from '../../utils/request'
 import {
     AlertCircleOutline as AlertIcon,
@@ -36,18 +36,15 @@ const creatColumns = ({ popMessage }) => {
 
     return [
     {
-        type: 'selection'
+        type: 'selection',
     },
     {
         type: 'expand',
         renderExpand: (rowData) => {
             return h(
-                UserCard,
+                GroupCard,
                 {
-                    avatar: rowData.avatar,
-                    credit: rowData.credit,
-                    credit_buff: rowData.credit_buff,
-                    invoke_count: rowData.count_setu,
+                    data: rowData,
                     hoverable: true
                 }
             )
@@ -59,14 +56,14 @@ const creatColumns = ({ popMessage }) => {
         width: 0
     },
     {
-        title: 'QQ',
-        key: 'user_id',
+        title: '群号',
+        key: 'group_id',
         width: 200,
         ellipsis: true
     },
     {
-        title: '昵称',
-        key: 'nickname',
+        title: '群名',
+        key: 'group_name',
         width: 300,
         ellipsis: true
     },
@@ -86,9 +83,21 @@ const creatColumns = ({ popMessage }) => {
         }
     },
     {
-        title: '创建时间',
-        key: 'create_time',
+        title: '群备注',
+        key: 'group_memo',
+        width: 100,
         ellipsis: true
+    },
+    {
+        title: '群成员数量',
+        key: 'member_count',
+        width: 300,
+        ellipsis: true
+    },
+    {
+        title: '群等级',
+        width: 300,
+        key: 'group_level'
     },
     {
         title: '状态',
@@ -99,22 +108,24 @@ const creatColumns = ({ popMessage }) => {
                 {
                     circle: true,
                     style: 'margin: 0; width: 80px',
-                    type: row.isEnabled == 1 ? 'primary' : 'error',
-                    ghost: row.isEnabled == 1 ? true : false,
+                    type: row.is_enabled == 1 ? 'primary' : 'error',
+                    ghost: row.is_enabled == 1 ? true : false,
                     disabled: row.tag,
                     onClick() {
                         row.tag = true
-                        axios.post('user/switchStatus', row).then(result => {
+                        axios.post('group/switchStatus', row).then(result => {
                             let msg = result.data.msg
                             //let code = result.data.code
-                            row.isEnabled = -row.isEnabled
-                            popMessage(msg, row.isEnabled)
+                            if(result.data.code == 200) {
+                                row.is_enabled = -row.is_enabled
+                            }
+                            popMessage(msg, row.is_enabled)
                         })
                         row.tag = false
                     }
                 },
                 {
-                    default: () => row.isEnabled == 1 ? '良好' : '禁用'
+                    default: () => row.is_enabled == 1 ? '良好' : '禁用'
                 }
             )
         },
@@ -140,6 +151,7 @@ export default defineComponent({
             }
         })
         return {
+            tagA: false,
             pagination: paginationReactive,
             columns: creatColumns({
                 popMessage (msg, type) {
@@ -159,18 +171,17 @@ export default defineComponent({
     },
     data() {
         return {
-            userList: []
+            dataList: []
         }
     },
     mounted() {
-        this.$axios.post('user/findAll').then(result => {
-        this.userList = result.data.datas
+        this.$axios.post('group/findBy').then(result => {
+        this.dataList = result.data.datas
         })
     },
     components: {
         AlertIcon,
         HelpIcon,
-        NTag
     },
     methods: {
     }

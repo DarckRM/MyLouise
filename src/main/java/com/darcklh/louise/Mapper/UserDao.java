@@ -2,11 +2,14 @@ package com.darcklh.louise.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.darcklh.louise.Model.Louise.User;
+import com.darcklh.louise.Model.VO.UserRole;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author DarckLH
@@ -19,9 +22,12 @@ public interface UserDao extends BaseMapper<User> {
 
     //重写一下这个 涉及到获取创建时间丢到SQL里简单一些
     @Override
-    @Insert("INSERT INTO t_user (user_id, group_id, nickname, create_time, count_setu, count_upload) VALUES" +
-            "(#{user_id}, #{group_id}, #{nickname}, NOW(), #{count_setu}, #{count_upload})")
+    @Insert("INSERT INTO t_user (user_id, group_id, avatar, nickname, create_time, count_setu, count_upload, isenabled, credit, credit_buff) VALUES" +
+            "(#{user_id}, #{group_id}, #{avatar}, #{nickname}, NOW(), #{count_setu}, #{count_upload}, #{isEnabled}, #{credit}, #{credit_buff})")
     public int insert(User user);
+
+    @Select("SELECT *, role_name, info FROM t_user LEFT JOIN t_role ON t_role.role_id = t_user.role_id")
+    public List<UserRole> findBy();
 
     @Select("SELECT COUNT(user_id) FROM t_user WHERE user_id = #{user_id}")
     public Integer isUserExist(String user_id);

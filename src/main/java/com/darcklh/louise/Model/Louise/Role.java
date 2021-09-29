@@ -1,7 +1,12 @@
 package com.darcklh.louise.Model.Louise;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.darcklh.louise.Model.VO.FeatureInfoMin;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author DarckLH
@@ -11,9 +16,13 @@ import lombok.Data;
 @Data
 public class Role {
 
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer role_id;
     private String role_name;
     private String info;
+    private Integer is_enabled;
+    @TableField(exist = false)
+    private List<FeatureInfoMin> featureInfoList;
+
 
 }

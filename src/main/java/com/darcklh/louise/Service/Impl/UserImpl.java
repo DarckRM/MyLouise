@@ -2,8 +2,11 @@ package com.darcklh.louise.Service.Impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Mapper.RoleDao;
 import com.darcklh.louise.Mapper.UserDao;
+import com.darcklh.louise.Model.Louise.Role;
 import com.darcklh.louise.Model.Louise.User;
+import com.darcklh.louise.Model.VO.UserRole;
 import com.darcklh.louise.Service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +32,10 @@ public class UserImpl implements UserService {
     Logger logger = LoggerFactory.getLogger(UserImpl.class);
 
     @Autowired
-    public UserDao userDao;
+    UserDao userDao;
+
+    @Autowired
+    RoleDao roleDao;
 
     public JSONObject joinLouise(String user_id, String group_id) {
 
@@ -61,6 +67,7 @@ public class UserImpl implements UserService {
         user.setCredit_buff(0);
         user.setCount_setu(0);
         user.setCount_upload(0);
+        user.setIsEnabled(1);
         //TODO 没搞懂腾讯返回的时间格式 日后再搞
         //user.setJoin_time(result.getTimestamp("join_time"));
         try {
@@ -88,6 +95,7 @@ public class UserImpl implements UserService {
         JSONObject returnJson = new JSONObject();
 
         User user = userDao.selectById(user_id);
+        Role role = roleDao.selectById(user.getRole_id());
         if (isEmpty(user)) {
             returnJson.put("reply", "没有你的信息诶");
         } else {
@@ -96,8 +104,14 @@ public class UserImpl implements UserService {
             Integer count_setu = user.getCount_setu();
             Integer count_upload = user.getCount_upload();
             returnJson.put("reply", nickname + "，你的个人信息" +
-                    "\n总共请求涩图次数：" + count_setu +
-                    "\n总共上传文件次数：" +count_upload);
+                    "\n总共请求功能次数：" + count_setu +
+                    "\n总共上传文件次数：" + count_upload +
+                    "\n在露易丝这里注册的时间；" + create_time +
+                    "\n-----------DIVIDER LINE------------" +
+                    "\n你的权限级别：<" + role.getRole_name() + ">" +
+                    "\n剩余CREDIT：" + user.getCredit() +
+                    "\nCREDIT BUFF：" + user.getCredit_buff()
+            );
         }
         return returnJson;
     }
@@ -139,7 +153,7 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return userDao.selectList(null);
+    public List<UserRole> findAll() {
+        return userDao.findBy();
     }
 }

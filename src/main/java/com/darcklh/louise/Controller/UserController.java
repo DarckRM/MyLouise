@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Model.Louise.User;
 import com.darcklh.louise.Model.Result;
 import com.darcklh.louise.Model.Saito.SysUser;
+import com.darcklh.louise.Model.VO.UserRole;
 import com.darcklh.louise.Service.SysUserService;
 import com.darcklh.louise.Service.UserService;
 import com.darcklh.louise.Utils.isEmpty;
@@ -23,9 +24,9 @@ public class UserController {
     UserService userService;
 
     @RequestMapping("findAll")
-    public Result<User> findAll() {
-        Result<User> result = new Result<>();
-        List<User> userList = userService.findAll();
+    public Result<UserRole> findAll() {
+        Result<UserRole> result = new Result<>();
+        List<UserRole> userList = userService.findAll();
         if (isEmpty.isEmpty(userList)) {
             result.setCode(202);
             return result;
