@@ -1,5 +1,6 @@
 package com.darcklh.louise.Model.Louise;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
@@ -11,7 +12,7 @@ import lombok.Data;
 @Data
 public class UserCredit {
 
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer credit_id;
     private String user_id;
     private String type;

@@ -63,7 +63,7 @@ const menuOptions = [
         },
         {
             label: '群组管理',
-            key: 'config-info',
+            key: 'group-manage',
             icon: renderIcon(PeopleIcon)
         }
     ]
@@ -73,23 +73,16 @@ const menuOptions = [
     key: 'saito-sys',
     icon: renderIcon(BookIcon),
     children: [
-      {
-        type: 'group',
-        label: '基础项',
-        key: 'people',
-        children: [
-          {
-            label: '插件管理',
-            key: 'plugin-management',
-            icon: renderIcon(CogIcon)
-          },
-          {
-            label: '权限管理',
-            key: 'power-management',
-            icon: renderIcon(CogIcon)
-          },
-        ]
-      },
+        {
+          label: '功能信息',
+          key: 'feature-info',
+          icon: renderIcon(CogIcon)
+        },
+        {
+          label: '角色信息',
+          key: 'role-info',
+          icon: renderIcon(CogIcon)
+        },
     ]
   }
 ]

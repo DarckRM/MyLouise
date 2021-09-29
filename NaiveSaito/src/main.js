@@ -4,9 +4,12 @@ import 'vfonts/Lato.css'
 import App from './App.vue' 
 import {
         create,
+        NTransfer,
+        NModal,
         NCard,
         NButton,
         NInput,
+        NInputNumber,
         NForm,
         useMessage,
         NFormItem,
@@ -15,6 +18,7 @@ import {
         NStatistic,
         NGi,
         NGrid,
+        NImage,
         NBreadcrumb,
         NBreadcrumbItem,
         NAvatar,
@@ -40,13 +44,20 @@ import {
         NResult,
         NAlert,
         NDataTable,
-        NSwitch
+        NSwitch,
+        NRadioGroup,
+        NRadio,
+        NDescriptionsItem,
+        NDescriptions
 } from 'naive-ui'
 const naive = create({
     components: [
+        NTransfer,
+        NModal,
         NCard,
         NButton,
         NInput,
+        NInputNumber,
         NForm,
         useMessage,
         NFormItem,
@@ -55,6 +66,7 @@ const naive = create({
         NStatistic,
         NGi,
         NGrid,
+        NImage,
         NBreadcrumb,
         NBreadcrumbItem,
         NAvatar,
@@ -80,8 +92,11 @@ const naive = create({
         NResult,
         NAlert,
         NDataTable,
-        NSwitch
-
+        NSwitch,
+        NRadioGroup,
+        NRadio,
+        NDescriptionsItem,
+        NDescriptions
     ]
 })
 const app = createApp(App)

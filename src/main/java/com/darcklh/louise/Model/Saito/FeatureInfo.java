@@ -1,5 +1,6 @@
 package com.darcklh.louise.Model.Saito;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
@@ -11,9 +12,10 @@ import lombok.Data;
 @Data
 public class FeatureInfo {
 
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer feature_id;
     private Integer type;
+    private String feature_url;
     private String feature_name;
     private String feature_cmd;
     private Integer credit_cost;
@@ -22,5 +24,6 @@ public class FeatureInfo {
     private String info;
     private Integer is_original;
     private Integer is_enabled;
+    private String avatar;
 
 }

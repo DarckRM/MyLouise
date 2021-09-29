@@ -1,8 +1,8 @@
 <template>
 <div>
     <n-h1 prefix="bar" style="font-weight: 400; font-size: 32px">
-        用户管理
-    <span style="font-weight: 200; font-size: 16px">(User management)</span>
+        功能信息
+    <span style="font-weight: 200; font-size: 16px">(Feature info)</span>
     <n-popover trigger="click">
         <template #trigger>
             <n-button text style="font-size: 26px">
@@ -11,21 +11,30 @@
                 </n-icon>
             </n-button>
         </template>
-        <p>可以对QQ用户进行一些基础管理</p>
+        <p>已经注册可以管理的功能</p>
     </n-popover>
     </n-h1>
 </div>
 <n-divider />
-<n-card title="用户列表">
-    <n-data-table :columns="columns" :data="userList" :pagination="pagination" :row-key="row => row.user_id" @update:checked-row-keys="handleCheck" />
+<n-card title="功能列表">
+    <div>
+        <n-button ghost type="primary" size="large" style="margin: 0 10px 10px 0; width: 80px" @click="showModal = true">新增</n-button>
+        <n-button type="error" size="large" style="margin: 0 10px 10px 0; width: 80px">删除</n-button>
+    </div>
+    <n-data-table :columns="columns" :data="dataList" :pagination="pagination" :row-key="row => row.feature_id" @update:checked-row-keys="handleCheck" />
 </n-card>
+<n-modal v-model:show="showModal">
+    <n-card style="width: 1100px;" title="新增功能" :bordered="false" size="huge">
+        <FeatureCard type="save" :data="dataList" width="width: 1000px"/>
+    </n-card>
+</n-modal>
 </template>
 
 <script>
 import { defineComponent, reactive, h, ref } from 'vue'
 import { router } from '../../router'
-import { NButton, useMessage, NTag } from 'naive-ui'
-import UserCard from '../../components/UserCard.vue'
+import { NButton, NTag, useMessage } from 'naive-ui'
+import FeatureCard from '../../components/FeatureCard.vue'
 import axios from '../../utils/request'
 import {
     AlertCircleOutline as AlertIcon,
@@ -42,53 +51,53 @@ const creatColumns = ({ popMessage }) => {
         type: 'expand',
         renderExpand: (rowData) => {
             return h(
-                UserCard,
+                FeatureCard,
                 {
-                    avatar: rowData.avatar,
-                    credit: rowData.credit,
-                    credit_buff: rowData.credit_buff,
-                    invoke_count: rowData.count_setu,
+                    data: rowData,
+                    type: 'edit',
                     hoverable: true
                 }
             )
         }
     },
     {
-        key: 'tag',
-        value: false,
-        width: 0
-    },
-    {
-        title: 'QQ',
-        key: 'user_id',
+        title: '功能名称',
+        key: 'feature_name',
         width: 200,
         ellipsis: true
     },
     {
-        title: '昵称',
-        key: 'nickname',
+        title: '命令',
+        key: 'feature_cmd',
         width: 300,
         ellipsis: true
     },
     {
-        title: '角色',
-        key: 'role_name',
+        title: 'URL',
+        key: 'feature_url',
+        width: 300,
+        ellipsis: true
+    },
+    {
+        title: '描述',
+        key: 'description',
+        width: 300,
+        ellipsis: true
+    },
+    {
+        title: '功能来源',
+        key: 'is_original',
         render(row) {
             return h(
                 NTag,
                 {
-                    type: row.role_id == 1 ? 'primary' : 'info'
+                    type: row.is_original == 1 ? 'primary' : 'info'
                 },
                 {
-                    default: () => row.role_name
+                    default: () => row.is_original == 1 ? '源自系统' : '外部插件'
                 }
             )
         }
-    },
-    {
-        title: '创建时间',
-        key: 'create_time',
-        ellipsis: true
     },
     {
         title: '状态',
@@ -99,22 +108,20 @@ const creatColumns = ({ popMessage }) => {
                 {
                     circle: true,
                     style: 'margin: 0; width: 80px',
-                    type: row.isEnabled == 1 ? 'primary' : 'error',
-                    ghost: row.isEnabled == 1 ? true : false,
-                    disabled: row.tag,
+                    type: row.is_enabled == 1 ? 'primary' : 'error',
+                    ghost: row.is_enabled == 1 ? true : false,
                     onClick() {
-                        row.tag = true
-                        axios.post('user/switchStatus', row).then(result => {
+                        
+                        axios.post('feature-info/switchStatus', row).then(result => {
                             let msg = result.data.msg
                             //let code = result.data.code
-                            row.isEnabled = -row.isEnabled
-                            popMessage(msg, row.isEnabled)
+                            row.is_enabled = -row.is_enabled
+                            popMessage(msg, row.is_enabled)
                         })
-                        row.tag = false
                     }
                 },
                 {
-                    default: () => row.isEnabled == 1 ? '良好' : '禁用'
+                    default: () => row.is_enabled == 1 ? '良好' : '禁用'
                 }
             )
         },
@@ -140,6 +147,7 @@ export default defineComponent({
             }
         })
         return {
+            showModal: ref(false),
             pagination: paginationReactive,
             columns: creatColumns({
                 popMessage (msg, type) {
@@ -159,18 +167,18 @@ export default defineComponent({
     },
     data() {
         return {
-            userList: []
+            dataList: []
         }
     },
     mounted() {
-        this.$axios.post('user/findAll').then(result => {
-        this.userList = result.data.datas
+        this.$axios.post('feature-info/findBy').then(result => {
+        this.dataList = result.data.datas
         })
     },
     components: {
         AlertIcon,
         HelpIcon,
-        NTag
+        FeatureCard
     },
     methods: {
     }

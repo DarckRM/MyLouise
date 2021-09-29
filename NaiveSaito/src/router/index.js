@@ -17,6 +17,18 @@ const routes = [
             {
                 path: 'user-manage',
                 component: () => import('../pages/louise/UserManagement.vue')
+            },
+            {
+                path: 'group-manage',
+                component: () => import('../pages/louise/GroupManagement.vue')
+            },
+            {
+                path: 'feature-info',
+                component: () => import('../pages/saito/FeatureInfo.vue')
+            },
+            {
+                path: 'role-info',
+                component: () => import('../pages/saito/RoleInfo.vue')
             } 
         ]
     },
