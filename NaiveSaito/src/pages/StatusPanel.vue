@@ -32,6 +32,11 @@
     </n-gi>
     <n-gi>
         <n-card hoverable title="YUki 网关">
+            <div>
+                <n-text italic>由好友Remid开发的，基于Go的网关，实现Bot请求转发</n-text>
+            </div>
+            <n-h3 type="info" prefix="bar" style="display: inline">运行时间</n-h3><n-text style="margin-left: 10px">{{nowTime}}</n-text>
+            <n-h3 prefix="bar">运行中...</n-h3>
             <n-divider />
             <n-button ghost type="primary" style="margin: 0 20px 10px 0; width: 100px">重启</n-button>
             <n-button type="error" style="margin: 0 20px 0 0; width: 100px">终结</n-button>

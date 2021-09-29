@@ -63,6 +63,7 @@ public class UserImpl implements UserService {
         user.setUser_id(user_id);
         user.setNickname(result.getString("nickname"));
         user.setAvatar("https://q1.qlogo.cn/g?b=qq&nk=" + user_id + "&s=640");
+        user.setRole_id(2);
         user.setCredit(10000);
         user.setCredit_buff(0);
         user.setCount_setu(0);
