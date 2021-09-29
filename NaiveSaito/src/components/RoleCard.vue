@@ -86,6 +86,10 @@ export default defineComponent({
                 feature_name: '图片搜索',
                 feature_id: 5
             },
+            {
+                feature_name: '用户注册',
+                feature_id: 6
+            },
             ]
             return Array.apply(null, { length: temp.length }).map((v, i) => ({
                 label: temp[i].feature_name,

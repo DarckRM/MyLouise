@@ -1,5 +1,6 @@
 package com.darcklh.louise.Filter.Handler;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Mapper.FeatureInfoDao;
@@ -11,6 +12,7 @@ import com.darcklh.louise.Model.Louise.User;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.Saito.FeatureInfo;
 import com.darcklh.louise.Model.VO.FeatureInfoMin;
+import com.darcklh.louise.Service.FeatureInfoService;
 import com.darcklh.louise.Service.Impl.GroupImpl;
 import com.darcklh.louise.Service.Impl.UserImpl;
 import com.darcklh.louise.Utils.HttpServletWrapper;
@@ -56,6 +58,9 @@ public class LouiseHandler implements HandlerInterceptor {
     FeatureInfoDao featureInfoDao;
 
     @Autowired
+    FeatureInfoService featureInfoService;
+
+    @Autowired
     R r;
 
     @Override
@@ -79,75 +84,68 @@ public class LouiseHandler implements HandlerInterceptor {
         String group_id = jsonObject.getString("group_id");
         String user_id = jsonObject.getJSONObject("sender").getString("user_id");
         Integer role_id = 0;
-
-        //判断是否具有请求权限
-        if (!isEmpty.isEmpty(group_id)) {
-            Group group = groupDao.selectById(group_id);
-            role_id = group.getRole_id();
-            returnJson.put("reply", "当前群聊的权限不准用这个功能哦");
-        } else {
-            User user = userDao.selectById(user_id);
-            role_id = user.getRole_id();
-            returnJson.put("reply", "你的权限还不准用这个功能哦");
-        }
-        FeatureInfo featureInfo = featureInfoDao.findWithFeatureURL(command);
-
-        //判断功能是否启用
-        if (featureInfo.getIs_enabled()!=1) {
-            PrintWriter writer = response.getWriter();
-            logger.debug("功能未启用: " + group_id);
-            returnJson.put("reply", "功能<" + featureInfo.getFeature_name() + ">未启用");
-            writer.print(returnJson);
-            writer.close();
-            return false;
-        }
         Boolean tag = false;
-        List<FeatureInfoMin> featureInfoMins = featureInfoDao.findWithRoleId(role_id);
-        for ( FeatureInfoMin featureInfoMin: featureInfoMins) {
-            if (featureInfoMin.getFeature_id().equals(featureInfo.getFeature_id()))
-                tag = true;
+
+        //判断用户是否存在并启用
+        if (!userImpl.isUserExist(user_id)) {
+            return returnFalseMessage(louiseConfig.getLOUISE_ERROR_UNKNOWN_USER(), "未登记的用户" + user_id, response);
+        } else if (!userImpl.isUserEnabled(user_id)) {
+            return returnFalseMessage(louiseConfig.getLOUISE_ERROR_BANNED_USER(), "未启用的用户" + user_id, response);
         }
 
-        if (!tag) {
-            PrintWriter writer = response.getWriter();
-            logger.debug("权限不足: " + group_id);
-            writer.print(returnJson);
-            writer.close();
-            return false;
-        }
-
+        //放行help
         if (command.equals("/louise/help")) {
             return true;
         }
 
-        if (!groupImpl.isGroupExist(group_id) && group_id != null) {
-            PrintWriter writer = response.getWriter();
-            logger.debug("未启用的群组: " + group_id);
-            returnJson.put("reply", "主人不准露易丝在这个群里说话哦");
-            writer.print(returnJson);
-            writer.close();
-            return false;
+        //判断群是否启用
+        if (!groupImpl.isGroupEnabled(group_id) && group_id != null) {
+            return returnFalseMessage("主人不准露易丝在这个群里说话哦", "未启用的群组: " + group_id, response);
         }
 
+        FeatureInfo featureInfo = featureInfoDao.findWithFeatureURL(command);
 
-        if (!jsonObject.getString("raw_message").equals("!join")) {
-            if (!userImpl.isUserExist(user_id)) {
-                PrintWriter writer = response.getWriter();
-                logger.debug("未登记的用户: " + user_id);
-                returnJson.put("reply", louiseConfig.getLOUISE_ERROR_UNKNOWN_USER());
-                writer.print(returnJson);
-                writer.close();
-                return false;
+        try {
+            //判断功能是否启用
+            if (featureInfo.getIs_enabled()!=1) {
+                return returnFalseMessage("功能<" + featureInfo.getFeature_name() + ">未启用", "功能未启用: " + group_id, response);
             }
-            //判断用户是否启用
-            if (!userImpl.isUserEnabled(user_id)) {
-                PrintWriter writer = response.getWriter();
-                logger.debug("未启用的用户: " + user_id);
-                returnJson.put("reply", louiseConfig.getLOUISE_ERROR_BANNED_USER());
-                writer.print(returnJson);
-                writer.close();
-                return false;
+        } catch (Exception e) {
+            return returnFalseMessage("未知的命令", "请求未知命令"+command, response);
+        }
+
+        //判断群是否具有请求权限
+        if(!isEmpty.isEmpty(group_id)) {
+            Group group = groupDao.selectById(group_id);
+            role_id = group.getRole_id();
+
+            List<FeatureInfoMin> featureInfoMins = featureInfoDao.findWithRoleId(role_id);
+            logger.info("群聊允许的功能列表: " +featureInfoMins);
+            for ( FeatureInfoMin featureInfoMin: featureInfoMins) {
+                if (featureInfoMin.getFeature_id().equals(featureInfo.getFeature_id())) {
+                    tag = true;
+                    break;
+                }
             }
+            if (!tag)
+                return returnFalseMessage("这个群聊的权限不准用这个功能哦", "群" + group_id +"权限不足", response);
+        }
+
+        if(tag) {
+            tag = false;
+            User user = userDao.selectById(user_id);
+            role_id = user.getRole_id();
+
+            List<FeatureInfoMin> featureInfoMins = featureInfoDao.findWithRoleId(role_id);
+            logger.info("用户允许的功能列表: " +featureInfoMins);
+            for ( FeatureInfoMin featureInfoMin: featureInfoMins) {
+                if (featureInfoMin.getFeature_id().equals(featureInfo.getFeature_id())) {
+                    tag = true;
+                    break;
+                }
+            }
+            if (!tag)
+                return returnFalseMessage("你的权限还不准用这个功能哦", "用户" + user_id +"权限不足", response);
         }
         return true;
     }
@@ -158,6 +156,16 @@ public class LouiseHandler implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
+    }
+
+    public Boolean returnFalseMessage(String msg, String log, HttpServletResponse response) throws Exception{
+        PrintWriter writer = response.getWriter();
+        JSONObject returnJson = new JSONObject();
+        logger.debug(log);
+        returnJson.put("reply", msg);
+        writer.print(returnJson);
+        writer.close();
+        return false;
     }
 
 }
