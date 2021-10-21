@@ -250,7 +250,7 @@ public class MyLouiseApi implements ErrorController {
         String nickname = message.getJSONObject("sender").getString("nickname");
 
         returnJson.put("reply", nickname + "，你要的图片" + pixiv_id + "找到了" +
-                "\n[CQ:image,file=https://pixiv.cat/" + pixiv_id + ".jpg]" +
+                "\n[CQ:image,file=" +louiseConfig.getPIXIV_PROXY_URL() + pixiv_id + ".jpg]" +
                 "\n如果未显示出图片请在pixiv_id后指定第几张作品");
 
         return returnJson;

@@ -86,6 +86,11 @@ public class LouiseHandler implements HandlerInterceptor {
         Integer role_id = 0;
         Boolean tag = false;
 
+        //放行join
+        if (command.equals("/louise/join")) {
+            return true;
+        }
+
         //判断用户是否存在并启用
         if (!userImpl.isUserExist(user_id)) {
             return returnFalseMessage(louiseConfig.getLOUISE_ERROR_UNKNOWN_USER(), "未登记的用户" + user_id, response);
@@ -99,7 +104,7 @@ public class LouiseHandler implements HandlerInterceptor {
         }
 
         //判断群是否启用
-        if (!groupImpl.isGroupEnabled(group_id) && group_id != null) {
+        if (group_id != null && !groupImpl.isGroupEnabled(group_id)) {
             return returnFalseMessage("主人不准露易丝在这个群里说话哦", "未启用的群组: " + group_id, response);
         }
 

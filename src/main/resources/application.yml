@@ -49,6 +49,9 @@ BOT:
     HTTP_POST_KEY: Ac0mq5WxAVVIMAyj8Dx0TYKXjwNiKlbn
 #第三方API相关配置
 API:
+    PIXIV:
+        REVERSE_PROXY: https://i.pixiv.re/
+        PROXY_URL: https://pixiv.re/
     SOURCENAO:
         URL: https://saucenao.com/search.php
         API_KEY: 1b1b6103a6503e94cc5dcef861f041aadd72ec49

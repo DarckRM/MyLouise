@@ -45,6 +45,10 @@ public class LouiseConfig {
     private String BOT_HTTP_POST_KEY;
 
     //API相关配置
+    @Value("${API.PIXIV.REVERSE_PROXY}")
+    private String PIXIV_REVERSE_PROXY;
+    @Value("${API.PIXIV.PROXY_URL}")
+    private String PIXIV_PROXY_URL;
     @Value("${API.SOURCENAO.URL}")
     private String SOURCENAO_URL;
     @Value("${API.SOURCENAO.API_KEY}")
