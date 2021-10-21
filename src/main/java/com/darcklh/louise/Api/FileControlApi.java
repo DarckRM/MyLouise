@@ -35,22 +35,21 @@ public class FileControlApi {
 
         if (!folder.exists() && !folder.isDirectory()) {
 
-            logger.info("创建了图片缓存文件夹");
+            logger.info("创建了图片缓存文件夹" + fileOrigin);
             folder.mkdirs();
 
         }
 
         String imageName = filePath + fileName + ".jpg";
         try {
-            url = new URL(urlList);
-            DataInputStream dataInputStream = new DataInputStream(url.openStream());
-
             //判断文件是否存在
             if (new File(imageName).exists()) {
                 logger.info("文件" + imageName + "已存在");
                 return;
             }
-            logger.info("开始下载" + imageName);
+            logger.info("开始下载" + imageName + " 图片地址: " + urlList);
+            url = new URL(urlList);
+            DataInputStream dataInputStream = new DataInputStream(url.openStream());
             FileOutputStream fileOutputStream = new FileOutputStream(new File(imageName));
             ByteArrayOutputStream output = new ByteArrayOutputStream();
 

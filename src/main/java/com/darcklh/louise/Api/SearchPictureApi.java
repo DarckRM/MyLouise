@@ -100,16 +100,22 @@ public class SearchPictureApi {
             Document document = Jsoup.parse(result.getBody());
 
             Element element = document.getElementsByClass("info-box").get(1).select(".detail-box h6").get(0);
-            Element img = document.getElementsByClass("image-box").get(1);
+            //Element img = document.getElementsByClass("image-box").get(1);
 
-            String thumbnail = img.child(0).attr("src");
+            //判断来源 Twitter跳过
+            String source = element.getElementsByTag("small").text();
+
+
+
+            //String thumbnail = img.child(0).attr("src");
             String title = element.child(1).text();
+            String thumbnail = element.child(1).attr("href");
             String author = element.child(2).text();
 
             r.put("message", nickname+"，这是Ascii2d的结果" +
                     "\n标题: " + title +
                     "\n作者: " + author +
-                    "\n[CQ:image,file=https://ascii2d.net" + thumbnail + "]");
+                    "\n[CQ:image,file=" + thumbnail);
             r.sendMessage(r.getMessage());
         } catch (Exception e) {
             logger.info("请求失败： "+e.getMessage());
@@ -163,8 +169,8 @@ public class SearchPictureApi {
             JSONObject sourceNaoHeader = sourceNAO.getJSONObject("header");
             String similarity = sourceNAO.getJSONObject("header").getString("similarity");
             Integer indexId = sourceNAO.getJSONObject("header").getInteger("index_id");
-            //相似度低于78%的结果以缩略图显示
-            if (Float.parseFloat(similarity) < 78.0) {
+            //相似度低于70%的结果以缩略图显示 排除Twitter来源
+            if (Float.parseFloat(similarity) < 70.0 && indexId != 41) {
                 logger.info("结果可能性低");
                 r.put("message", "找到的结果相似度为"+similarity+"显示缩略图" +
                         "\n此为不大可能的结果: \n"+
@@ -182,7 +188,7 @@ public class SearchPictureApi {
                 //来自Pixiv
                 case 5: returnJson = handleFromPixiv(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 //TODO 暂时禁用推特来源 未解决图片缓存路径问题
-                //case 41: returnJson = handleFromTwitter(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
+                case 41: returnJson = handleFromTwitter(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 case 9:
                 case 12:
                     returnJson = handleFromDanbooru(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
@@ -263,7 +269,7 @@ public class SearchPictureApi {
             String images = "";
             for (int i = start; i <= end; i++) {
                 //下载图片到本地
-                fileControlApi.downloadPicture("https://pixiv.cat/" + pixiv_id + "-" + i + ".jpg", pixiv_id + "-" + i, "pixiv");
+                fileControlApi.downloadPicture(louiseConfig.getPIXIV_PROXY_URL() + pixiv_id + "-" + i + ".jpg", pixiv_id + "-" + i, "pixiv");
                 images += "[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "pixiv/" + pixiv_id + "-" + i + ".jpg]";
             }
             reply.put("message",
@@ -280,7 +286,7 @@ public class SearchPictureApi {
 
         } catch (Exception e) {
             logger.info(e.getLocalizedMessage());
-            fileControlApi.downloadPicture("https://pixiv.cat/" + pixiv_id + ".jpg", pixiv_id, "pixiv");
+            fileControlApi.downloadPicture(louiseConfig.getPIXIV_PROXY_URL() + pixiv_id + ".jpg", pixiv_id, "pixiv");
             reply.put("message",
                     nickname+"，查询出来咯"+
                             "\n来源Pixiv"+
@@ -312,7 +318,9 @@ public class SearchPictureApi {
         imageUrl = index_name.substring(index_name.indexOf(" - ")+3, index_name.length()-4);
         String imageUrlEndfix = index_name.substring(index_name.indexOf(".")+1, index_name.indexOf(".")+4);
         String imageUrlPrefix = "https://pbs.twimg.com/media/";
-        imageUrl = imageUrlPrefix + imageUrl + "?format=" + imageUrlEndfix + "&name=large";
+        String finalUrl = imageUrlPrefix + imageUrl + "?format=" + imageUrlEndfix + "&name=large";
+        //TODO 暂时无法下载Twitter的图片
+        //fileControlApi.downloadPicture(finalUrl, imageUrl, "Twiiter");
 
         reply.put("message",
                 nickname+"，查询出来咯"+
@@ -320,9 +328,11 @@ public class SearchPictureApi {
                         "\n推文用户:"+twitter_user_handle+
                         "\n用户ID:"+twitter_user_id+
                         "\n相似度:"+similarity+
-                        "\n可能的图片地址:"+sourceNaoArray+
-                        "\n[CQ:image,file="+imageUrl+"]");
-        logger.info("图片地址"+imageUrl);
+                        "\n图片可能无法正常显示，说明缺乏网络环境，请点击链接访问"+
+                        "\n推文地址:"+sourceNaoArray+
+                        "\n图片地址:"+finalUrl+
+                        "\n[CQ:image,file="+finalUrl+"]");
+        logger.info("图片地址"+finalUrl);
         return reply;
     }
     /**
