@@ -48,7 +48,8 @@ import {
         NRadioGroup,
         NRadio,
         NDescriptionsItem,
-        NDescriptions
+        NDescriptions,
+        NDialog,
 } from 'naive-ui'
 const naive = create({
     components: [
@@ -96,7 +97,8 @@ const naive = create({
         NRadioGroup,
         NRadio,
         NDescriptionsItem,
-        NDescriptions
+        NDescriptions,
+        NDialog,
     ]
 })
 const app = createApp(App)

@@ -16,29 +16,17 @@
     </n-h1>
 </div>
 <n-divider />
-<n-alert title="Warning" type="warning" style="margin-bottom: 20px; width: 700px">
+<n-alert title="Warning" type="warning" style="margin: 0 20px 20px 0">
     <p>请注意，除非你非常确定修改参数意味着什么，否则请不要随意修改这里的内容</p>
 </n-alert>
-<n-card title="配置中心" style="width: 700px">
-    <n-tabs>
-        <n-tab-pane name="louise-config" tab="Louise配置项">
-            <LouiseConfig></LouiseConfig>
-        </n-tab-pane>
-        <n-tab-pane name="bot-config" tab="Bot配置项">
-            <BotConfig></BotConfig>
-        </n-tab-pane>
-        <n-tab-pane name="api-config" tab="API配置项">
-            <APIConfig></APIConfig>
-        </n-tab-pane>
-    </n-tabs>
+<n-card title="配置中心">
+    <LouiseConfig></LouiseConfig>
 </n-card>
 </template>
 
 <script>
     import { defineComponent } from 'vue'
     import LouiseConfig from '../components/system/LouiseConfig.vue'
-    import BotConfig from '../components/system/BotConfig.vue'
-    import APIConfig from '../components/system/APIConfig.vue'
     import { router } from '../router'
     import {
         AlertCircleOutline as AlertIcon,
@@ -51,8 +39,6 @@
             AlertIcon,
             HelpIcon,
             LouiseConfig,
-            BotConfig,
-            APIConfig
         }
 
     })

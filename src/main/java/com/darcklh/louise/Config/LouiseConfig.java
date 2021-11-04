@@ -1,11 +1,16 @@
 package com.darcklh.louise.Config;
 
+import com.darcklh.louise.Model.Saito.SysConfig;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 配置信息类 通过自动注入实现配置刷新
@@ -55,5 +60,32 @@ public class LouiseConfig {
     private String SOURCENAO_API_KEY;
     @Value("${API.SOURCENAO.ERROR.REQUEST_FAILED}")
     private String SOURCENAO_ERROR_REQUEST_FAILED;
+
+    /**
+     * 从数据库中更新配置
+     * @param sysConfigs
+     */
+    public void refreshConfig(List<SysConfig> sysConfigs) {
+        //获取系统配置项
+        HashMap<String, String> configs = new HashMap<>();
+
+        for ( SysConfig sysConfig: sysConfigs ) {
+            configs.put(sysConfig.getConfig_name(), sysConfig.getConfig_value());
+        }
+
+        //从数据库中取得配置(默认读取一次配置文件)
+        this.setLOUISE_HELP_PAGE(configs.get("LOUISE.HELP_PAGE"));
+        this.setLOUISE_ADMIN_NUMBER(configs.get("LOUISE.ADMIN_NUMBER"));
+        this.setLOUISE_CACHE_IMAGE_LOCATION(configs.get("LOUISE.CACHE.IMAGE_LOCATION"));
+
+        this.setBOT_LOUISE_CACHE_IMAGE(configs.get("BOT.LOUISE_CACHE_IMAGE"));
+        this.setBOT_BASE_URL(configs.get("BOT.BASE_URL"));
+        this.setBOT_HTTP_POST_KEY(configs.get("BOT.HTTP_POST_KEY"));
+
+        this.setSOURCENAO_URL(configs.get("API.SOURCENAO.URL"));
+        this.setSOURCENAO_API_KEY(configs.get("API.SOURCENAO.API_KEY"));
+        this.setPIXIV_PROXY_URL(configs.get("API.PIXIV.PROXY_URL"));
+
+    }
 
 }

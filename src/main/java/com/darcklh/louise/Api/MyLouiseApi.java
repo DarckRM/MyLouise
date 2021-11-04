@@ -1,5 +1,6 @@
 package com.darcklh.louise.Api;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.Saito.PluginInfo;
@@ -61,19 +62,13 @@ public class MyLouiseApi implements ErrorController {
     }
 
     /**
-     * 刷新配置的接口
+     * 刷新配置
      */
     @RequestMapping("/louise/show")
     public String RefreshConfig() {
         return "API: " + louiseConfig.getBOT_LOUISE_CACHE_IMAGE();
     }
 
-    @RequestMapping("/louise/refresh")
-    public String refresh() {
-        louiseConfig.setBOT_LOUISE_CACHE_IMAGE("aaaa");
-        //contextRefresher.refresh();
-        return louiseConfig.toString();
-    }
 
     /**
      * 返回帮助信息
@@ -122,6 +117,17 @@ public class MyLouiseApi implements ErrorController {
             logger.info("切换至 线上部署 配置");
             reply.put("reply", "切换到服务部署环境");
         }
+        return reply;
+    }
+
+    /**
+     * 查询当前系统配置
+     * @return
+     */
+    @RequestMapping("louise/config")
+    public JSONObject queryConfig() {
+        JSONObject reply = new JSONObject();
+        reply.put("reply", louiseConfig.toString());
         return reply;
     }
 
@@ -300,7 +306,7 @@ public class MyLouiseApi implements ErrorController {
 
         //构造快速操作返回信息
         JSONObject reply = new JSONObject();
-        reply.put("reply", "你上传的文件已经确实记录下来了");
+        reply.put("reply", "你上传的文件已经记录下来了");
         return reply;
     }
 }

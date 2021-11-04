@@ -224,7 +224,7 @@ public class SearchPictureApi {
 
         //牺牲速度获得更好的图片显示 后台预解析图片信息
         try {
-            Document document = Jsoup.connect("https://pixiv.cat/" + pixiv_id + ".jpg").ignoreHttpErrors(true).post();
+            Document document = Jsoup.connect(louiseConfig.getPIXIV_PROXY_URL() + pixiv_id + ".jpg").ignoreHttpErrors(true).post();
 
             //试着确认是否多图结果
             String images_number = document.body().getElementsByTag("p").first().text();
