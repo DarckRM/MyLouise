@@ -134,6 +134,8 @@ public class LouiseHandler implements HandlerInterceptor {
             }
             if (!tag)
                 return returnFalseMessage("这个群聊的权限不准用这个功能哦", "群" + group_id +"权限不足", response);
+        } else {
+            tag = true;
         }
 
         if(tag) {
