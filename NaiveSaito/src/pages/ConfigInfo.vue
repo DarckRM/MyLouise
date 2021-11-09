@@ -16,7 +16,7 @@
     </n-h1>
 </div>
 <n-divider />
-<n-alert title="Warning" type="warning" style="margin: 0 20px 20px 0">
+<n-alert title="Warning" type="warning" style="margin-bottom: 20px">
     <p>请注意，除非你非常确定修改参数意味着什么，否则请不要随意修改这里的内容</p>
 </n-alert>
 <n-card title="配置中心">

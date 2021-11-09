@@ -14,8 +14,8 @@ public class CqhttpController {
      * @return
      */
     public Result GetStatus() {
-        R r = new R();
-        JSONObject jsonObject = r.requestAPI("get_group_list");
+//        R r = new R();
+//        JSONObject jsonObject = r.requestAPI("get_group_list");
         return null;
     }
 

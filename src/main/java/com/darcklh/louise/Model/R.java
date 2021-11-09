@@ -2,7 +2,10 @@ package com.darcklh.louise.Model;
 
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -21,6 +25,8 @@ public class R {
 
     //自动注入信息载体
     @Autowired
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     LouiseConfig louiseConfig;
 
     //发送报文的基础信息
@@ -40,41 +46,58 @@ public class R {
     Logger logger = LoggerFactory.getLogger(R.class);
 
     /**
-     * 根据参数向cqhttp发送消息
-     * @param sendJson JSONObject
-     * @return response String
-     */
-    public String sendMessage(JSONObject sendJson) {
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> cqhttp = new HttpEntity<>(sendJson.toString(), headers);
-        //让Bot发送信息
-        logger.info("发送报文: " + sendJson);
-        return restTemplate.postForObject("http://localhost:5700/send_msg", cqhttp, String.class);
-    }
-
-    /**
-     * 根据参数请求cqhttp接口
+     * 请求cqhttp接口
      * @param api
      * @return
      */
-    public JSONObject requestAPI(String api) {
+    private JSONObject requestAPI(String api) {
 
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> cqhttp = new HttpEntity<>(headers);
         //开始请求
         logger.info("请求接口: " + api);
-        return restTemplate.postForObject("http://127.0.0.1:5700/" + api, cqhttp, JSONObject.class);
+        this.refresh();
+        return restTemplate.postForObject(louiseConfig.getBOT_BASE_URL() + api, cqhttp, JSONObject.class);
     }
 
     /**
-     * 像管理员发送消息
-     * @param msg
+     * 带参数请求cqhttp接口
+     * @param api
+     * @param sendJson
+     * @return
      */
-    public void sendAdminMessage(String msg, R r) {
-        r.put("user_id", louiseConfig.getLOUISE_ADMIN_NUMBER());
-        r.put("message", msg);
-        r.sendMessage(getMessage());
+    private JSONObject requestAPI(String api, JSONObject sendJson) {
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> cqhttp = new HttpEntity<>(sendJson.toString(), headers);
+        //开始请求
+        logger.info("请求接口: " + api);
+        this.refresh();
+        return restTemplate.postForObject(louiseConfig.getBOT_BASE_URL() + api, cqhttp, JSONObject.class);
+    }
+
+    /**
+     * 根据参数向cqhttp发送消息
+     * @param sendJson JSONObject
+     * @return response String
+     */
+    public JSONObject sendMessage(JSONObject sendJson) {
+
+        //让Bot发送信息
+        logger.info("发送报文: " + sendJson);
+        return this.requestAPI("send_msg", sendJson);
+    }
+
+    /**
+     * 发送群公告
+     * @param group_id 群号
+     * @param content 消息
+     * @return
+     */
+    public JSONObject sendGroupNotice(String group_id, String content) {
+
+        this.put("group_id", group_id);
+        this.put("content", content);
+        return this.requestAPI("/_send_group_notice", this.getMessage());
     }
 
     /**
@@ -94,6 +117,13 @@ public class R {
      */
     public void put(String key, String value) {
         this.message.put(key, value);
+    }
+
+    /**
+     * 每次发送消息后清空消息体
+     */
+    public void refresh() {
+        this.message = new JSONObject();
     }
 
 }

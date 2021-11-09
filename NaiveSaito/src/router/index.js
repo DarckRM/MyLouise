@@ -15,6 +15,10 @@ const routes = [
                 component: () => import('../pages/ConfigInfo.vue')
             },
             {
+                path: 'send-notice',
+                component: () => import('../pages/SendNotifiation.vue')
+            },
+            {
                 path: 'user-manage',
                 component: () => import('../pages/louise/UserManagement.vue')
             },
