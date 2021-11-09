@@ -210,8 +210,6 @@ public class MyLouiseApi implements ErrorController {
     @RequestMapping("louise/find")
     private JSONObject findPicture(@RequestBody JSONObject message) {
 
-        R r = new R();
-
         //返回值
         JSONObject returnJson = new JSONObject();
         //解析上传的信息 拿到图片URL还有一些相关参数
@@ -236,11 +234,11 @@ public class MyLouiseApi implements ErrorController {
         r.setNickname(nickname);
         r.setSenderType(senderType);
         r.setNumber(number);
+        r.setMessage(message);
+        searchPictureApi.setUploadImgUrl(url);
 
+        logger.info("上传图片的地址:"+ url);
         //封装信息
-        r.put("url", url);
-        r.put(r.getSenderType(), r.getNumber());
-
         new Thread(() -> searchPictureApi.searchPictureCenter(message, r)).start();
 
         returnJson.put("reply", nickname+"!露易丝在搜索了哦！" +

@@ -32,7 +32,6 @@
 
 <script>
 import { defineComponent, reactive, h, ref } from 'vue'
-import { router } from '../../router'
 import { NButton, NTag, useMessage } from 'naive-ui'
 import FeatureCard from '../../components/FeatureCard.vue'
 import axios from '../../utils/request'

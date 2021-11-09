@@ -37,6 +37,9 @@ public class BootApplication {
     @Autowired
     SaitoController saitoController;
 
+    @Autowired
+    R r = new R();
+
     public static Date bootDate;
 
     @PostConstruct
@@ -65,13 +68,15 @@ public class BootApplication {
         } catch (Exception e) {
             logger.info("加载插件失败: " + e.getMessage());
         }
-        R r = new R();
+
         r.put("user_id", louiseConfig.getLOUISE_ADMIN_NUMBER());
         r.put("message", "露易丝启动了哦");
         try {
             r.sendMessage(r.getMessage());
         } catch (ResourceAccessException e) {
             logger.info("与BOT建立连接失败");
+        } catch (NullPointerException e) {
+            logger.info("louiseConfig向R中自动注入失败");
         }
 
         logger.info("插件加载完毕，共" + i + "个");
