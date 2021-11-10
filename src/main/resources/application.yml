@@ -13,7 +13,7 @@ spring:
 #        password: root
     #静态资源路径
     mvc:
-        static-path-pattern: /static/**
+        static-path-pattern: /templates/asserts/**
 
 
 #配饰mybatisPlus

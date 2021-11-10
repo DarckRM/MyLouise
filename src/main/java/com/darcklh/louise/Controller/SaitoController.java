@@ -38,6 +38,11 @@ public class SaitoController {
         return result;
     }
 
+    @RequestMapping("/index")
+    public String index() {
+        return "index";
+    }
+
     @RequestMapping("plugin-init")
     public void PluginInit(Integer number) {
         try {

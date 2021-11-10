@@ -231,6 +231,7 @@ public class MyLouiseApi implements ErrorController {
             senderType = "user_id";
         }
 
+        //TODO 可能线程不安全
         r.setNickname(nickname);
         r.setSenderType(senderType);
         r.setNumber(number);
