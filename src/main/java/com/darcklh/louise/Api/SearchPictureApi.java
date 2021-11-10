@@ -140,6 +140,7 @@ public class SearchPictureApi {
             resultData.put("ext_urls", origin);
             resultData.put("index_name", 0);
             resultData.put("thumbnail", thumbnail);
+            resultData.put("invoker", "A2d");
             sendJson = handleFromPixiv(nickname, "来自Ascii2d", sendJson, resultData, resultData);
             r.sendMessage(sendJson);
 
@@ -196,6 +197,8 @@ public class SearchPictureApi {
             JSONObject sourceNaoHeader = sourceNAO.getJSONObject("header");
             String similarity = sourceNAO.getJSONObject("header").getString("similarity");
             Integer indexId = sourceNAO.getJSONObject("header").getInteger("index_id");
+            String index_name = sourceNAO.getJSONObject("header").getString("index_name");
+            sourceNaoHeader.put("invoker", "NAO");
             //相似度低于70%的结果以缩略图显示 排除Twitter来源
             if (Float.parseFloat(similarity) < 70.0 && indexId != 41) {
                 logger.info("结果可能性低");
@@ -203,32 +206,34 @@ public class SearchPictureApi {
                         "\n此为不大可能的结果: \n"+
                         sourceNaoData.getJSONArray("ext_urls").toString()+
                         "\n[CQ:image,file="+sourceNaoHeader.getString("thumbnail")+"]");
-                r.sendMessage(sendJson);
+                logger.info("请求Bot的响应结果: "+r.sendMessage(sendJson));
                 return;
             }
-
-            //返回结果集
-            JSONObject returnJson = new JSONObject();
 
             //判断结果来源 如twitter之流来源很难获取图片 会补充URL以供查看
             switch (indexId) {
                 //来自Pixiv
-                case 5: returnJson = handleFromPixiv(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
+                case 5: sendJson = handleFromPixiv(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 //TODO 暂时禁用推特来源 未解决图片缓存路径问题
-                case 41: returnJson = handleFromTwitter(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
+                case 41: sendJson = handleFromTwitter(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 case 9:
                 case 12:
-                    returnJson = handleFromDanbooru(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
+                    sendJson = handleFromDanbooru(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 default: {
-                    returnJson.put("reply", "");
+
+                    sendJson.put("message", "暂不支持返回该来源的具体信息" +
+                            "来源信息: " + index_name +
+                            "相似度: " + similarity +
+                            "[CQ:image,file=" + sourceNaoHeader.getString("thumbnail") + "]");
+                    logger.info("请求Bot的响应结果: "+r.sendMessage(sendJson));
                     return;
                 }
             }
-            logger.info("请求Bot的响应结果: "+r.sendMessage(returnJson));
+            logger.info("请求Bot的响应结果: "+r.sendMessage(sendJson));
         } catch (Exception e) {
             sendJson.put("message", "SourceNAO未能找到合理的结果，或者来源不支持\n" +
                     "堆栈信息: "+ e.getMessage());
-            r.sendMessage(sendJson);
+            logger.info("请求Bot的响应结果: "+r.sendMessage(sendJson));
         }
     }
 
@@ -243,6 +248,7 @@ public class SearchPictureApi {
      */
     private JSONObject handleFromPixiv(String nickname, String similarity, JSONObject reply, JSONObject resultData, JSONObject resultHeader) throws IOException{
 
+        String invoker = resultHeader.getString("invoker");
         String pixiv_id = resultData.getString("pixiv_id");
         String title = resultData.getString("title");
         String thumbnail = resultHeader.getString("thumbnail");
@@ -253,24 +259,30 @@ public class SearchPictureApi {
         //牺牲速度获得更好的图片显示 后台预解析图片信息
         try {
             Document document = Jsoup.connect(louiseConfig.getPIXIV_PROXY_URL() + pixiv_id + ".jpg").ignoreHttpErrors(true).post();
-
             //试着确认是否多图结果
             String images_number = document.body().getElementsByTag("p").first().text();
             images_number = images_number.substring(images_number.indexOf(" ") + 1, images_number.lastIndexOf(" "));
-            Integer count = Integer.parseInt(images_number);
+            int count = Integer.parseInt(images_number);
             logger.info("总共有 " + count + " 张图片");
 
+            //如果是从Ascii2d调用的handleFromPixiv()那么跳过获取图片次序的逻辑
             //确认是多图结果 从JSON中获取匹配结果图片的次序
-            String image_index = resultHeader.getString("index_name");
-            image_index = image_index.substring(image_index.indexOf("_p") + 2);
-            String indexString = "";
-            for (char cc : image_index.toCharArray()) {
-                if (Character.isDigit(cc)) {
-                    indexString += cc;
-                } else break;
+            int index = 1;
+            if (invoker.equals("NAO")) {
+                String image_index = resultHeader.getString("index_name");
+                image_index = image_index.substring(image_index.indexOf("_p") + 2);
+                String indexString = "";
+                for (char cc : image_index.toCharArray()) {
+                    if (Character.isDigit(cc)) {
+                        indexString += cc;
+                    } else break;
+                }
+                index = Integer.parseInt(indexString) + 1;
+                logger.info("精确匹配结果为第 " + index + " 张");
+            } else {
+                index = 1;
+                logger.info("无法判断精确位置，默认为第 " + index + " 张");
             }
-            Integer index = Integer.parseInt(indexString) + 1;
-            logger.info("精确匹配结果为第 " + index + " 张");
 
             int start = index - 2;
             int end = index + 2;
