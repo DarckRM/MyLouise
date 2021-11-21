@@ -9,20 +9,21 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
     props: {
-        client_name: ''
+        client_name: '',
+        data: ''
     },
     name: 'WebSocket',
     setup(props) {
         const client_name = props.client_name
+        const data = props.data
         return {
-            client_name
+            client_name,
+            data
         }
     },
     data() {
         
         return {
-            //后台系统运行时间
-            louiseBootTime: '未知',
             // 连接状态
             isConn: false,
             // ws是否启动
@@ -30,7 +31,8 @@ export default defineComponent({
             // 定义ws对象
             webSocket: null,
             // ws请求链接（类似于ws后台地址）
-            ws: 'ws://127.0.0.1:8099/saito_ws/' + this.client_name,
+            // ws: 'ws://127.0.0.1:8099/saito_ws/' + this.client_name,
+            ws: 'ws://121.4.179.240:8099/saito_ws/' + this.client_name,
             // ws定时器
             wsTimer: null,
         }
@@ -41,12 +43,13 @@ export default defineComponent({
     },
     methods: {
         sendDataToServer() {
+
             if (this.webSocket.readyState === 1) {
                 this.webSocket.send('来自前端的数据')
             } else {
                 throw Error('服务未连接')
             }
-        },
+        }, 
         /**
          * 初始化ws
          */
@@ -85,9 +88,7 @@ export default defineComponent({
         },
         wsMessageHanler(e) {
             const redata = JSON.parse(e.data)
-            this.louiseBootTime = redata.bootTime
-            console.log(this.louiseBootTime)
-            //console.log(redata)
+            this.data = redata.result
         },
         /**
          * ws通信发生错误

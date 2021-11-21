@@ -11,6 +11,7 @@
 <script>
 import { defineComponent, h } from 'vue'
 import {
+  TerminalOutline as TernimalIcon,
   BookOutline as BookIcon,
   PeopleOutline as PeopleIcon,
   PersonOutline as PersonIcon,
@@ -45,6 +46,11 @@ const menuOptions = [
     label: '主页',
     key: 'index',
     icon: renderIcon(HomeIcon)
+  },
+  {
+    label: '控制台',
+    key: 'terminal',
+    icon: renderIcon(TernimalIcon)
   },
   {
     label: '配置信息',

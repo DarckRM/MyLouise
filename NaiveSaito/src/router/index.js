@@ -11,6 +11,10 @@ const routes = [
                 component: () => import('../pages/StatusPanel.vue')
             },
             {
+                path: 'terminal',
+                component: () => import('../pages/Terminal.vue')
+            },
+            {
                 path: 'config-info',
                 component: () => import('../pages/ConfigInfo.vue')
             },

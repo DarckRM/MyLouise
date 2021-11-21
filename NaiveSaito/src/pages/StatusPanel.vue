@@ -56,7 +56,7 @@
     </n-gi>
   </n-grid>
 </n-card>
-<WebSocket ref="webSocket" client_name="status_conn"></WebSocket>
+<WebSocket ref="webSocket" client_name="status_conn" data=""></WebSocket>
 </template>
 
 <script>
@@ -89,7 +89,10 @@ import {
         },
         methods: {
             nowTimes(){
-                this.nowTime = this.$refs.webSocket.louiseBootTime
+                if(this.$refs.webSocket.data == null) {
+                    return
+                }
+                this.nowTime = this.$refs.webSocket.data
                 if(this.$refs.webSocket.isConn) {
                     this.louiseStatus = 'success'
                     this.louiseText = '运行良好'
@@ -99,7 +102,6 @@ import {
                     this.louiseText = '停机中'
                 } 
                 setInterval(this.nowTimes,5000)
-                this.clear()
             },
             clear(){
                 this.nowTimes = null
