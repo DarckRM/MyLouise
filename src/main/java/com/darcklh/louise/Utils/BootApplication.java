@@ -7,6 +7,7 @@ import com.darcklh.louise.Mapper.SysConfigDao;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.Saito.SysConfig;
+import com.darcklh.louise.Service.WebSocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
 public class BootApplication {

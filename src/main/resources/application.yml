@@ -21,6 +21,7 @@ mybatis-plus:
     configuration:
         #关闭表字段下划线自动转驼峰导致实体类字段无法匹配
         map-underscore-to-camel-case: false
+        #开启Dao层日志
         log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     mapper-locations: classpath*:xml
     global-config:
@@ -57,3 +58,5 @@ API:
         API_KEY: 1b1b6103a6503e94cc5dcef861f041aadd72ec49
         ERROR:
             REQUEST_FAILED: SourceNAO出问题了，不关咱的事
+logging:
+    config: classpath:logback-spring.xml

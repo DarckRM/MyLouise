@@ -16,7 +16,6 @@ import java.io.IOException;
  * @date 2021/8/12 12:16
  * @Description
  */
-@Component
 public class LouiseFilter implements Filter {
 
     Logger logger = LoggerFactory.getLogger(LouiseFilter.class);

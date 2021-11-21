@@ -1,9 +1,11 @@
 package com.darcklh.louise.Controller;
 
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Model.LoggerQueue;
 import com.darcklh.louise.Model.Result;
 import com.darcklh.louise.Model.Saito.SysConfig;
 import com.darcklh.louise.Service.SysConfigService;
+import com.darcklh.louise.Service.WebSocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author DarckLH
@@ -43,6 +47,7 @@ public class SysConfigController {
 
     @RequestMapping("findBy")
     public Result<SysConfig> findSysConfigBy() {
+
         Result<SysConfig> result = new Result<>();
         result.setDatas(sysConfigService.findAllSysConfig());
         return result;
