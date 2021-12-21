@@ -100,9 +100,11 @@ public class LouiseHandler implements HandlerInterceptor {
 
         //判断群是否启用
         if (!groupImpl.isGroupEnabled(group_id) && group_id != null) {
-            return returnFalseMessage("主人不准露易丝在这个群里说话哦", "未启用的群组: " + group_id, response);
+            return returnFalseMessage("群被暂时禁用了哦", "未启用的群组: " + group_id, response);
+//            return returnFalseMessage("主人不准露易丝在这个群里说话哦", "未启用的群组: " + group_id, response);
         }
 
+        //获取请求的功能对象
         FeatureInfo featureInfo = featureInfoDao.findWithFeatureURL(command);
 
         try {
@@ -147,6 +149,11 @@ public class LouiseHandler implements HandlerInterceptor {
             if (!tag)
                 return returnFalseMessage("你的权限还不准用这个功能哦", "用户" + user_id +"权限不足", response);
         }
+
+        //合法性校验通过 扣除CREDIT
+        userDao.minusCredit(featureInfo.getCredit_cost(), user_id);
+        logger.info("功能" +featureInfo.getFeature_name() + " 消耗用户 " + user_id +" CREDIT " + featureInfo.getCredit_cost());
+
         return true;
     }
 
@@ -161,7 +168,7 @@ public class LouiseHandler implements HandlerInterceptor {
     public Boolean returnFalseMessage(String msg, String log, HttpServletResponse response) throws Exception{
         PrintWriter writer = response.getWriter();
         JSONObject returnJson = new JSONObject();
-        logger.debug(log);
+        logger.info(log);
         returnJson.put("reply", msg);
         writer.print(returnJson);
         writer.close();

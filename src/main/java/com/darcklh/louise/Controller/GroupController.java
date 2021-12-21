@@ -29,7 +29,7 @@ public class GroupController {
     @RequestMapping("findBy")
     public Result<GroupRole> findBy() {
         Result<GroupRole> result = new Result<>();
-        List<GroupRole> groups = groupService.findBy();
+        List<GroupRole> groups = groupService.findGroupRoleBy();
         if (isEmpty.isEmpty(groups)) {
             result.setCode(202);
             return result;

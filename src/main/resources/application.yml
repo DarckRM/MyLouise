@@ -21,7 +21,7 @@ mybatis-plus:
     configuration:
         #关闭表字段下划线自动转驼峰导致实体类字段无法匹配
         map-underscore-to-camel-case: false
-        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     mapper-locations: classpath*:xml
     global-config:
         db-config:
@@ -30,7 +30,8 @@ mybatis-plus:
 
 #Louise相关配置
 LOUISE:
-    HELP_PAGE: https://chenjie.ink:8096/file/images/Image_20210814200900036_WUuK.jpg
+    HELP_PAGE: https://chenjie.ink:8096/file/images/Image_20210930103600006_zcnn.jpg
+#    HELP_PAGE: https://chenjie.ink:8096/file/images/Image_20210814200900036_WUuK.jpg
     ADMIN_NUMBER: 412543224
     #图片缓存位置
     CACHE:

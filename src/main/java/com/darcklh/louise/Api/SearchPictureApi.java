@@ -263,7 +263,7 @@ public class SearchPictureApi {
             String images = "";
             for (int i = start; i <= end; i++) {
                 //下载图片到本地
-                fileControlApi.downloadPicture("https://pixiv.cat/" + pixiv_id + "-" + i + ".jpg", pixiv_id + "-" + i, "pixiv");
+                fileControlApi.downloadPictureURL("https://pixiv.cat/" + pixiv_id + "-" + i + ".jpg", pixiv_id + "-" + i, "pixiv");
                 images += "[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "pixiv/" + pixiv_id + "-" + i + ".jpg]";
             }
             reply.put("message",
@@ -280,7 +280,7 @@ public class SearchPictureApi {
 
         } catch (Exception e) {
             logger.info(e.getLocalizedMessage());
-            fileControlApi.downloadPicture("https://pixiv.cat/" + pixiv_id + ".jpg", pixiv_id, "pixiv");
+            fileControlApi.downloadPictureURL("https://pixiv.cat/" + pixiv_id + ".jpg", pixiv_id, "pixiv");
             reply.put("message",
                     nickname+"，查询出来咯"+
                             "\n来源Pixiv"+
@@ -352,8 +352,8 @@ public class SearchPictureApi {
         String finalUrl = "https://img3.gelbooru.com//images/" + imageFinalUrlPrefix + imageUrl + imageUrlEndfix;
         String exampleUrl = "https://img3.gelbooru.com//samples/" + imageExampleUrlPrefix + imageUrl + imageUrlEndfix;
 
-        fileControlApi.downloadPicture(finalUrl, imageUrl, "Gelbooru");
-        fileControlApi.downloadPicture(exampleUrl, imageUrl, "Gelbooru");
+        fileControlApi.downloadPictureURL(finalUrl, imageUrl, "Gelbooru");
+        fileControlApi.downloadPictureURL(exampleUrl, imageUrl, "Gelbooru");
 
         if (index_id == 12) {
             reply.put("message",
