@@ -71,7 +71,7 @@ public class SendPictureApi {
         }
         jsonObject.put(senderType, id);
         jsonObject.put("reply",
-                nickname+"，你要的涩图已经送达，请注意身体健康哦"+
+                nickname+"，你要的图片已经送达，请注意身体健康哦"+
                 "\n标题:"+title+
                 "\n作者:"+author+
                 "\npid:"+pid+

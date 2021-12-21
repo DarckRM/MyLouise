@@ -44,7 +44,7 @@ public class MyLouiseApi implements ErrorController {
      * @return
      */
     @RequestMapping("/louise/p/{plugin}")
-    public JSONObject PluginsCenter(@PathVariable String plugin, @RequestBody JSONObject message) {
+    public JSONObject pluginsCenter(@PathVariable String plugin, @RequestBody JSONObject message) {
         logger.info("rua");
 
         return null;
@@ -52,7 +52,7 @@ public class MyLouiseApi implements ErrorController {
 
     //TODO 接管了所有的请求错误 需要修改
     @RequestMapping("/error")
-    public JSONObject Error() {
+    public JSONObject error() {
         JSONObject returnJson = new JSONObject();
         //如果请求失败了
         logger.debug("未知的命令请求");
@@ -64,7 +64,7 @@ public class MyLouiseApi implements ErrorController {
      * 刷新配置的接口
      */
     @RequestMapping("/louise/show")
-    public String RefreshConfig() {
+    public String refreshConfig() {
         return "API: " + louiseConfig.getBOT_LOUISE_CACHE_IMAGE();
     }
 
@@ -126,7 +126,7 @@ public class MyLouiseApi implements ErrorController {
     }
 
     @RequestMapping("louise/test")
-    public String testRequestProcessCenter(HttpServletRequest request, @RequestBody String message) throws NoSuchAlgorithmException {
+    public String testRequestCenter(HttpServletRequest request, @RequestBody String message) throws NoSuchAlgorithmException {
         JSONObject result = new JSONObject();
         result.put("reply","现在测试中");
         return result.toString() + louiseConfig.getLOUISE_ERROR_UNKNOWN_COMMAND();
@@ -134,7 +134,7 @@ public class MyLouiseApi implements ErrorController {
     }
 
     @RequestMapping("louise/meta")
-    public JSONObject requestProcessCenter() {
+    public JSONObject metaRequestCenter() {
         return null;
     }
 
@@ -144,7 +144,7 @@ public class MyLouiseApi implements ErrorController {
      * @return
      */
     @RequestMapping("louise/join")
-    public JSONObject Join(@RequestBody JSONObject jsonObject) {
+    public JSONObject join(@RequestBody JSONObject jsonObject) {
 
         String user_id = jsonObject.getString("user_id");
         String group_id = jsonObject.getString("group_id");
