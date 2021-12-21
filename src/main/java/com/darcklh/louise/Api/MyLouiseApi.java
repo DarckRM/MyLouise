@@ -1,5 +1,6 @@
 package com.darcklh.louise.Api;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.Saito.PluginInfo;
@@ -61,19 +62,13 @@ public class MyLouiseApi implements ErrorController {
     }
 
     /**
-     * 刷新配置的接口
+     * 刷新配置
      */
     @RequestMapping("/louise/show")
     public String refreshConfig() {
         return "API: " + louiseConfig.getBOT_LOUISE_CACHE_IMAGE();
     }
 
-    @RequestMapping("/louise/refresh")
-    public String refresh() {
-        louiseConfig.setBOT_LOUISE_CACHE_IMAGE("aaaa");
-        //contextRefresher.refresh();
-        return louiseConfig.toString();
-    }
 
     /**
      * 返回帮助信息
@@ -122,6 +117,17 @@ public class MyLouiseApi implements ErrorController {
             logger.info("切换至 线上部署 配置");
             reply.put("reply", "切换到服务部署环境");
         }
+        return reply;
+    }
+
+    /**
+     * 查询当前系统配置
+     * @return
+     */
+    @RequestMapping("louise/config")
+    public JSONObject queryConfig() {
+        JSONObject reply = new JSONObject();
+        reply.put("reply", louiseConfig.toString());
         return reply;
     }
 
@@ -204,8 +210,6 @@ public class MyLouiseApi implements ErrorController {
     @RequestMapping("louise/find")
     private JSONObject findPicture(@RequestBody JSONObject message) {
 
-        R r = new R();
-
         //返回值
         JSONObject returnJson = new JSONObject();
         //解析上传的信息 拿到图片URL还有一些相关参数
@@ -227,14 +231,15 @@ public class MyLouiseApi implements ErrorController {
             senderType = "user_id";
         }
 
+        //TODO 可能线程不安全
         r.setNickname(nickname);
         r.setSenderType(senderType);
         r.setNumber(number);
+        r.setMessage(message);
+        searchPictureApi.setUploadImgUrl(url);
 
+        logger.info("上传图片的地址:"+ url);
         //封装信息
-        r.put("url", url);
-        r.put(r.getSenderType(), r.getNumber());
-
         new Thread(() -> searchPictureApi.searchPictureCenter(message, r)).start();
 
         returnJson.put("reply", nickname+"!露易丝在搜索了哦！" +
@@ -250,7 +255,7 @@ public class MyLouiseApi implements ErrorController {
         String nickname = message.getJSONObject("sender").getString("nickname");
 
         returnJson.put("reply", nickname + "，你要的图片" + pixiv_id + "找到了" +
-                "\n[CQ:image,file=https://pixiv.cat/" + pixiv_id + ".jpg]" +
+                "\n[CQ:image,file=" +louiseConfig.getPIXIV_PROXY_URL() + pixiv_id + ".jpg]" +
                 "\n如果未显示出图片请在pixiv_id后指定第几张作品");
 
         return returnJson;
@@ -300,7 +305,7 @@ public class MyLouiseApi implements ErrorController {
 
         //构造快速操作返回信息
         JSONObject reply = new JSONObject();
-        reply.put("reply", "你上传的文件已经确实记录下来了");
+        reply.put("reply", "你上传的文件已经记录下来了");
         return reply;
     }
 }

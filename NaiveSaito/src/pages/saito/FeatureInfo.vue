@@ -32,7 +32,6 @@
 
 <script>
 import { defineComponent, reactive, h, ref } from 'vue'
-import { router } from '../../router'
 import { NButton, NTag, useMessage } from 'naive-ui'
 import FeatureCard from '../../components/FeatureCard.vue'
 import axios from '../../utils/request'
@@ -135,9 +134,9 @@ export default defineComponent({
         const message = useMessage()
         const paginationReactive = reactive({
                 page: 1,
-                pageSize: 5,
+                pageSize: 15,
                 showSizePicker: true,
-                pageSizes: [3, 5, 7],
+                pageSizes: [10, 15, 25],
                 onChange: (page) => {
                     paginationReactive.page = page
             },

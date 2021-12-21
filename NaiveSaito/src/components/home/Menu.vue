@@ -11,12 +11,14 @@
 <script>
 import { defineComponent, h } from 'vue'
 import {
+  TerminalOutline as TernimalIcon,
   BookOutline as BookIcon,
   PeopleOutline as PeopleIcon,
   PersonOutline as PersonIcon,
   CogOutline as CogIcon,
   HardwareChipOutline as ChipIcon,
   HomeOutline as HomeIcon,
+  NotificationsOutline as NoticeIcon,
   Cube as CubeIcon
 } from '@vicons/ionicons5'
 import  { useMessage, NIcon } from 'naive-ui'
@@ -46,9 +48,19 @@ const menuOptions = [
     icon: renderIcon(HomeIcon)
   },
   {
+    label: '控制台',
+    key: 'terminal',
+    icon: renderIcon(TernimalIcon)
+  },
+  {
     label: '配置信息',
     key: 'config-info',
     icon: renderIcon(ChipIcon)
+  },
+  {
+    label: '发送公告',
+    key: 'send-notice',
+    icon: renderIcon(NoticeIcon)
   },
   {
     
