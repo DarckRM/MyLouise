@@ -7,7 +7,9 @@ import LoginPage from './components/LoginPage.vue';
 
 <template>
 <n-message-provider>
+<n-dialog-provider>
 <router-view></router-view>
+</n-dialog-provider>
 </n-message-provider>
 </template>
 
@@ -25,13 +27,14 @@ import LoginPage from './components/LoginPage.vue';
 
 <script>
 import { defineComponent } from 'vue'
-import { NDivider, NMessageProvider } from 'naive-ui'
-  import { router } from './router'
+import { NDivider, NMessageProvider, NDialogProvider } from 'naive-ui'
+import { router } from './router'
 
 export default defineComponent({
   components: {
     NDivider,
-    NMessageProvider
+    NMessageProvider,
+    NDialogProvider
   }
 })
 </script>

@@ -86,6 +86,11 @@ public class LouiseHandler implements HandlerInterceptor {
         Integer role_id = 0;
         Boolean tag = false;
 
+        //放行join
+        if (command.equals("/louise/join")) {
+            return true;
+        }
+
         //判断用户是否存在并启用
         if (!userImpl.isUserExist(user_id)) {
             return returnFalseMessage(louiseConfig.getLOUISE_ERROR_UNKNOWN_USER(), "未登记的用户" + user_id, response);
@@ -99,9 +104,8 @@ public class LouiseHandler implements HandlerInterceptor {
         }
 
         //判断群是否启用
-        if (!groupImpl.isGroupEnabled(group_id) && group_id != null) {
-            return returnFalseMessage("群被暂时禁用了哦", "未启用的群组: " + group_id, response);
-//            return returnFalseMessage("主人不准露易丝在这个群里说话哦", "未启用的群组: " + group_id, response);
+        if (group_id != null && !groupImpl.isGroupEnabled(group_id)) {
+            return returnFalseMessage("主人不准露易丝在这个群里说话哦", "未启用的群组: " + group_id, response);
         }
 
         //获取请求的功能对象
@@ -131,6 +135,8 @@ public class LouiseHandler implements HandlerInterceptor {
             }
             if (!tag)
                 return returnFalseMessage("这个群聊的权限不准用这个功能哦", "群" + group_id +"权限不足", response);
+        } else {
+            tag = true;
         }
 
         if(tag) {

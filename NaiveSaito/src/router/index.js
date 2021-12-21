@@ -11,8 +11,16 @@ const routes = [
                 component: () => import('../pages/StatusPanel.vue')
             },
             {
+                path: 'terminal',
+                component: () => import('../pages/Terminal.vue')
+            },
+            {
                 path: 'config-info',
                 component: () => import('../pages/ConfigInfo.vue')
+            },
+            {
+                path: 'send-notice',
+                component: () => import('../pages/SendNotifiation.vue')
             },
             {
                 path: 'user-manage',

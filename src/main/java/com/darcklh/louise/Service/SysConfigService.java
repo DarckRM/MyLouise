@@ -14,5 +14,7 @@ import java.util.List;
 public interface SysConfigService {
 
     public List<SysConfig> findSysConfigByType(String type);
+    public List<SysConfig> findAllSysConfig();
+    public Integer edit(List<SysConfig> sysConfigs);
 
 }

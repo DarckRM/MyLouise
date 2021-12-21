@@ -22,8 +22,8 @@ public interface UserDao extends BaseMapper<User> {
 
     //重写一下这个 涉及到获取创建时间丢到SQL里简单一些
     @Override
-    @Insert("INSERT INTO t_user (user_id, group_id, avatar, nickname, create_time, count_setu, count_upload, isenabled, credit, credit_buff) VALUES" +
-            "(#{user_id}, #{group_id}, #{avatar}, #{nickname}, NOW(), #{count_setu}, #{count_upload}, #{isEnabled}, #{credit}, #{credit_buff})")
+    @Insert("INSERT INTO t_user (user_id, group_id, role_id, avatar, nickname, create_time, count_setu, count_upload, isenabled, credit, credit_buff) VALUES" +
+            "(#{user_id}, #{group_id}, #{role_id}, #{avatar}, #{nickname}, NOW(), #{count_setu}, #{count_upload}, #{isEnabled}, #{credit}, #{credit_buff})")
     public int insert(User user);
 
     @Select("SELECT *, role_name, info FROM t_user LEFT JOIN t_role ON t_role.role_id = t_user.role_id")

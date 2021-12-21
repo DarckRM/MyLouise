@@ -1,5 +1,6 @@
 package com.darcklh.louise.Service.Impl;
 
+import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Mapper.SysConfigDao;
 import com.darcklh.louise.Model.Saito.SysConfig;
 import com.darcklh.louise.Service.SysConfigService;
@@ -30,5 +31,18 @@ public class SysConfigImpl implements SysConfigService {
         }
         List<SysConfig> sysConfigs = sysConfigDao.findSysConfigByType(x);
         return sysConfigs;
+    }
+
+    @Override
+    public List<SysConfig> findAllSysConfig() {
+        List<SysConfig> sysConfigs = sysConfigDao.selectList(null);
+        return sysConfigs;
+    }
+
+    public Integer edit(List<SysConfig> sysConfigs) {
+        for (SysConfig sysConfig : sysConfigs) {
+            sysConfigDao.updateById(sysConfig);
+        }
+        return 1;
     }
 }
