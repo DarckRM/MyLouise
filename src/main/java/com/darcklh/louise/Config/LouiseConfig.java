@@ -24,6 +24,8 @@ public class LouiseConfig {
     private String SERVER_PORT;
 
     //Louise相关配置
+    @Value("${LOUISE.WELCOME_SENTENCE}")
+    private String LOUISE_WELCOME_SENTENCE;
     @Value("${LOUISE.HELP_PAGE}")
     private String LOUISE_HELP_PAGE;
     @Value("${LOUISE.ADMIN_NUMBER}")
@@ -74,6 +76,7 @@ public class LouiseConfig {
         }
 
         //从数据库中取得配置(默认读取一次配置文件)
+        this.setLOUISE_WELCOME_SENTENCE(configs.get("LOUISE.WELCOME_SENTENCE"));
         this.setLOUISE_HELP_PAGE(configs.get("LOUISE.HELP_PAGE"));
         this.setLOUISE_ADMIN_NUMBER(configs.get("LOUISE.ADMIN_NUMBER"));
         this.setLOUISE_CACHE_IMAGE_LOCATION(configs.get("LOUISE.CACHE.IMAGE_LOCATION"));

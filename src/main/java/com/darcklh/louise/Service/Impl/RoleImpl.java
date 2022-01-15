@@ -36,6 +36,11 @@ public class RoleImpl implements RoleService{
     }
 
     @Override
+    public Role selectById(Integer role_id) {
+        return roleDao.selectById(role_id);
+    }
+
+    @Override
     public String delBy(Integer role_id) {
         return null;
     }

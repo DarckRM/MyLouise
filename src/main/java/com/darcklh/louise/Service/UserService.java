@@ -13,8 +13,9 @@ public interface UserService {
     public JSONObject myInfo(String user_id);
     public void updateCount(String user_id, int option);
     public String banUser(String user_id);
-    public boolean isUserExist(String user_id);
-    public boolean isUserEnabled(String user_id);
+    public int isUserAvaliable(String user_id);
+    public User selectById(String user_id);
+    public int minusCredit( String user_id, int credit);
 
 
 

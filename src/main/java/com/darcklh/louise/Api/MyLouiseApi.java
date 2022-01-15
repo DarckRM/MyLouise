@@ -1,11 +1,13 @@
 package com.darcklh.louise.Api;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Model.Louise.Role;
+import com.darcklh.louise.Model.Louise.User;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
-import com.darcklh.louise.Service.Impl.UserImpl;
+import com.darcklh.louise.Service.RoleService;
+import com.darcklh.louise.Service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.List;
+
+import static com.darcklh.louise.Utils.isEmpty.isEmpty;
 
 @RestController
 public class MyLouiseApi implements ErrorController {
@@ -36,7 +41,10 @@ public class MyLouiseApi implements ErrorController {
     LouiseConfig louiseConfig;
 
     @Autowired
-    private UserImpl userImpl;
+    private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
 
     /**
      * 插件调用中心
@@ -96,7 +104,7 @@ public class MyLouiseApi implements ErrorController {
             return reply;
         }
         String user_id = message.getString("message").substring(5);
-        reply.put("reply", userImpl.banUser(user_id));
+        reply.put("reply", userService.banUser(user_id));
         return reply;
     }
 
@@ -166,7 +174,7 @@ public class MyLouiseApi implements ErrorController {
                 returnJson.put("reply","露易丝不支持私聊注册哦，\n请在群聊里使用吧");
                 return returnJson;
             }
-            return userImpl.joinLouise(user_id, group_id);
+            return userService.joinLouise(user_id, group_id);
         }
         return null;
     }
@@ -198,7 +206,7 @@ public class MyLouiseApi implements ErrorController {
         }
 
         //调用LoliconAPI随机或根据参数请求色图
-        userImpl.updateCount(user_id,1);
+        userService.updateCount(user_id,1);
         return sendPictureApi.sendPicture(number, nickname, senderType, message);
     }
 
@@ -288,7 +296,29 @@ public class MyLouiseApi implements ErrorController {
     public JSONObject myInfo(@RequestBody JSONObject message) {
 
         String user_id = message.getString("user_id");
-        return userImpl.myInfo(user_id);
+
+        JSONObject returnJson = new JSONObject();
+
+        User user = userService.selectById(user_id);
+        Role role = roleService.selectById(user.getRole_id());
+        if (isEmpty(user)) {
+            returnJson.put("reply", "没有你的信息诶");
+        } else {
+            String nickname = user.getNickname();
+            Timestamp create_time = user.getCreate_time();
+            Integer count_setu = user.getCount_setu();
+            Integer count_upload = user.getCount_upload();
+            returnJson.put("reply", nickname + "，你的个人信息" +
+                    "\n总共请求功能次数：" + count_setu +
+                    "\n总共上传文件次数：" + count_upload +
+                    "\n在露易丝这里注册的时间；" + create_time +
+                    "\n-----------DIVIDER LINE------------" +
+                    "\n你的权限级别：<" + role.getRole_name() + ">" +
+                    "\n剩余CREDIT：" + user.getCredit() +
+                    "\nCREDIT BUFF：" + user.getCredit_buff()
+            );
+        }
+        return returnJson;
 
     }
 

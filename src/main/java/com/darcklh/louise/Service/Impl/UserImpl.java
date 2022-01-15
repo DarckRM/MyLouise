@@ -86,35 +86,25 @@ public class UserImpl implements UserService {
         return jsonObject;
     }
 
+    @Override
+    public User selectById(String user_id) {
+        User user = userDao.selectById(user_id);
+        if (isEmpty(user)) {
+            logger.info("用户 " + user_id + " 不存在");
+            return null;
+        }
+        return user;
+    }
+
     /**
      * 根据用户qq查询相关用户信息
      * @param user_id String
      * @return
      */
+    @Override
     public JSONObject myInfo(String user_id) {
 
-        JSONObject returnJson = new JSONObject();
-
-        User user = userDao.selectById(user_id);
-        Role role = roleDao.selectById(user.getRole_id());
-        if (isEmpty(user)) {
-            returnJson.put("reply", "没有你的信息诶");
-        } else {
-            String nickname = user.getNickname();
-            Timestamp create_time = user.getCreate_time();
-            Integer count_setu = user.getCount_setu();
-            Integer count_upload = user.getCount_upload();
-            returnJson.put("reply", nickname + "，你的个人信息" +
-                    "\n总共请求功能次数：" + count_setu +
-                    "\n总共上传文件次数：" + count_upload +
-                    "\n在露易丝这里注册的时间；" + create_time +
-                    "\n-----------DIVIDER LINE------------" +
-                    "\n你的权限级别：<" + role.getRole_name() + ">" +
-                    "\n剩余CREDIT：" + user.getCredit() +
-                    "\nCREDIT BUFF：" + user.getCredit_buff()
-            );
-        }
-        return returnJson;
+    return null;
     }
 
     /**
@@ -134,23 +124,31 @@ public class UserImpl implements UserService {
     public String banUser(String user_id) {
         String reply = "变更状态失败";
         if (userDao.banUser(user_id) == 1) {
-            reply = isUserEnabled(user_id) ? "用户"+user_id+"已解封" : "用户"+user_id+"已暂时烟了";
+            reply = isUserAvaliable(user_id) == -1 ? "用户"+user_id+"已解封" : "用户"+user_id+"已封禁";
         }
         return reply;
     }
 
-    public boolean isUserExist(String user_id) {
+    public int isUserAvaliable(String user_id) {
         //判断用户是否已注册
         if (userDao.isUserExist(user_id) == 0)
-            return false;
-        return true;
-    }
-
-    public boolean isUserEnabled(String user_id) {
+            return 0;
         //判断用户是否启用
         if (userDao.isUserEnabled(user_id) <= 0)
-            return false;
-        return true;
+            return -1;
+        return 1;
+    }
+
+    @Override
+    public int minusCredit(String user_id, int credit) {
+
+        User user = userDao.selectById(user_id);
+        int balance = user.getCredit() - credit;
+        if (balance < 0)
+            return balance;
+        userDao.minusCredit(credit, user_id);
+        logger.info("用户 " + user_id + " CREDIT余额还有 " + balance);
+        return balance;
     }
 
     @Override

@@ -13,8 +13,10 @@ import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.Saito.FeatureInfo;
 import com.darcklh.louise.Model.VO.FeatureInfoMin;
 import com.darcklh.louise.Service.FeatureInfoService;
+import com.darcklh.louise.Service.GroupService;
 import com.darcklh.louise.Service.Impl.GroupImpl;
 import com.darcklh.louise.Service.Impl.UserImpl;
+import com.darcklh.louise.Service.UserService;
 import com.darcklh.louise.Utils.HttpServletWrapper;
 import com.darcklh.louise.Utils.isEmpty;
 import org.slf4j.Logger;
@@ -43,19 +45,13 @@ public class LouiseHandler implements HandlerInterceptor {
     LouiseConfig louiseConfig;
 
     @Autowired
-    UserImpl userImpl;
+    UserService userService;
 
     @Autowired
-    UserDao userDao;
-
-    @Autowired
-    GroupImpl groupImpl;
+    GroupService groupService;
 
     @Autowired
     GroupDao groupDao;
-
-    @Autowired
-    FeatureInfoDao featureInfoDao;
 
     @Autowired
     FeatureInfoService featureInfoService;
@@ -66,7 +62,7 @@ public class LouiseHandler implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         logger.info("拦截器合法性校验");
-        JSONObject returnJson = new JSONObject();
+
         String command = request.getRequestURI();
 
         //对command预处理
@@ -83,7 +79,7 @@ public class LouiseHandler implements HandlerInterceptor {
         JSONObject jsonObject = JSONObject.parseObject(body);
         String group_id = jsonObject.getString("group_id");
         String user_id = jsonObject.getJSONObject("sender").getString("user_id");
-        Integer role_id = 0;
+
         Boolean tag = false;
 
         //放行join
@@ -91,25 +87,27 @@ public class LouiseHandler implements HandlerInterceptor {
             return true;
         }
 
-        //判断用户是否存在并启用
-        if (!userImpl.isUserExist(user_id)) {
-            return returnFalseMessage(louiseConfig.getLOUISE_ERROR_UNKNOWN_USER(), "未登记的用户" + user_id, response);
-        } else if (!userImpl.isUserEnabled(user_id)) {
-            return returnFalseMessage(louiseConfig.getLOUISE_ERROR_BANNED_USER(), "未启用的用户" + user_id, response);
-        }
-
         //放行help
         if (command.equals("/louise/help")) {
             return true;
         }
 
+        int isAvaliable = userService.isUserAvaliable(user_id);
+
+        //判断用户是否存在并启用
+        if (isAvaliable == 0) {
+            return returnFalseMessage(louiseConfig.getLOUISE_ERROR_UNKNOWN_USER(), "未登记的用户" + user_id, response);
+        } else if (isAvaliable == -1) {
+            return returnFalseMessage(louiseConfig.getLOUISE_ERROR_BANNED_USER(), "未启用的用户" + user_id, response);
+        }
+
         //判断群是否启用
-        if (group_id != null && !groupImpl.isGroupEnabled(group_id)) {
+        if (group_id != null && !groupService.isGroupEnabled(group_id)) {
             return returnFalseMessage("主人不准露易丝在这个群里说话哦", "未启用的群组: " + group_id, response);
         }
 
         //获取请求的功能对象
-        FeatureInfo featureInfo = featureInfoDao.findWithFeatureURL(command);
+        FeatureInfo featureInfo = featureInfoService.findWithFeatureURL(command);
 
         try {
             //判断功能是否启用
@@ -122,10 +120,9 @@ public class LouiseHandler implements HandlerInterceptor {
 
         //判断群是否具有请求权限
         if(!isEmpty.isEmpty(group_id)) {
-            Group group = groupDao.selectById(group_id);
-            role_id = group.getRole_id();
+            Group group = groupService.selectById(group_id);
 
-            List<FeatureInfoMin> featureInfoMins = featureInfoDao.findWithRoleId(role_id);
+            List<FeatureInfoMin> featureInfoMins = featureInfoService.findWithRoleId(group.getRole_id());
             logger.info("群聊允许的功能列表: " +featureInfoMins);
             for ( FeatureInfoMin featureInfoMin: featureInfoMins) {
                 if (featureInfoMin.getFeature_id().equals(featureInfo.getFeature_id())) {
@@ -141,10 +138,9 @@ public class LouiseHandler implements HandlerInterceptor {
 
         if(tag) {
             tag = false;
-            User user = userDao.selectById(user_id);
-            role_id = user.getRole_id();
+            User user = userService.selectById(user_id);
 
-            List<FeatureInfoMin> featureInfoMins = featureInfoDao.findWithRoleId(role_id);
+            List<FeatureInfoMin> featureInfoMins = featureInfoService.findWithRoleId(user.getRole_id());
             logger.info("用户允许的功能列表: " +featureInfoMins);
             for ( FeatureInfoMin featureInfoMin: featureInfoMins) {
                 if (featureInfoMin.getFeature_id().equals(featureInfo.getFeature_id())) {
@@ -157,8 +153,12 @@ public class LouiseHandler implements HandlerInterceptor {
         }
 
         //合法性校验通过 扣除CREDIT
-        userDao.minusCredit(featureInfo.getCredit_cost(), user_id);
-        logger.info("功能" +featureInfo.getFeature_name() + " 消耗用户 " + user_id +" CREDIT " + featureInfo.getCredit_cost());
+        int credit = userService.minusCredit(user_id, featureInfo.getCredit_cost());
+        if (credit < 0) {
+            return returnFalseMessage("你的CREDIT余额不足哦", "用户 " + user_id + " CREDIT不足", response);
+        }
+
+        logger.info("功能 " +featureInfo.getFeature_name() + " 消耗用户 " + user_id +" CREDIT " + featureInfo.getCredit_cost());
 
         return true;
     }
