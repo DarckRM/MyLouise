@@ -73,7 +73,7 @@ public class BootApplication {
         }
 
         r.put("user_id", louiseConfig.getLOUISE_ADMIN_NUMBER());
-        r.put("message", "露易丝启动了哦");
+        r.put("message", louiseConfig.getLOUISE_WELCOME_SENTENCE());
         try {
             r.sendMessage(r.getMessage());
         } catch (ResourceAccessException e) {

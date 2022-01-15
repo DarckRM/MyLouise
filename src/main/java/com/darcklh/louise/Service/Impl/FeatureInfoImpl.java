@@ -2,6 +2,7 @@ package com.darcklh.louise.Service.Impl;
 
 import com.darcklh.louise.Mapper.FeatureInfoDao;
 import com.darcklh.louise.Model.Saito.FeatureInfo;
+import com.darcklh.louise.Model.VO.FeatureInfoMin;
 import com.darcklh.louise.Service.FeatureInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,15 @@ public class FeatureInfoImpl implements FeatureInfoService {
             reply = isEnabled(feature_id) == 1 ? "功能<"+feature_name+">已启用" : "功能<"+feature_name+">已禁用";
         }
         return reply;
+    }
+
+    @Override
+    public FeatureInfo findWithFeatureURL(String feature_url) {
+        return featureInfoDao.findWithFeatureURL(feature_url);
+    }
+
+    @Override
+    public List<FeatureInfoMin> findWithRoleId(Integer role_id) {
+        return featureInfoDao.findWithRoleId(role_id);
     }
 }

@@ -15,6 +15,7 @@ public interface GroupService extends BaseService<Group> {
     public List<GroupRole> findGroupRoleBy();
     public List<Group> findBy();
     public String delByGroup_ID(String group_id);
+    public Group selectById(String group_id);
     public String editBy(Group group);
     public String add(Group group);
     public String switchStatus(String group_id);

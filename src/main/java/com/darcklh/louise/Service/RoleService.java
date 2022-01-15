@@ -13,5 +13,6 @@ public interface RoleService extends BaseService<Role>{
     public Integer delRoleFeature(Integer role_id);
     public String addRoleFeature(Integer role_id, Integer feature_id);
     public String edit(RoleFeatureId roleFeatureId);
+    public Role selectById(Integer role_id);
 
 }

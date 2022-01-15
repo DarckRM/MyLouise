@@ -55,7 +55,7 @@ public class GroupController {
     }
 
     @RequestMapping("switchStatus")
-    public Result test(@RequestBody JSONObject jsonObject) {
+    public Result switchStatus(@RequestBody JSONObject jsonObject) {
         Result result = new Result();
         result.setMsg(groupService.switchStatus(jsonObject.getString("group_id")));
         if (result.getMsg().equals("变更状态失败")) {

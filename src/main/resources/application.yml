@@ -31,6 +31,7 @@ mybatis-plus:
 
 #Louise相关配置
 LOUISE:
+    WELCOME_SENTENCE: 椰羊来咯！
     HELP_PAGE: https://chenjie.ink:8096/file/images/Image_20210930103600006_zcnn.jpg
 #    HELP_PAGE: https://chenjie.ink:8096/file/images/Image_20210814200900036_WUuK.jpg
     ADMIN_NUMBER: 412543224

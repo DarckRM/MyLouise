@@ -34,6 +34,10 @@ public class GroupImpl implements GroupService {
         return null;
     }
 
+    public Group selectById(String group_id) {
+        return groupDao.selectById(group_id);
+    }
+
     public String editBy(Group group) {
         return null;
     }

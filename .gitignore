@@ -1,5 +1,8 @@
 # Created by .ignore support plugin (hsz.mobi)
 cache/
+
+logs/
+
 ### Maven template
 target/
 pom.xml.tag

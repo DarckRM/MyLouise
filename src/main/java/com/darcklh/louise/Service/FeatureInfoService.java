@@ -1,6 +1,9 @@
 package com.darcklh.louise.Service;
 
 import com.darcklh.louise.Model.Saito.FeatureInfo;
+import com.darcklh.louise.Model.VO.FeatureInfoMin;
+
+import java.util.List;
 
 
 /**
@@ -10,4 +13,6 @@ import com.darcklh.louise.Model.Saito.FeatureInfo;
  */
 public interface FeatureInfoService extends BaseService<FeatureInfo>{
     public String switchStatus(Integer feature_id, String feature_name);
+    public FeatureInfo findWithFeatureURL(String feature_url);
+    public List<FeatureInfoMin> findWithRoleId(Integer role_id);
 }
