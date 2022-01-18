@@ -1,5 +1,5 @@
 import axios from "axios";
-// axios.defaults.baseURL = "http://127.0.0.1:8099/saito/"; //此路径为配置代理服务器时的代理路径\
+// axios.defaults.baseURL = "http://127.0.0.1:8099/saito/"; //此路径为配置代理服务器时的代理路径
 axios.defaults.baseURL = "http://121.4.179.240:8099/saito/"; //此路径为配置代理服务器时的代理路径
 export default {
   get(url, data, responseType) {

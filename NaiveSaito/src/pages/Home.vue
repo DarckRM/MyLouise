@@ -4,7 +4,7 @@
             <n-layout-header bordered style="padding: 0 30px; height: 100%">
                 <Top></Top>
             </n-layout-header>
-            <div style="height: 200px;"></div>
+            <div style="height: 600px;"></div>
             <n-layout has-sider position="absolute" style="top: 100px">
                 <n-layout-sider  content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80" :width="280" show-trigger="bar">            
                     <Menu></Menu>
