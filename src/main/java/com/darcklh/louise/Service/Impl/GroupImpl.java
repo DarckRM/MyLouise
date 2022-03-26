@@ -20,15 +20,21 @@ public class GroupImpl implements GroupService {
     @Autowired
     GroupDao groupDao;
 
-    public List<GroupRole> findBy() {
+    public List<GroupRole> findGroupRoleBy() {
         return groupDao.findBy();
     }
 
-    public String delBy() {
+    public List<Group> findBy() {
         return null;
     }
 
-    public String editBy() {
+    public String delBy(Integer id){return null; };
+
+    public String delByGroup_ID(String group_id) {
+        return null;
+    }
+
+    public String editBy(Group group) {
         return null;
     }
 

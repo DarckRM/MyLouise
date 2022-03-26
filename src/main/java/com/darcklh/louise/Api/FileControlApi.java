@@ -27,7 +27,7 @@ public class FileControlApi {
      * 根据传入的URL下载图片到本地
      * @param urlList
      */
-    public void downloadPicture(String urlList, String fileName, String fileOrigin) {
+    public void downloadPictureURL(String urlList, String fileName, String fileOrigin) {
         URL url = null;
         //判断目录是否存在
         String filePath = louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION() + fileOrigin + "/";
@@ -69,5 +69,9 @@ public class FileControlApi {
             logger.info("下载图片" + imageName + "失败");
         }
     }
+
+    private void downloadTo() {
+
+    };
 
 }

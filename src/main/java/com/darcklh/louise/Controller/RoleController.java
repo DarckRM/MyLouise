@@ -21,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("saito/role/")
-public class RoleController {
+public class    RoleController {
 
     @Autowired
     RoleService roleService;

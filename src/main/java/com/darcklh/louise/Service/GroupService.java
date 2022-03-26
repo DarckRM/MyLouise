@@ -10,11 +10,12 @@ import java.util.List;
  * @date 2021/9/28 19:47
  * @Description
  */
-public interface GroupService {
+public interface GroupService extends BaseService<Group> {
 
-    public List<GroupRole> findBy();
-    public String delBy();
-    public String editBy();
+    public List<GroupRole> findGroupRoleBy();
+    public List<Group> findBy();
+    public String delByGroup_ID(String group_id);
+    public String editBy(Group group);
     public String add(Group group);
     public String switchStatus(String group_id);
     public boolean isGroupExist(String group_id);

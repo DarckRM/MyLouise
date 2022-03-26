@@ -43,4 +43,7 @@ public interface UserDao extends BaseMapper<User> {
 
     @Update("UPDATE t_user SET count_upload = count_upload + 1 WHERE user_id = #{user_id}")
     public Integer updateCountUpload(String user_id);
+
+    @Update("UPDATE t_user SET credit = credit - #{credit_cost} WHERE user_id = #{user_id}")
+    public Integer minusCredit(Integer credit_cost, String user_id);
 }

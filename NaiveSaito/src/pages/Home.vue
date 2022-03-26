@@ -1,9 +1,10 @@
 <template>
     <div id="homeDiv" style="position: relative">
-        <n-layout postion="absolute" bordered style="height:930px">
-            <n-layout-header bordered style="padding: 0 30px;">
+        <n-layout postion="absolute" bordered>
+            <n-layout-header bordered style="padding: 0 30px; height: 100%">
                 <Top></Top>
             </n-layout-header>
+            <div style="height: 200px;"></div>
             <n-layout has-sider position="absolute" style="top: 100px">
                 <n-layout-sider  content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80" :width="280" show-trigger="bar">            
                     <Menu></Menu>
