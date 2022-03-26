@@ -22,7 +22,8 @@
 <n-card title="输出">
     <div v-html="terminal_output"></div>
     <WebSocket ref="webSocket" client_name="terminal_info" data=""></WebSocket>
-    <n-button @click="displayLog">显示日志</n-button>
+    <n-button @click="displayLog">追踪日志</n-button>
+    <n-button @click="clear">停止追踪</n-button>
 </n-card>
 </template>
 
