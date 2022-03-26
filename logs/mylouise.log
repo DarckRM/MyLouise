@@ -624,3 +624,25 @@ Error starting ApplicationContext. To display the conditions report re-run your 
 2021-11-21 21:19:12.774 [Thread-8] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
 2021-11-21 21:19:22.208 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 收到用户消息:terminal_info,报文:来自前端的数据
 2021-11-21 21:19:33.089 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 收到用户消息:terminal_info,报文:来自前端的数据
+2021-12-21 11:13:49.062 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on LAPTOP-0BTHOJQH with PID 19888 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
+2021-12-21 11:13:49.077 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2021-12-21 11:13:49.124 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-12-21 11:13:49.140 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-12-21 11:13:50.406 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2021-12-21 11:13:50.421 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2021-12-21 11:13:50.421 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2021-12-21 11:13:50.546 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2021-12-21 11:13:50.546 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1406 ms
+2021-12-21 11:13:51.140 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2021-12-21 11:13:52.187 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2021-12-21 11:13:52.281 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2021-12-21 11:13:52.328 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2021-12-21 11:13:52.328 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2021-12-21 11:13:52.359 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2021-12-21 11:13:52.359 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2021-12-21 11:13:54.454 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2021-12-21 11:13:54.454 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2021-12-21 11:13:54.610 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2021-12-21 11:13:54.813 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2021-12-21 11:13:54.891 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2021-12-21 11:13:54.907 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 6.477 seconds (JVM running for 7.699)
