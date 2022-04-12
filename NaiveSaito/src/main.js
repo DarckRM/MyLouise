@@ -50,6 +50,10 @@ import {
         NDescriptionsItem,
         NDescriptions,
         NDialog,
+        NUpload,
+        NUploadDragger,
+        NP,
+        NSelect
 } from 'naive-ui'
 const naive = create({
     components: [
@@ -99,6 +103,10 @@ const naive = create({
         NDescriptionsItem,
         NDescriptions,
         NDialog,
+        NUpload,
+        NUploadDragger,
+        NP,
+        NSelect
     ]
 })
 const app = createApp(App)
