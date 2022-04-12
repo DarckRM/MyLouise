@@ -4,7 +4,6 @@
         <img style="width: 150px" alt="Vue logo" src="../assets/logo.png">
         MyLouise Backfront Alpha
     </div>
-
         <n-divider />
         <n-card v-bind:title="loginPageTitle" id="loginCard">
         <n-tabs default-value='signin'>

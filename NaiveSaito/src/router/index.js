@@ -42,9 +42,14 @@ const routes = [
     },
     {
         path: '/',
-        name: 'Login',
-        component: () => import('../components/LoginPage.vue')
+        name: 'ImageRetrieve',
+        component: () => import('../components/ImageRetrieve.vue')
     },
+    {
+      path: '/login',
+      name: 'Login',
+      component: () => import('../components/LoginPage.vue')
+  },
     {
         path: '/404',
         name: '404 Page',
