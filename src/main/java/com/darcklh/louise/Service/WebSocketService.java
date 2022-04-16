@@ -45,11 +45,11 @@ public class WebSocketService {
         client.setSession(session);
         client.setUri(session.getRequestURI().toString());
         webSocketMap.put(userName, client);
-        log.info("用户连接:"+userName+",当前在线人数为:" + getOnlineCount());
+        log.info("用户 " + userName + " 连接,当前在线人数为:" + getOnlineCount());
         try {
             sendMessage("{\"msg\":\"来自后台的反馈：连接成功\"}");
         } catch (IOException e) {
-            log.error("用户:"+userName+",网络异常!!!!!!");
+            log.error("用户 " + userName + " ,网络异常!!!!!!");
         }
     }
 
@@ -64,7 +64,7 @@ public class WebSocketService {
             //从set中删除
             subOnlineCount();
         }
-        log.info(userName+"用户退出,当前在线人数为:" + getOnlineCount());
+        log.info("用户 " + userName + " 退出,当前在线人数为:" + getOnlineCount());
     }
 
     /**
@@ -110,6 +110,7 @@ public class WebSocketService {
                 webSocketClient.getSession().getBasicRemote().sendText(message);
             }
         } catch (IOException e) {
+            log.info("用户 " + userName + " 遇到异常");
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
