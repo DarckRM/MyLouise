@@ -63,7 +63,6 @@
 import { defineComponent } from "vue"
 import WebSocket from '../components/websocket/WebSocket.vue'
 import {
-    AlertCircleOutline as AlertIcon,
     HelpCircleOutline as HelpIcon
 } from '@vicons/ionicons5'
 
@@ -100,6 +99,7 @@ import {
                   this.louiseText = '停机中'
               } 
               setInterval(this.nowTimes,5000)
+              this.clear()
             },
             clear(){
                 this.nowTimes = null

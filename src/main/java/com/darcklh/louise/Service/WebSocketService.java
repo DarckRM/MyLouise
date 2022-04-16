@@ -27,7 +27,6 @@ public class WebSocketService {
     //concurrent包的线程安全Set，用来存放每个客户端对应的WebSocketServer对象。
     private static ConcurrentHashMap<String, WebSocketClient> webSocketMap = new ConcurrentHashMap<>();
 
-
     /**与某个客户端的连接会话，需要通过它来给客户端发送数据*/
     private Session session;
     /**接收userName*/
@@ -46,8 +45,6 @@ public class WebSocketService {
         client.setSession(session);
         client.setUri(session.getRequestURI().toString());
         webSocketMap.put(userName, client);
-
-        log.info("----------------------------------------------------------------------------");
         log.info("用户连接:"+userName+",当前在线人数为:" + getOnlineCount());
         try {
             sendMessage("{\"msg\":\"来自后台的反馈：连接成功\"}");
@@ -61,15 +58,12 @@ public class WebSocketService {
      */
     @OnClose
     public void onClose() {
+        log.info("用户 " + userName + " 断开了连接");
         if(webSocketMap.containsKey(userName)){
             webSocketMap.remove(userName);
-            if(webSocketMap.size()>0)
-            {
-                //从set中删除
-                subOnlineCount();
-            }
+            //从set中删除
+            subOnlineCount();
         }
-        log.info("----------------------------------------------------------------------------");
         log.info(userName+"用户退出,当前在线人数为:" + getOnlineCount());
     }
 

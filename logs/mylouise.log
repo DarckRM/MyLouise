@@ -1,85 +1,721 @@
-2022-04-16 22:22:19.486 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 12204 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
-2022-04-16 22:22:19.491 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-04-16 22:22:19.531 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2022-04-16 22:22:19.531 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2022-04-16 22:22:20.702 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-04-16 22:22:20.710 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-04-16 22:22:20.711 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-04-16 22:22:20.787 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-04-16 22:22:20.787 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1255 ms
-2022-04-16 22:22:21.295 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2022-04-16 22:22:21.917 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2022-04-16 22:22:22.001 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-04-16 22:22:22.045 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-04-16 22:22:22.046 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-04-16 22:22:22.073 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
-2022-04-16 22:22:22.100 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-04-16 22:22:22.101 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-04-16 22:22:24.186 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
-2022-04-16 22:22:24.187 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-04-16 22:22:24.329 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-04-16 22:22:24.550 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-04-16 22:22:24.642 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-04-16 22:22:24.654 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.68 seconds (JVM running for 6.594)
-2022-04-16 22:22:40.663 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-04-16 22:22:40.665 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-04-16 22:22:40.666 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
-2022-04-16 22:22:40.697 [Thread-7] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
-2022-04-16 22:22:46.751 [Thread-8] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
-2022-04-16 22:23:13.722 [Thread-9] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
-2022-04-16 22:23:19.901 [Thread-10] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
-2022-04-16 22:24:16.529 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 24900 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
-2022-04-16 22:24:16.531 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-04-16 22:24:16.568 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2022-04-16 22:24:16.568 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2022-04-16 22:24:17.433 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-04-16 22:24:17.440 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-04-16 22:24:17.440 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-04-16 22:24:17.510 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-04-16 22:24:17.510 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 942 ms
-2022-04-16 22:24:17.957 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2022-04-16 22:24:18.685 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2022-04-16 22:24:18.756 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-04-16 22:24:18.809 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-04-16 22:24:18.809 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-04-16 22:24:18.811 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
-2022-04-16 22:24:18.832 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-04-16 22:24:18.833 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-04-16 22:24:20.910 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
-2022-04-16 22:24:20.911 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-04-16 22:24:21.051 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-04-16 22:24:21.232 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-04-16 22:24:21.307 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-04-16 22:24:21.317 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.284 seconds (JVM running for 6.057)
-2022-04-16 22:24:24.946 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-04-16 22:24:24.947 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-04-16 22:24:24.948 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
-2022-04-16 22:25:03.052 [Thread-7] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
-2022-04-16 22:26:17.696 [Thread-8] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
-2022-04-16 22:28:36.561 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
-2022-04-16 22:28:36.563 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
-2022-04-16 22:28:38.859 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
-2022-04-16 22:28:38.860 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
-2022-04-16 22:28:39.718 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
-2022-04-16 22:28:39.719 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
-2022-04-16 22:28:39.723 [Thread-11] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
-2022-04-16 22:28:50.190 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 收到用户消息:terminal_info,报文:来自前端的数据
-2022-04-16 22:29:06.112 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
-2022-04-16 22:29:06.113 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
-2022-04-16 22:30:54.725 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
-2022-04-16 22:30:54.725 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
-2022-04-16 22:30:54.726 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
-2022-04-16 22:30:54.726 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
-2022-04-16 22:30:55.576 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
-2022-04-16 22:30:55.576 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
-2022-04-16 22:30:59.628 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
-2022-04-16 22:30:59.629 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:4
-2022-04-16 22:30:59.695 [Thread-13] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
-2022-04-16 22:31:04.189 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 收到用户消息:terminal_info,报文:来自前端的数据
-2022-04-16 22:31:41.840 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
-2022-04-16 22:31:41.840 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
-2022-04-16 22:31:41.841 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:3
-2022-04-16 22:31:41.841 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:3
-2022-04-16 22:31:43.839 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
-2022-04-16 22:31:43.840 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:4
-2022-04-16 22:31:43.852 [Thread-15] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 00:38:30.943 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 22364 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 00:38:30.948 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 00:38:30.989 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-17 00:38:30.989 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-17 00:38:31.773 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 00:38:31.780 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 00:38:31.780 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 00:38:31.849 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 00:38:31.849 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 859 ms
+2022-04-17 00:38:32.236 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-17 00:38:32.790 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-17 00:38:32.853 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 00:38:32.893 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 00:38:32.893 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 00:38:32.895 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 00:38:32.915 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 00:38:32.916 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 00:38:34.990 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 00:38:34.990 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 00:38:35.119 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 00:38:35.275 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 00:38:35.340 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 00:38:35.350 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 4.843 seconds (JVM running for 5.535)
+2022-04-17 00:39:32.542 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 00:39:32.543 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 00:39:32.544 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 00:41:09.299 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:41:09.301 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:1
+2022-04-17 00:41:11.220 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:41:11.220 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 00:41:11.264 [Thread-8] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 00:42:33.109 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:42:33.109 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:42:33.112 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 00:42:33.112 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 00:43:32.897 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:43:32.898 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 00:43:32.899 [Thread-9] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 00:43:59.599 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:43:59.600 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 00:43:59.611 [Thread-11] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 00:44:10.568 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:44:10.568 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 00:45:00.199 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:00.199 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 00:45:03.296 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:03.296 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:03.296 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:03.297 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:03.297 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 00:45:03.297 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 00:45:03.297 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 00:45:03.297 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 00:45:03.895 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:03.896 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 00:45:11.152 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:11.153 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:3
+2022-04-17 00:45:11.157 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:11.158 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:4
+2022-04-17 00:45:11.174 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:11.174 [Thread-14] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 00:45:11.174 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:5
+2022-04-17 00:45:42.353 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:42.353 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:4
+2022-04-17 00:45:42.353 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:42.354 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:4
+2022-04-17 00:45:42.365 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2022-04-17 00:45:42.717 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2022-04-17 00:45:42.802 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 22364 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 00:45:42.802 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 00:45:43.096 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 00:45:43.097 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 00:45:43.097 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 00:45:43.117 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 00:45:43.117 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 313 ms
+2022-04-17 00:45:43.285 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2022-04-17 00:45:43.671 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2022-04-17 00:45:43.706 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 00:45:43.741 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 00:45:43.741 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 00:45:43.743 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 00:45:43.743 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 00:45:43.743 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 00:45:45.787 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 00:45:45.787 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 00:45:45.820 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 00:45:45.851 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 00:45:45.894 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 00:45:45.898 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 3.132 seconds (JVM running for 436.083)
+2022-04-17 00:45:45.899 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2022-04-17 00:45:45.942 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 00:45:45.943 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 00:45:45.944 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 00:45:45.946 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:1
+2022-04-17 00:45:45.960 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 00:45:47.489 [Thread-15] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:47.489 [Thread-15] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 00:45:47.490 [Thread-15] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:47.490 [Thread-15] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 00:45:47.499 [Thread-15] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+2022-04-17 00:45:47.875 [Thread-15] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+2022-04-17 00:45:47.951 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 22364 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 00:45:47.951 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 00:45:48.184 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 00:45:48.185 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 00:45:48.185 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 00:45:48.199 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 00:45:48.200 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 246 ms
+2022-04-17 00:45:48.349 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+2022-04-17 00:45:48.775 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+2022-04-17 00:45:48.817 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 00:45:48.860 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 00:45:48.860 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 00:45:48.862 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 00:45:48.862 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 00:45:48.862 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 00:45:50.903 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 00:45:50.904 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 00:45:50.937 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 00:45:50.965 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 00:45:51.006 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 00:45:51.009 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 3.093 seconds (JVM running for 441.193)
+2022-04-17 00:45:51.009 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2022-04-17 00:45:51.056 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 00:45:51.057 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 00:45:51.058 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 00:45:51.061 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 00:45:51.080 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 00:45:55.162 [Thread-20] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:55.162 [Thread-20] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 00:45:55.162 [Thread-20] INFO  com.darcklh.louise.Service.WebSocketService - ----------------------------------------------------------------------------
+2022-04-17 00:45:55.163 [Thread-20] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 00:45:55.169 [Thread-20] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
+2022-04-17 00:45:55.530 [Thread-20] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
+2022-04-17 00:45:55.599 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 22364 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 00:45:55.599 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 00:45:55.836 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 00:45:55.837 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 00:45:55.837 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 00:45:55.852 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 00:45:55.852 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 252 ms
+2022-04-17 00:45:55.995 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Starting...
+2022-04-17 00:45:56.365 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Start completed.
+2022-04-17 00:45:56.399 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 00:45:56.432 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 00:45:56.432 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 00:45:56.434 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 00:45:56.434 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 00:45:56.434 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 00:45:58.463 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 00:45:58.464 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 00:45:58.512 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 00:45:58.541 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 00:45:58.584 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 00:45:58.587 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 3.021 seconds (JVM running for 448.772)
+2022-04-17 00:45:58.588 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2022-04-17 00:45:58.696 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 00:45:58.697 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 00:45:58.698 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 00:45:58.701 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 00:45:58.713 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 00:46:16.226 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 00:46:16.232 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 00:46:16.248 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 00:47:30.513 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 00:47:30.517 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 00:47:30.534 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 00:47:42.365 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:0
+2022-04-17 00:47:42.365 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:0
+2022-04-17 00:47:42.365 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:0
+2022-04-17 00:47:42.365 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:0
+2022-04-17 00:47:43.198 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:1
+2022-04-17 00:49:22.930 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 00:49:22.942 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 00:49:22.949 [Thread-32] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 00:49:22.956 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 00:50:31.588 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 00:50:31.600 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 00:50:42.200 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 00:50:42.213 [Thread-33] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 00:51:54.509 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 00:51:54.512 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 00:51:54.526 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 00:51:58.117 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 00:51:58.117 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 00:51:58.117 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 00:51:58.118 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 00:51:58.948 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 00:51:58.952 [Thread-35] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 00:52:17.124 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 00:52:27.565 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 19668 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 00:52:27.567 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 00:52:27.600 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-17 00:52:27.600 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-17 00:52:28.382 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 00:52:28.389 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 00:52:28.390 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 00:52:28.458 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 00:52:28.458 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 857 ms
+2022-04-17 00:52:28.843 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-17 00:52:29.412 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-17 00:52:29.481 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 00:52:29.523 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 00:52:29.523 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 00:52:29.525 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 00:52:29.545 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 00:52:29.546 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 00:52:31.628 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 00:52:31.629 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 00:52:31.753 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 00:52:31.908 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 00:52:31.974 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 00:52:31.985 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 4.806 seconds (JVM running for 5.466)
+2022-04-17 00:52:32.263 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 00:52:32.264 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 00:52:32.265 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 00:52:32.295 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 00:52:45.583 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 00:52:45.617 [Thread-8] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 00:52:50.979 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 00:52:50.983 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 00:52:55.403 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 00:52:55.414 [Thread-9] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 00:52:59.388 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 00:52:59.395 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 00:53:01.028 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 00:53:01.040 [Thread-10] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 00:53:02.330 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:3
+2022-04-17 00:53:02.336 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:4
+2022-04-17 00:58:29.779 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:4
+2022-04-17 00:58:29.779 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:4
+2022-04-17 00:58:29.779 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:4
+2022-04-17 00:58:29.779 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:4
+2022-04-17 00:58:37.636 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 25900 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 00:58:37.638 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 00:58:37.676 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-17 00:58:37.677 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-17 00:58:38.501 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 00:58:38.508 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 00:58:38.508 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 00:58:38.584 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 00:58:38.584 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 907 ms
+2022-04-17 00:58:38.992 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-17 00:58:39.709 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-17 00:58:39.812 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 00:58:39.855 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 00:58:39.855 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 00:58:39.857 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 00:58:39.878 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 00:58:39.880 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 00:58:41.957 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 00:58:41.958 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 00:58:42.087 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 00:58:42.252 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 00:58:42.319 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 00:58:42.329 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.101 seconds (JVM running for 5.807)
+2022-04-17 00:58:58.477 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 00:58:58.478 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 00:58:58.479 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 00:58:58.499 [Thread-7] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 00:58:58.520 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 00:59:03.884 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 00:59:03.904 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 00:59:03.923 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:00:06.517 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:00:06.524 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:00:10.127 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:00:10.139 [Thread-10] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:00:14.756 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:00:14.764 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:00:17.898 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:00:17.911 [Thread-11] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:00:22.364 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:00:22.371 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:00:30.133 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:00:30.132 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:00:30.132 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:00:30.132 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:00:35.333 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:00:35.357 [Thread-13] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:00:37.284 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:3
+2022-04-17 01:00:37.290 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:4
+2022-04-17 01:02:17.424 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 26656 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 01:02:17.427 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 01:02:17.474 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-17 01:02:17.474 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-17 01:02:18.456 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 01:02:18.465 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 01:02:18.465 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 01:02:18.564 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 01:02:18.565 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1090 ms
+2022-04-17 01:02:19.097 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-17 01:02:19.699 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-17 01:02:19.766 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 01:02:19.810 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 01:02:19.810 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 01:02:19.812 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 01:02:19.832 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 01:02:19.833 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 01:02:21.906 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 01:02:21.906 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 01:02:22.032 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 01:02:22.189 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 01:02:22.257 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 01:02:22.268 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.314 seconds (JVM running for 5.943)
+2022-04-17 01:02:22.360 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 01:02:22.361 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 01:02:22.362 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 01:02:22.395 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 01:03:01.974 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:03:01.976 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 01:03:08.105 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 2624 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 01:03:08.107 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 01:03:08.138 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-17 01:03:08.139 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-17 01:03:09.019 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 01:03:09.027 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 01:03:09.027 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 01:03:09.095 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 01:03:09.096 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 957 ms
+2022-04-17 01:03:09.486 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-17 01:03:10.180 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-17 01:03:10.246 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 01:03:10.288 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 01:03:10.288 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 01:03:10.290 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 01:03:10.310 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 01:03:10.311 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 01:03:12.385 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 01:03:12.386 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 01:03:12.523 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 01:03:12.686 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 01:03:12.752 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 01:03:12.762 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.053 seconds (JVM running for 5.968)
+2022-04-17 01:03:18.995 [http-nio-8099-exec-3] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 01:03:18.996 [http-nio-8099-exec-3] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 01:03:18.997 [http-nio-8099-exec-3] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 01:03:19.023 [Thread-7] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:03:19.053 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 01:03:22.574 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:03:22.576 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 01:03:22.578 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 01:03:22.592 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:03:36.984 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:03:36.984 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:03:36.990 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:03:37.004 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:03:37.009 [Thread-10] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:03:43.879 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:03:43.879 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:03:43.884 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:03:43.900 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:03:51.397 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:03:51.397 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:03:51.402 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:04:00.115 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:04:00.128 [Thread-11] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:04:07.169 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:04:07.169 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:04:07.175 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:04:07.189 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:04:29.627 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:04:29.628 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:04:29.628 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:04:29.628 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:04:29.628 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:04:29.628 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:04:29.629 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:04:29.629 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:04:29.629 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:04:29.630 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:04:29.630 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:04:29.630 [Thread-5] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:04:29.643 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2022-04-17 01:04:30.006 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2022-04-17 01:04:30.096 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 2624 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 01:04:30.097 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 01:04:30.370 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 01:04:30.371 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 01:04:30.371 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 01:04:30.390 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 01:04:30.391 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 292 ms
+2022-04-17 01:04:30.552 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2022-04-17 01:04:30.925 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2022-04-17 01:04:30.958 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 01:04:30.993 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 01:04:30.993 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 01:04:30.995 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 01:04:30.995 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 01:04:30.996 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 01:04:33.044 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 01:04:33.045 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 01:04:33.086 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 01:04:33.120 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 01:04:33.165 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 01:04:33.167 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 01:04:33.168 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 01:04:33.169 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 01:04:33.171 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 3.113 seconds (JVM running for 86.377)
+2022-04-17 01:04:33.172 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 01:04:33.173 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2022-04-17 01:04:33.184 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:04:33.199 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 01:04:33.214 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:04:33.228 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:04:33.247 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 01:04:44.744 [Thread-12] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:04:44.745 [Thread-12] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 01:04:44.745 [Thread-12] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:04:44.746 [Thread-12] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 01:04:44.746 [Thread-12] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:04:44.746 [Thread-12] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:04:44.747 [Thread-12] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:04:44.747 [Thread-12] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 01:04:44.747 [Thread-12] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:04:44.748 [Thread-12] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:04:44.749 [Thread-12] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:04:44.750 [Thread-12] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:04:44.760 [Thread-12] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+2022-04-17 01:04:45.129 [Thread-12] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+2022-04-17 01:04:45.199 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 2624 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 01:04:45.199 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 01:04:45.436 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 01:04:45.437 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 01:04:45.437 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 01:04:45.452 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 01:04:45.452 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 251 ms
+2022-04-17 01:04:45.612 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+2022-04-17 01:04:46.203 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+2022-04-17 01:04:46.245 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 01:04:46.287 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 01:04:46.287 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 01:04:46.288 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 01:04:46.289 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 01:04:46.289 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 01:04:48.327 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 01:04:48.327 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 01:04:48.359 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 01:04:48.390 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 01:04:48.433 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 01:04:48.436 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 3.27 seconds (JVM running for 101.643)
+2022-04-17 01:04:48.437 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2022-04-17 01:04:48.562 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 01:04:48.563 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 01:04:48.564 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 01:04:48.566 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 01:04:48.580 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 01:04:48.594 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:04:48.607 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 01:04:48.621 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:04:48.635 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:07:58.104 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:07:58.105 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:07:58.108 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:07:58.123 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:08:07.099 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:08:07.100 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:08:07.106 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:08:07.122 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:08:11.325 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:08:11.326 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:08:11.325 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:08:11.326 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:08:11.326 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:08:11.327 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:08:11.327 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 01:08:11.327 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 01:08:11.327 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:08:11.327 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 01:08:11.326 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:08:11.327 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:08:11.327 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:08:11.328 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:08:11.328 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:08:11.328 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:08:12.199 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:08:20.916 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 12600 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 01:08:20.917 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 01:08:20.953 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-17 01:08:20.953 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-17 01:08:21.830 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 01:08:21.836 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 01:08:21.836 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 01:08:21.903 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 01:08:21.903 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 949 ms
+2022-04-17 01:08:22.300 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-17 01:08:22.875 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-17 01:08:22.943 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 01:08:22.986 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 01:08:22.986 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 01:08:22.987 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 01:08:23.007 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 01:08:23.008 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 01:08:25.073 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 01:08:25.074 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 01:08:25.231 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 01:08:25.394 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 01:08:25.467 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 01:08:25.477 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 4.976 seconds (JVM running for 5.833)
+2022-04-17 01:08:25.550 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 01:08:25.551 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 01:08:25.552 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 01:08:25.583 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:1
+2022-04-17 01:08:32.855 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:08:32.858 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:08:32.862 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:08:32.877 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:08:32.886 [Thread-9] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:08:46.592 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:08:46.593 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:08:46.598 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:08:46.615 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:08:50.905 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:08:50.906 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:08:50.913 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:08:50.916 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:08:50.917 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:08:50.925 [Thread-10] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:08:50.929 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:08:50.944 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:08:52.666 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:08:52.667 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:08:52.671 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:08:52.685 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:10:47.193 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:10:47.194 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:10:47.199 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:10:47.214 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:10:47.219 [Thread-11] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:11:01.250 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:11:01.250 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:11:01.254 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:11:01.256 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:11:01.256 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:11:01.268 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:11:01.283 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:11:02.406 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:11:02.406 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:11:02.407 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:11:02.406 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:11:02.407 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:11:02.407 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:11:02.407 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:11:02.407 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:11:02.407 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:11:02.407 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:11:02.407 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:11:02.407 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:2
+2022-04-17 01:11:02.409 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:11:02.410 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:2
+2022-04-17 01:11:03.292 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:3
+2022-04-17 01:11:03.293 [Thread-12] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:11:15.062 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:11:15.062 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:3
+2022-04-17 01:11:15.066 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:4
+2022-04-17 01:11:15.081 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:5
+2022-04-17 01:11:21.803 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:11:21.804 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:4
+2022-04-17 01:11:21.810 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:5
+2022-04-17 01:11:21.824 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:5
+2022-04-17 01:11:21.832 [Thread-15] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:12:32.647 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:12:32.648 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:4
+2022-04-17 01:12:32.651 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:5
+2022-04-17 01:12:32.668 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:5
+2022-04-17 01:12:38.439 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:12:38.439 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:12:38.439 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:12:38.439 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:12:38.439 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:4
+2022-04-17 01:12:38.440 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:4
+2022-04-17 01:12:38.440 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:4
+2022-04-17 01:12:38.440 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:4
+2022-04-17 01:12:39.304 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:5
+2022-04-17 01:12:39.308 [Thread-17] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:17:08.670 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 25936 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 01:17:08.673 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 01:17:08.750 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-17 01:17:08.751 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-17 01:17:09.812 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 01:17:09.818 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 01:17:09.818 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 01:17:09.885 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 01:17:09.886 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1135 ms
+2022-04-17 01:17:10.289 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-17 01:17:10.853 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-17 01:17:10.932 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 01:17:10.973 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 01:17:10.974 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 01:17:10.976 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 01:17:11.005 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 01:17:11.005 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 01:17:13.094 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 01:17:13.094 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 01:17:13.236 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 01:17:13.406 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 01:17:13.476 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 01:17:13.488 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.231 seconds (JVM running for 6.008)
+2022-04-17 01:17:13.614 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 01:17:13.615 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 01:17:13.615 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2022-04-17 01:17:13.630 [Thread-7] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:17:13.928 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 01:19:39.597 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:19:39.600 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 01:19:39.601 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 01:19:39.615 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:3
+2022-04-17 01:22:21.955 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 14544 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 01:22:21.957 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 01:22:21.993 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-17 01:22:21.993 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-17 01:22:22.953 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 01:22:22.960 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 01:22:22.961 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 01:22:23.037 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 01:22:23.037 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1044 ms
+2022-04-17 01:22:23.517 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-17 01:22:24.134 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-17 01:22:24.209 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 01:22:24.254 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 01:22:24.255 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 01:22:24.256 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 01:22:24.279 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 01:22:24.280 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 01:22:26.361 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 01:22:26.362 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 01:22:26.511 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 01:22:26.686 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 01:22:26.756 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 01:22:26.767 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.306 seconds (JVM running for 6.153)
+2022-04-17 01:22:26.995 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 01:22:26.996 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 01:22:26.997 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 01:22:27.029 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:1
+2022-04-17 01:22:27.032 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 01:22:36.045 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:22:36.050 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:22:36.052 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:22:36.077 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 01:22:36.096 [Thread-8] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:22:49.456 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:22:49.457 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 01:22:49.460 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 01:22:49.476 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:23:51.450 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:23:51.450 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:1
+2022-04-17 01:23:51.454 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:23:51.469 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:23:53.207 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:23:53.207 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:23:53.207 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:23:53.208 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:0
+2022-04-17 01:23:53.208 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:1
+2022-04-17 01:23:53.208 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:23:53.208 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:23:53.208 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:0
+2022-04-17 01:23:53.208 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:0
+2022-04-17 01:23:53.209 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:0
+2022-04-17 01:23:54.126 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:1
+2022-04-17 01:24:06.264 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:24:06.264 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:0
+2022-04-17 01:24:06.272 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:1
+2022-04-17 01:24:50.128 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:24:50.129 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:0
+2022-04-17 01:24:57.794 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:1
+2022-04-17 01:25:03.225 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 01:25:03.228 [Thread-12] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:25:51.444 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 01:25:51.446 [Thread-13] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:25:55.141 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:2
+2022-04-17 01:26:01.903 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 01:26:01.904 [Thread-14] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:26:13.850 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:2
+2022-04-17 01:26:20.761 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.12 on DESKTOP-H72A044 with PID 25340 (E:\CodingLife\MyLouise\target\classes started by a in E:\CodingLife\MyLouise)
+2022-04-17 01:26:20.763 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-17 01:26:20.809 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-17 01:26:20.809 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-17 01:26:22.025 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-17 01:26:22.034 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-17 01:26:22.034 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-17 01:26:22.134 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-17 01:26:22.134 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1324 ms
+2022-04-17 01:26:22.690 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-17 01:26:23.275 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-17 01:26:23.349 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-17 01:26:23.393 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-17 01:26:23.394 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-17 01:26:23.396 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 插件 Miku 运行中
+2022-04-17 01:26:23.421 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
+2022-04-17 01:26:23.423 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-17 01:26:25.502 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 与BOT建立连接失败
+2022-04-17 01:26:25.503 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
+2022-04-17 01:26:25.719 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-17 01:26:25.913 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-17 01:26:25.991 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-17 01:26:26.007 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.671 seconds (JVM running for 6.425)
+2022-04-17 01:26:26.326 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-17 01:26:26.327 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-17 01:26:26.328 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-17 01:26:26.363 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 01:27:07.776 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:27:07.779 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:0
+2022-04-17 01:27:13.028 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:1
+2022-04-17 01:27:17.708 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:27:17.709 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:0
+2022-04-17 01:27:17.714 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 01:27:17.717 [Thread-10] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:27:30.688 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:27:30.689 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:0
+2022-04-17 01:27:30.697 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:1
+2022-04-17 01:27:38.565 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:27:38.565 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:0
+2022-04-17 01:27:38.570 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 01:27:38.572 [Thread-13] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-17 01:27:48.494 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info 断开了连接
+2022-04-17 01:27:48.495 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - terminal_info用户退出,当前在线人数为:0
+2022-04-17 01:27:48.498 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:status_conn,当前在线人数为:1
+2022-04-17 01:28:02.768 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn 断开了连接
+2022-04-17 01:28:02.769 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - status_conn用户退出,当前在线人数为:0
+2022-04-17 01:28:02.773 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户连接:terminal_info,当前在线人数为:1
+2022-04-17 01:28:02.775 [Thread-16] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始

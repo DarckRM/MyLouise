@@ -48,6 +48,9 @@ import WebSocket from '../components/websocket/WebSocket.vue'
                 terminal_output: ''
             }
         },
+        unmounted() {
+          this.clear()
+        },
         mounted() {
             axios.get('/output_log').then(result => {
             })
