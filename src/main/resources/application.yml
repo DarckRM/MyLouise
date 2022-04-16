@@ -22,7 +22,7 @@ mybatis-plus:
         #关闭表字段下划线自动转驼峰导致实体类字段无法匹配
         map-underscore-to-camel-case: false
         #开启Dao层日志
-        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     mapper-locations: classpath*:xml
     global-config:
         db-config:

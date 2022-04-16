@@ -49,15 +49,16 @@ import WebSocket from '../components/websocket/WebSocket.vue'
             }
         },
         mounted() {
-
             axios.get('/output_log').then(result => {
             })
         },
         methods: {
             displayLog() {
-                this.terminal_output = this.$refs.webSocket.data
-                setInterval(this.displayLog, 1000)
-                this.clear()
+              clearInterval(this.displayLog)
+              this.displayLog = null
+              this.terminal_output = this.$refs.webSocket.data
+              setInterval(this.displayLog, 1000)
+              this.clear()
             },
             clear() {
                 this.displayLog = null

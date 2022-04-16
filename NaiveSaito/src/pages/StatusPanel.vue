@@ -17,7 +17,7 @@
 </div>
 <n-divider />
 <n-card title="运行状态" style="margin-bottom: 40px">
-  <n-grid x-gap="30" :cols="3">
+  <n-grid cols="1 620:3" :x-gap="12" :y-gap="8" item-responsive >
     <n-gi>
       <n-card content-style hoverable title="CQ-HTTP 机器人">
           <div>
@@ -77,7 +77,6 @@ import {
             this.nowTimes()
         },
         unmounted() {
-          console.log("清除计时器")
           this.clear()
         },
         data() {
@@ -89,19 +88,18 @@ import {
         },
         methods: {
             nowTimes(){
-                if(this.$refs.webSocket.data == null) {
-                    return
-                }
-                this.nowTime = this.$refs.webSocket.data
-                if(this.$refs.webSocket.isConn) {
-                    this.louiseStatus = 'success'
-                    this.louiseText = '运行良好'
-                }
-                else {
-                    this.louiseStatus = 'error'
-                    this.louiseText = '停机中'
-                } 
-                setInterval(this.nowTimes,5000)
+              clearInterval(this.nowTimes)
+              this.nowTimes = null
+              this.nowTime = this.$refs.webSocket.data
+              if(this.$refs.webSocket.isConn) {
+                  this.louiseStatus = 'success'
+                  this.louiseText = '运行良好'
+              }
+              else {
+                  this.louiseStatus = 'error'
+                  this.louiseText = '停机中'
+              } 
+              setInterval(this.nowTimes,5000)
             },
             clear(){
                 this.nowTimes = null
