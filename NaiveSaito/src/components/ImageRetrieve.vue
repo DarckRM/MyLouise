@@ -19,7 +19,6 @@
           </n-upload-dragger>
         </n-upload>
         <n-select :options="retrieveMethod">
-
         </n-select>
         <n-button type="primary" style="margin: 20 100">
           开始检索
