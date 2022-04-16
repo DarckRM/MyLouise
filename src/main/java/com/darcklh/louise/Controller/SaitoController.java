@@ -10,10 +10,7 @@ import com.darcklh.louise.Service.WebSocketService;
 import com.darcklh.louise.Utils.PluginManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
 import java.io.BufferedReader;
@@ -73,8 +70,8 @@ public class SaitoController {
     /**
      * 心跳检测 检查各系统运行状况
      */
-    @GetMapping("/output_log")
-    public void outputLog() {
+    @GetMapping("/output_log/{client_name}")
+    public void outputLog(@PathVariable String client_name) {
 
         //获取日志信息
         new Thread(() -> {
@@ -133,7 +130,7 @@ public class SaitoController {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("result", result);
                     //发送
-                    WebSocketService.sendMessage("terminal_info", jsonObject.toString());
+                    WebSocketService.sendMessage(client_name, jsonObject.toString());
 
                     //休眠一秒
                     Thread.sleep(1000);

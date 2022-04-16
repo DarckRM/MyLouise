@@ -56,7 +56,7 @@
     </n-gi>
   </n-grid>
 </n-card>
-<WebSocket ref="webSocket" client_name="status_conn" data=""></WebSocket>
+<WebSocket ref="webSocket" :client_name="client_name" data=""></WebSocket>
 </template>
 
 <script>
@@ -67,44 +67,42 @@ import {
 } from '@vicons/ionicons5'
 
     export default defineComponent({
-        name: 'StatusPanel',
-        components: {
-            WebSocket,
-            HelpIcon
-        },
-        mounted() {
-            this.nowTimes()
-        },
-        unmounted() {
-          this.clear()
-        },
-        data() {
-            return {
-                nowTime: '',
-                louiseStatus: 'error',
-                louiseText: '未知'
-            }
-        },
-        methods: {
-            nowTimes(){
-              clearInterval(this.nowTimes)
-              this.nowTimes = null
-              this.nowTime = this.$refs.webSocket.data
-              if(this.$refs.webSocket.isConn) {
-                  this.louiseStatus = 'success'
-                  this.louiseText = '运行良好'
-              }
-              else {
-                  this.louiseStatus = 'error'
-                  this.louiseText = '停机中'
-              } 
-              setInterval(this.nowTimes,5000)
-              this.clear()
-            },
-            clear(){
-                this.nowTimes = null
-                clearInterval(this.nowTimes)
-            }
+      name: 'StatusPanel',
+      components: {
+          WebSocket,
+          HelpIcon
+      },
+      data() {
+        return {
+          nowTime: '',
+          louiseStatus: 'error',
+          louiseText: '未知',
+          client_name: 'status_conn' + (new Date()).valueOf(),
+          nowTimes: null
         }
+      },
+      mounted() {
+        this.nowTimes = setInterval(() => {
+            if(this.$refs.webSocket.isConn) {
+                this.louiseStatus = 'success'
+                this.louiseText = '运行良好'
+            }
+            else {
+                this.louiseStatus = 'error'
+                this.louiseText = '停机中'
+            } 
+        }, 5000)
+      },
+      methods: {
+        clear(){
+          clearInterval(this.nowTimes)
+          this.nowTimes = null
+        }
+      },
+      watch: {
+        $route() {
+          this.clear()
+        }
+      }
     })
 </script>

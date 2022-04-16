@@ -52,7 +52,6 @@ export default defineComponent({
         wsInit() {
             
             if (!this.wsIsRun) return
-            console.log(this.wsIsRun)
             // 销毁ws
             this.wsDestroy()
             // 初始化ws
@@ -81,7 +80,7 @@ export default defineComponent({
         },
         wsOpenHanler(event) {
           this.isConn = true
-          console.log('ws建立连接成功')
+          console.log('ws客户端:' + this.client_name + '建立连接成功')
         },
         wsMessageHanler(e) {
             const redata = JSON.parse(e.data)
@@ -92,7 +91,7 @@ export default defineComponent({
          */
         wsErrorHanler(event) {
             this.isConn = false
-            console.log(event, '通信发生错误')
+            console.log(event, 'ws客户端:' + this.client_name + '通信发生错误')
             this.wsInit()
         },
         /**
@@ -100,7 +99,7 @@ export default defineComponent({
          */
         wsCloseHanler(event) {
             this.isConn = false
-            console.log('ws关闭')
+            console.log('ws客户端:' + this.client_name + '关闭')
             this.wsDestroy()
         },
         /**
