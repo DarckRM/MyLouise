@@ -19,20 +19,19 @@ export default defineComponent({
         }
     },
     data() {
-        
-        return {
-            // 连接状态
-            isConn: false,
-            // ws是否启动
-            wsIsRun: false,
-            // 定义ws对象
-            webSocket: null,
-            // ws请求链接（类似于ws后台地址）
-            ws: 'ws://127.0.0.1:8099/saito_ws/' + this.client_name,
-            // ws: 'ws://121.4.179.240:8099/saito_ws/' + this.client_name,
-            // ws定时器
-            wsTimer: null,
-        }
+      return {
+        // 连接状态
+        isConn: false,
+        // ws是否启动
+        wsIsRun: false,
+        // 定义ws对象
+        webSocket: null,
+        // ws请求链接（类似于ws后台地址）
+        ws: 'ws://127.0.0.1:8099/saito_ws/' + this.client_name,
+        // ws: 'ws://121.4.179.240:8099/saito_ws/' + this.client_name,
+        // ws定时器
+          wsTimer: null,
+      }
     },    
     async mounted() {
         this.wsIsRun = true
@@ -53,6 +52,7 @@ export default defineComponent({
         wsInit() {
             
             if (!this.wsIsRun) return
+            console.log(this.wsIsRun)
             // 销毁ws
             this.wsDestroy()
             // 初始化ws
@@ -80,8 +80,8 @@ export default defineComponent({
             }, 3000)
         },
         wsOpenHanler(event) {
-            this.isConn = true
-            console.log('ws建立连接成功')
+          this.isConn = true
+          console.log('ws建立连接成功')
         },
         wsMessageHanler(e) {
             const redata = JSON.parse(e.data)
@@ -100,8 +100,8 @@ export default defineComponent({
          */
         wsCloseHanler(event) {
             this.isConn = false
-            console.log(event, 'ws关闭')
-            this.wsInit()
+            console.log('ws关闭')
+            this.wsDestroy()
         },
         /**
          * 销毁ws
@@ -119,7 +119,7 @@ export default defineComponent({
         },
     },
     unmounted() {
-      this.wsDestroy()
+      this.wsCloseHanler()
     },
 
 })
