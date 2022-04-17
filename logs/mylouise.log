@@ -1,560 +1,135 @@
-2022-01-15 11:05:56.673 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 18820 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:05:56.677 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:05:56.757 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2022-01-15 11:05:56.757 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2022-01-15 11:05:58.177 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:05:58.193 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:05:58.193 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:05:58.321 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:05:58.330 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1573 ms
-2022-01-15 11:05:59.034 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2022-01-15 11:06:00.524 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2022-01-15 11:06:00.636 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:06:00.692 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:06:00.692 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:06:00.748 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-01-15 11:06:00.748 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:06:00.909 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:06:01.149 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:06:01.445 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:06:01.549 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:06:01.565 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.611 seconds (JVM running for 7.49)
-2022-01-15 11:06:02.799 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:06:02.799 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:06:02.799 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2022-01-15 11:06:15.573 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/info
-2022-01-15 11:06:15.584 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:06:15.584 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:06:15.608 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Model.R - 快速操作: {"reply":"露易丝没有听懂诶，如果需要帮助的话请说!help"}
-2022-01-15 11:06:38.199 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/hrlp
-2022-01-15 11:06:38.201 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:06:38.201 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:06:38.202 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Model.R - 快速操作: {"reply":"露易丝没有听懂诶，如果需要帮助的话请说!help"}
-2022-01-15 11:06:44.160 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/help
-2022-01-15 11:06:44.160 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:06:44.160 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:06:44.160 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:07:31.760 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/config
-2022-01-15 11:07:31.761 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:07:31.762 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:07:31.762 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:07:31.909 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 请求未知命令/louise/config
-2022-01-15 11:08:45.699 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/setu
-2022-01-15 11:08:45.700 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:08:45.701 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:08:45.701 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:08:45.848 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 请求未知命令/louise/setu
-2022-01-15 11:10:38.866 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2022-01-15 11:10:39.588 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2022-01-15 11:10:39.700 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 18820 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:10:39.708 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:10:40.173 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:10:40.173 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:10:40.173 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:10:40.221 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:10:40.221 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 513 ms
-2022-01-15 11:10:40.461 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
-2022-01-15 11:10:40.960 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
-2022-01-15 11:10:41.008 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:10:41.056 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:10:41.056 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:10:41.064 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-01-15 11:10:41.064 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:10:41.072 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:10:41.120 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:10:41.160 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:10:41.232 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:10:41.240 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 1.59 seconds (JVM running for 287.159)
-2022-01-15 11:10:41.240 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:10:43.447 [Thread-7] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
-2022-01-15 11:10:43.839 [Thread-7] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
-2022-01-15 11:10:43.919 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 18820 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:10:43.919 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:10:44.239 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:10:44.239 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:10:44.239 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:10:44.271 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:10:44.271 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 344 ms
-2022-01-15 11:10:44.479 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
-2022-01-15 11:10:44.923 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
-2022-01-15 11:10:44.962 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:10:45.010 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:10:45.010 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:10:45.010 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-01-15 11:10:45.010 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:10:45.034 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:10:45.083 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:10:45.147 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:10:45.236 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:10:45.236 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 1.355 seconds (JVM running for 291.157)
-2022-01-15 11:10:45.236 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:10:52.740 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:10:52.744 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:10:52.744 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2022-01-15 11:10:56.713 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/config
-2022-01-15 11:10:56.713 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:10:56.713 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:10:56.713 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:10:57.331 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Model.R - 快速操作: {"reply":"露易丝没有听懂诶，如果需要帮助的话请说!help"}
-2022-01-15 11:11:38.573 [Thread-11] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
-2022-01-15 11:11:39.774 [Thread-11] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
-2022-01-15 11:11:39.878 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 18820 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:11:39.878 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:11:40.270 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:11:40.278 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:11:40.278 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:11:40.318 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:11:40.318 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 440 ms
-2022-01-15 11:11:40.534 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Starting...
-2022-01-15 11:11:41.201 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Start completed.
-2022-01-15 11:11:41.257 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:11:41.297 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:11:41.297 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:11:41.305 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-01-15 11:11:41.305 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:11:41.313 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:11:41.353 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:11:41.394 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:11:41.457 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:11:41.465 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 1.638 seconds (JVM running for 347.384)
-2022-01-15 11:11:41.465 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:11:42.742 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:11:42.745 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:11:42.745 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2022-01-15 11:11:43.684 [Thread-15] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown initiated...
-2022-01-15 11:11:44.584 [Thread-15] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown completed.
-2022-01-15 11:11:44.664 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 18820 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:11:44.664 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:11:44.974 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:11:44.974 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:11:44.974 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:11:45.014 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:11:45.014 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 350 ms
-2022-01-15 11:11:45.193 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Starting...
-2022-01-15 11:11:45.866 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Start completed.
-2022-01-15 11:11:45.914 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:11:45.954 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:11:45.954 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:11:45.954 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-01-15 11:11:45.954 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:11:45.976 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:11:46.010 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:11:46.058 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:11:46.122 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:11:46.122 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 1.504 seconds (JVM running for 352.047)
-2022-01-15 11:11:46.130 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:11:52.740 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:11:52.744 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:11:52.744 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2022-01-15 11:11:53.576 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/config
-2022-01-15 11:11:53.576 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:11:53.576 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:11:53.576 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:11:53.872 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Model.R - 快速操作: {"reply":"露易丝没有听懂诶，如果需要帮助的话请说!help"}
-2022-01-15 11:12:54.977 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 10196 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:12:54.977 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:12:55.033 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2022-01-15 11:12:55.033 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2022-01-15 11:12:56.590 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:12:56.597 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:12:56.597 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:12:56.724 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:12:56.724 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1683 ms
-2022-01-15 11:12:57.460 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2022-01-15 11:12:58.215 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2022-01-15 11:12:58.335 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:12:58.383 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:12:58.383 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:12:58.415 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-01-15 11:12:58.415 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:12:58.519 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:12:58.743 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:12:59.010 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:12:59.120 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:12:59.131 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 4.897 seconds (JVM running for 7.528)
-2022-01-15 11:13:02.817 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:13:02.825 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:13:02.825 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2022-01-15 11:13:17.375 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/config
-2022-01-15 11:13:17.391 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:13:17.391 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:13:17.399 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:13:53.556 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/config
-2022-01-15 11:13:53.567 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:13:53.568 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:13:53.569 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:13:53.588 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Model.R - 快速操作: {"reply":"露易丝没有听懂诶，如果需要帮助的话请说!help"}
-2022-01-15 11:13:55.843 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Model.R - 快速操作: {"reply":"露易丝没有听懂诶，如果需要帮助的话请说!help"}
-2022-01-15 11:13:56.775 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2022-01-15 11:13:57.323 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2022-01-15 11:14:55.332 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 10580 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:14:55.332 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:14:55.396 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2022-01-15 11:14:55.396 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2022-01-15 11:14:56.748 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:14:56.764 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:14:56.764 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:14:56.917 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:14:56.917 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1521 ms
-2022-01-15 11:14:57.517 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2022-01-15 11:14:58.272 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2022-01-15 11:14:58.368 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:14:58.416 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:14:58.416 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:14:58.448 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-01-15 11:14:58.448 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:14:58.527 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:14:58.721 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:14:58.956 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:14:59.055 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:14:59.075 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 4.316 seconds (JVM running for 6.147)
-2022-01-15 11:15:02.790 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:15:02.790 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:15:02.798 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 8 ms
-2022-01-15 11:15:02.888 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/config
-2022-01-15 11:15:02.902 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:15:02.902 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:15:02.910 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:15:03.174 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户允许的功能列表: [FeatureInfoMin(feature_id=1, feature_name=系统帮助, feature_url=null), FeatureInfoMin(feature_id=2, feature_name=随机图片, feature_url=null), FeatureInfoMin(feature_id=7, feature_name=开发配置环境, feature_url=null), FeatureInfoMin(feature_id=5, feature_name=图片搜索, feature_url=null), FeatureInfoMin(feature_id=3, feature_name=获取个人信息, feature_url=null), FeatureInfoMin(feature_id=4, feature_name=请求Pixiv图片, feature_url=null), FeatureInfoMin(feature_id=6, feature_name=用户注册, feature_url=null), FeatureInfoMin(feature_id=8, feature_name=当前配置, feature_url=null)]
-2022-01-15 11:15:03.310 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户 412543224 CREDIT余额还有 9950
-2022-01-15 11:15:03.319 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 功能 当前配置 消耗用户 412543224 CREDIT 50
-2022-01-15 11:15:23.322 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/config
-2022-01-15 11:15:23.322 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:15:23.322 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:15:23.322 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:15:23.584 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户允许的功能列表: [FeatureInfoMin(feature_id=1, feature_name=系统帮助, feature_url=null), FeatureInfoMin(feature_id=2, feature_name=随机图片, feature_url=null), FeatureInfoMin(feature_id=7, feature_name=开发配置环境, feature_url=null), FeatureInfoMin(feature_id=5, feature_name=图片搜索, feature_url=null), FeatureInfoMin(feature_id=3, feature_name=获取个人信息, feature_url=null), FeatureInfoMin(feature_id=4, feature_name=请求Pixiv图片, feature_url=null), FeatureInfoMin(feature_id=6, feature_name=用户注册, feature_url=null), FeatureInfoMin(feature_id=8, feature_name=当前配置, feature_url=null)]
-2022-01-15 11:15:23.725 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户 412543224 CREDIT余额还有 9900
-2022-01-15 11:15:23.725 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 功能 当前配置 消耗用户 412543224 CREDIT 50
-2022-01-15 11:15:43.572 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/config
-2022-01-15 11:15:43.572 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:15:43.572 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:15:43.572 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:15:43.840 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户允许的功能列表: [FeatureInfoMin(feature_id=1, feature_name=系统帮助, feature_url=null), FeatureInfoMin(feature_id=2, feature_name=随机图片, feature_url=null), FeatureInfoMin(feature_id=7, feature_name=开发配置环境, feature_url=null), FeatureInfoMin(feature_id=5, feature_name=图片搜索, feature_url=null), FeatureInfoMin(feature_id=3, feature_name=获取个人信息, feature_url=null), FeatureInfoMin(feature_id=4, feature_name=请求Pixiv图片, feature_url=null), FeatureInfoMin(feature_id=6, feature_name=用户注册, feature_url=null), FeatureInfoMin(feature_id=8, feature_name=当前配置, feature_url=null)]
-2022-01-15 11:15:43.888 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户412543224CREDIT不足
-2022-01-15 11:16:01.708 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/config
-2022-01-15 11:16:01.708 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:16:01.709 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:16:01.709 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:16:01.983 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户允许的功能列表: [FeatureInfoMin(feature_id=1, feature_name=系统帮助, feature_url=null), FeatureInfoMin(feature_id=2, feature_name=随机图片, feature_url=null), FeatureInfoMin(feature_id=7, feature_name=开发配置环境, feature_url=null), FeatureInfoMin(feature_id=5, feature_name=图片搜索, feature_url=null), FeatureInfoMin(feature_id=3, feature_name=获取个人信息, feature_url=null), FeatureInfoMin(feature_id=4, feature_name=请求Pixiv图片, feature_url=null), FeatureInfoMin(feature_id=6, feature_name=用户注册, feature_url=null), FeatureInfoMin(feature_id=8, feature_name=当前配置, feature_url=null)]
-2022-01-15 11:16:02.126 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户 412543224 CREDIT余额还有 0
-2022-01-15 11:16:02.126 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 功能 当前配置 消耗用户 412543224 CREDIT 9900
-2022-01-15 11:16:44.933 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/setu
-2022-01-15 11:16:44.933 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:16:44.934 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:16:44.934 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:16:45.622 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户允许的功能列表: [FeatureInfoMin(feature_id=1, feature_name=系统帮助, feature_url=null), FeatureInfoMin(feature_id=2, feature_name=随机图片, feature_url=null), FeatureInfoMin(feature_id=7, feature_name=开发配置环境, feature_url=null), FeatureInfoMin(feature_id=5, feature_name=图片搜索, feature_url=null), FeatureInfoMin(feature_id=3, feature_name=获取个人信息, feature_url=null), FeatureInfoMin(feature_id=4, feature_name=请求Pixiv图片, feature_url=null), FeatureInfoMin(feature_id=6, feature_name=用户注册, feature_url=null), FeatureInfoMin(feature_id=8, feature_name=当前配置, feature_url=null)]
-2022-01-15 11:16:45.670 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户412543224CREDIT不足
-2022-01-15 11:17:24.311 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2022-01-15 11:17:24.929 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2022-01-15 11:17:25.025 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 10580 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:17:25.025 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:17:25.441 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:17:25.449 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:17:25.449 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:17:25.489 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:17:25.489 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 456 ms
-2022-01-15 11:17:25.785 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
-2022-01-15 11:17:29.510 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
-2022-01-15 11:17:29.556 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:17:29.604 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:17:29.604 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:17:29.608 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-01-15 11:17:29.608 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:17:29.617 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:17:29.672 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:17:29.731 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:17:29.832 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:17:29.837 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 4.86 seconds (JVM running for 156.908)
-2022-01-15 11:17:29.839 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:17:32.067 [Thread-7] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
-2022-01-15 11:17:32.531 [Thread-7] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
-2022-01-15 11:17:32.612 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 10580 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:17:32.612 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:17:32.961 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:17:32.962 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:17:32.963 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:17:33.000 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:17:33.001 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 385 ms
-2022-01-15 11:17:33.229 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
-2022-01-15 11:17:33.708 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
-2022-01-15 11:17:33.755 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:17:33.801 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:17:33.801 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:17:33.805 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-01-15 11:17:33.806 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:17:33.820 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:17:33.874 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:17:33.924 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:17:34.020 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:17:34.025 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 1.454 seconds (JVM running for 161.095)
-2022-01-15 11:17:34.026 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:17:34.269 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:17:34.271 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:17:34.272 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2022-01-15 11:21:15.989 [Thread-11] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
-2022-01-15 11:21:18.133 [Thread-11] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
-2022-01-15 11:21:18.221 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 10580 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:21:18.221 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:21:18.541 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:21:18.541 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:21:18.541 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:21:18.581 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:21:18.581 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 352 ms
-2022-01-15 11:21:18.781 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Starting...
-2022-01-15 11:21:21.281 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Start completed.
-2022-01-15 11:21:21.329 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:21:21.377 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:21:21.377 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:21:21.377 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-01-15 11:21:21.377 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:21:21.393 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:21:21.433 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:21:21.473 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:21:21.537 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:21:21.545 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 3.368 seconds (JVM running for 388.619)
-2022-01-15 11:21:21.545 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:21:22.739 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:21:22.742 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:21:22.742 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2022-01-15 11:22:34.482 [Thread-15] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown initiated...
-2022-01-15 11:22:35.594 [Thread-15] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown completed.
-2022-01-15 11:22:35.682 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 10580 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:22:35.682 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:22:36.036 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:22:36.036 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:22:36.036 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:22:36.077 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:22:36.077 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 395 ms
-2022-01-15 11:22:36.333 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Starting...
-2022-01-15 11:22:36.821 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Start completed.
-2022-01-15 11:22:36.862 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:22:36.910 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:22:36.910 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:22:36.910 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-01-15 11:22:36.910 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:22:36.923 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:22:36.967 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:22:37.007 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:22:37.073 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:22:37.079 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 1.442 seconds (JVM running for 464.152)
-2022-01-15 11:22:37.079 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:22:39.396 [Thread-19] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Shutdown initiated...
-2022-01-15 11:22:39.684 [Thread-19] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Shutdown completed.
-2022-01-15 11:22:39.781 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 10580 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:22:39.781 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:22:40.110 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:22:40.110 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:22:40.110 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:22:40.150 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:22:40.150 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 361 ms
-2022-01-15 11:22:40.390 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Starting...
-2022-01-15 11:22:42.136 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Start completed.
-2022-01-15 11:22:42.176 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:22:42.224 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:22:42.224 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:22:42.224 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了哦"}
-2022-01-15 11:22:42.232 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:22:42.239 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:22:42.280 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:22:42.318 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:22:42.366 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:22:42.371 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 2.632 seconds (JVM running for 469.442)
-2022-01-15 11:22:42.371 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:22:42.742 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:22:42.744 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:22:42.744 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2022-01-15 11:22:55.339 [Thread-23] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Shutdown initiated...
-2022-01-15 11:22:58.982 [Thread-23] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Shutdown completed.
-2022-01-15 11:22:59.062 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 10580 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:22:59.062 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:22:59.382 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:22:59.382 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:22:59.382 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:22:59.414 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:22:59.414 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 352 ms
-2022-01-15 11:22:59.599 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Starting...
-2022-01-15 11:23:00.737 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Start completed.
-2022-01-15 11:23:00.841 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:23:00.953 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:23:00.953 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:23:00.953 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"椰羊来咯！"}
-2022-01-15 11:23:00.953 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:23:00.988 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:23:01.025 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:23:01.081 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:23:01.129 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:23:01.129 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 2.101 seconds (JVM running for 488.204)
-2022-01-15 11:23:01.129 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:23:03.337 [Thread-27] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Shutdown initiated...
-2022-01-15 11:23:05.306 [Thread-27] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Shutdown completed.
-2022-01-15 11:23:05.394 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 10580 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:23:05.394 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:23:05.676 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:23:05.676 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:23:05.676 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:23:05.708 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:23:05.708 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 314 ms
-2022-01-15 11:23:05.868 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Starting...
-2022-01-15 11:23:06.658 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Start completed.
-2022-01-15 11:23:06.722 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:23:06.794 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:23:06.794 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:23:06.802 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"椰羊来咯！"}
-2022-01-15 11:23:06.802 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:23:06.810 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:23:06.850 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:23:06.891 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:23:06.940 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:23:06.948 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 1.591 seconds (JVM running for 494.022)
-2022-01-15 11:23:06.948 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:23:12.744 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:23:12.747 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:23:12.747 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2022-01-15 11:24:32.256 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 1752 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:24:32.264 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:24:32.343 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2022-01-15 11:24:32.343 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2022-01-15 11:24:33.842 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:24:33.850 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:24:33.850 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:24:33.986 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:24:33.986 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1643 ms
-2022-01-15 11:24:34.700 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2022-01-15 11:24:35.397 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2022-01-15 11:24:35.493 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:24:35.541 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:24:35.541 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:24:35.573 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"椰羊来咯！"}
-2022-01-15 11:24:35.573 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:24:35.690 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:24:35.926 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:24:36.165 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:24:36.275 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:24:36.283 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 4.767 seconds (JVM running for 6.702)
-2022-01-15 11:24:42.787 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:24:42.795 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:24:42.795 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2022-01-15 11:27:51.501 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2022-01-15 11:27:56.729 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2022-01-15 11:27:56.825 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 1752 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:27:56.825 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:27:57.225 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:27:57.225 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:27:57.225 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:27:57.265 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:27:57.265 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 440 ms
-2022-01-15 11:27:57.506 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
-2022-01-15 11:27:57.986 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
-2022-01-15 11:27:58.034 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:27:58.074 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:27:58.074 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:27:58.082 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了"}
-2022-01-15 11:27:58.082 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:27:58.092 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:27:58.154 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:27:58.218 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:27:58.331 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:27:58.331 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 1.556 seconds (JVM running for 208.75)
-2022-01-15 11:27:58.339 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:28:00.527 [Thread-7] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
-2022-01-15 11:28:02.146 [Thread-7] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
-2022-01-15 11:28:02.226 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 1752 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:28:02.226 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:28:02.538 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:28:02.538 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:28:02.538 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:28:02.578 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:28:02.578 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 352 ms
-2022-01-15 11:28:02.778 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
-2022-01-15 11:28:03.353 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
-2022-01-15 11:28:03.394 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:28:03.441 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:28:03.441 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:28:03.441 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了"}
-2022-01-15 11:28:03.441 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:28:03.458 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:28:03.497 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:28:03.554 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:28:03.618 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:28:03.626 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 1.442 seconds (JVM running for 214.039)
-2022-01-15 11:28:03.626 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2022-01-15 11:28:03.756 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:28:03.758 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:28:03.758 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2022-01-15 11:34:18.218 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.11 on DESKTOP-1LE2CQA with PID 20356 (D:\CodingLife\MyLouise\target\classes started by 41254 in D:\CodingLife\MyLouise)
-2022-01-15 11:34:18.226 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
-2022-01-15 11:34:18.290 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2022-01-15 11:34:18.290 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2022-01-15 11:34:19.812 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
-2022-01-15 11:34:19.828 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2022-01-15 11:34:19.828 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
-2022-01-15 11:34:19.964 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2022-01-15 11:34:19.964 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1674 ms
-2022-01-15 11:34:20.637 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2022-01-15 11:34:29.410 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2022-01-15 11:34:29.674 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
-2022-01-15 11:34:29.930 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
-2022-01-15 11:34:29.939 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
-2022-01-15 11:34:29.971 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了"}
-2022-01-15 11:34:29.971 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
-2022-01-15 11:34:30.067 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 插件加载完毕，共2个
-2022-01-15 11:34:30.292 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
-2022-01-15 11:34:30.561 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2022-01-15 11:34:30.677 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
-2022-01-15 11:34:30.695 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 13.252 seconds (JVM running for 15.664)
-2022-01-15 11:34:32.786 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-01-15 11:34:32.794 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2022-01-15 11:34:32.794 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2022-01-15 11:34:49.932 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/setu
-2022-01-15 11:34:49.946 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:34:49.946 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:34:49.954 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:34:58.410 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户允许的功能列表: [FeatureInfoMin(feature_id=1, feature_name=系统帮助, feature_url=null), FeatureInfoMin(feature_id=2, feature_name=随机图片, feature_url=null), FeatureInfoMin(feature_id=7, feature_name=开发配置环境, feature_url=null), FeatureInfoMin(feature_id=5, feature_name=图片搜索, feature_url=null), FeatureInfoMin(feature_id=3, feature_name=获取个人信息, feature_url=null), FeatureInfoMin(feature_id=4, feature_name=请求Pixiv图片, feature_url=null), FeatureInfoMin(feature_id=6, feature_name=用户注册, feature_url=null), FeatureInfoMin(feature_id=8, feature_name=当前配置, feature_url=null)]
-2022-01-15 11:34:58.963 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户 412543224 CREDIT余额还有 9900
-2022-01-15 11:34:58.971 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 功能 随机图片 消耗用户 412543224 CREDIT 100
-2022-01-15 11:35:09.074 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Api.SendPictureApi - 进入发图流程, 发起用户为:DarckLH QQ:412543224
-2022-01-15 11:35:10.380 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Api.SendPictureApi - []
-2022-01-15 11:35:49.577 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/setu
-2022-01-15 11:35:49.577 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/setu
-2022-01-15 11:35:49.577 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:35:49.583 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:35:49.583 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:35:49.583 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:35:49.586 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:35:49.586 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:35:49.857 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户允许的功能列表: [FeatureInfoMin(feature_id=1, feature_name=系统帮助, feature_url=null), FeatureInfoMin(feature_id=2, feature_name=随机图片, feature_url=null), FeatureInfoMin(feature_id=7, feature_name=开发配置环境, feature_url=null), FeatureInfoMin(feature_id=5, feature_name=图片搜索, feature_url=null), FeatureInfoMin(feature_id=3, feature_name=获取个人信息, feature_url=null), FeatureInfoMin(feature_id=4, feature_name=请求Pixiv图片, feature_url=null), FeatureInfoMin(feature_id=6, feature_name=用户注册, feature_url=null), FeatureInfoMin(feature_id=8, feature_name=当前配置, feature_url=null)]
-2022-01-15 11:35:49.859 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户允许的功能列表: [FeatureInfoMin(feature_id=1, feature_name=系统帮助, feature_url=null), FeatureInfoMin(feature_id=2, feature_name=随机图片, feature_url=null), FeatureInfoMin(feature_id=7, feature_name=开发配置环境, feature_url=null), FeatureInfoMin(feature_id=5, feature_name=图片搜索, feature_url=null), FeatureInfoMin(feature_id=3, feature_name=获取个人信息, feature_url=null), FeatureInfoMin(feature_id=4, feature_name=请求Pixiv图片, feature_url=null), FeatureInfoMin(feature_id=6, feature_name=用户注册, feature_url=null), FeatureInfoMin(feature_id=8, feature_name=当前配置, feature_url=null)]
-2022-01-15 11:35:49.990 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户 412543224 CREDIT余额还有 9800
-2022-01-15 11:35:49.990 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 功能 随机图片 消耗用户 412543224 CREDIT 100
-2022-01-15 11:35:50.006 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户 412543224 CREDIT余额还有 9800
-2022-01-15 11:35:50.006 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 功能 随机图片 消耗用户 412543224 CREDIT 100
-2022-01-15 11:35:50.079 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Api.SendPictureApi - 进入发图流程, 发起用户为:DarckLH QQ:412543224
-2022-01-15 11:35:50.095 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Api.SendPictureApi - 进入发图流程, 发起用户为:DarckLH QQ:412543224
-2022-01-15 11:35:50.847 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Api.SendPictureApi - []
-2022-01-15 11:36:00.913 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Api.SendPictureApi - []
-2022-01-15 11:36:14.586 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/setu
-2022-01-15 11:36:14.586 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:36:14.586 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:36:14.586 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:36:17.801 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户允许的功能列表: [FeatureInfoMin(feature_id=1, feature_name=系统帮助, feature_url=null), FeatureInfoMin(feature_id=2, feature_name=随机图片, feature_url=null), FeatureInfoMin(feature_id=7, feature_name=开发配置环境, feature_url=null), FeatureInfoMin(feature_id=5, feature_name=图片搜索, feature_url=null), FeatureInfoMin(feature_id=3, feature_name=获取个人信息, feature_url=null), FeatureInfoMin(feature_id=4, feature_name=请求Pixiv图片, feature_url=null), FeatureInfoMin(feature_id=6, feature_name=用户注册, feature_url=null), FeatureInfoMin(feature_id=8, feature_name=当前配置, feature_url=null)]
-2022-01-15 11:36:18.995 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户 412543224 CREDIT余额还有 9600
-2022-01-15 11:36:18.995 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 功能 随机图片 消耗用户 412543224 CREDIT 100
-2022-01-15 11:36:19.622 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Api.SendPictureApi - 进入发图流程, 发起用户为:DarckLH QQ:412543224
-2022-01-15 11:36:30.398 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Api.SendPictureApi - [{"p":0,"ext":"png","uid":14924165,"urls":{"regular":"https://i.pixiv.cat/img-master/img/2018/05/27/23/26/15/68956000_p0_master1200.jpg"},"uploadDate":1527431175000,"author":"まめ猫","r18":false,"width":2894,"pid":68956000,"title":"月読しずく","height":4093,"tags":["ミライアカリイラコン新VTuber","オリジナル","原创","片目隠れ","one eye covered"]}]
-2022-01-15 11:36:30.408 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Api.SendPictureApi - 图片地址: https://i.pixiv.re/img-master/img/2018/05/27/23/26/15/68956000_p0_master1200.jpg
-2022-01-15 11:39:31.552 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/config
-2022-01-15 11:39:31.553 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:39:31.554 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:39:31.555 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:39:58.425 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/config
-2022-01-15 11:39:58.425 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
-2022-01-15 11:39:58.425 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
-2022-01-15 11:39:58.425 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
-2022-01-15 11:40:04.172 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户允许的功能列表: [FeatureInfoMin(feature_id=1, feature_name=系统帮助, feature_url=null), FeatureInfoMin(feature_id=2, feature_name=随机图片, feature_url=null), FeatureInfoMin(feature_id=7, feature_name=开发配置环境, feature_url=null), FeatureInfoMin(feature_id=5, feature_name=图片搜索, feature_url=null), FeatureInfoMin(feature_id=3, feature_name=获取个人信息, feature_url=null), FeatureInfoMin(feature_id=4, feature_name=请求Pixiv图片, feature_url=null), FeatureInfoMin(feature_id=6, feature_name=用户注册, feature_url=null), FeatureInfoMin(feature_id=8, feature_name=当前配置, feature_url=null)]
-2022-01-15 11:40:04.734 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 用户允许的功能列表: [FeatureInfoMin(feature_id=1, feature_name=系统帮助, feature_url=null), FeatureInfoMin(feature_id=2, feature_name=随机图片, feature_url=null), FeatureInfoMin(feature_id=7, feature_name=开发配置环境, feature_url=null), FeatureInfoMin(feature_id=5, feature_name=图片搜索, feature_url=null), FeatureInfoMin(feature_id=3, feature_name=获取个人信息, feature_url=null), FeatureInfoMin(feature_id=4, feature_name=请求Pixiv图片, feature_url=null), FeatureInfoMin(feature_id=6, feature_name=用户注册, feature_url=null), FeatureInfoMin(feature_id=8, feature_name=当前配置, feature_url=null)]
-2022-01-15 11:40:05.079 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户 412543224 CREDIT余额还有 9600
-2022-01-15 11:40:05.079 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 功能 当前配置 消耗用户 412543224 CREDIT 0
-2022-01-15 11:40:07.666 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户 412543224 CREDIT余额还有 9600
-2022-01-15 11:40:07.666 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 功能 当前配置 消耗用户 412543224 CREDIT 0
-2022-01-15 13:07:27.320 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2022-01-15 13:07:27.743 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2022-04-03 13:49:40.913 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.6 on DESKTOP-O1GAJDD with PID 10908 (D:\CodingLife\MyLouise\target\classes started by darcklh in D:\CodingLife\MyLouise)
+2022-04-03 13:49:40.921 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-03 13:49:40.978 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-03 13:49:40.978 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-03 13:49:42.497 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-03 13:49:42.497 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-03 13:49:42.497 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-03 13:49:42.598 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-03 13:49:42.598 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1620 ms
+2022-04-03 13:49:43.353 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-03 13:49:45.489 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-03 13:49:45.837 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - <--加载MyLouise插件-->
+2022-04-03 13:49:46.317 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--图片发送1.0---DarckLH-- >
+2022-04-03 13:49:46.325 [restartedMain] INFO  com.darcklh.louise.Utils.BootApplication - 加载插件 <--虚拟歌姬---MIku-- >
+2022-04-03 13:49:46.329 [restartedMain] INFO  com.darcklh.plugin.PluginMiku - 进入插件PluginMiku
+2022-04-03 13:49:46.338 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2022-04-03 13:49:47.032 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2022-04-03 13:49:47.032 [restartedMain] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2022-04-03 13:49:47.050 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2022-04-03 13:51:43.229 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.6 on DESKTOP-O1GAJDD with PID 16976 (D:\CodingLife\MyLouise\target\classes started by darcklh in D:\CodingLife\MyLouise)
+2022-04-03 13:51:43.239 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-03 13:51:43.302 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-03 13:51:43.302 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-03 13:51:44.822 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-03 13:51:44.829 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-03 13:51:44.829 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-03 13:51:44.929 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-03 13:51:44.945 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1643 ms
+2022-04-03 13:51:45.562 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-03 13:51:46.833 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-03 13:51:47.007 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了"}
+2022-04-03 13:51:47.007 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-03 13:51:47.413 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-03 13:51:47.752 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-03 13:51:47.899 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-03 13:51:47.931 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.338 seconds (JVM running for 6.316)
+2022-04-03 13:51:48.767 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-03 13:51:48.767 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-03 13:51:48.783 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 16 ms
+2022-04-03 13:51:55.748 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/join
+2022-04-03 13:51:55.764 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
+2022-04-03 13:51:55.764 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
+2022-04-03 13:51:55.776 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
+2022-04-03 13:52:06.912 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/join
+2022-04-03 13:52:06.912 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
+2022-04-03 13:52:06.912 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
+2022-04-03 13:52:06.912 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
+2022-04-03 13:52:06.912 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.Impl.UserImpl - 进入注册流程
+2022-04-03 13:52:06.912 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户来自群: 887921706 QQ号: 412543224
+2022-04-03 13:52:06.927 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.Impl.UserImpl - {"data":{"area":"","last_sent_time":1646052639,"unfriendly":false,"role":"owner","level":"1","sex":"male","title_expire_time":0,"card_changeable":false,"title":"","join_time":1627983776,"group_id":887921706,"user_id":412543224,"nickname":"DarckLH","shut_up_timestamp":0,"age":0,"card":""},"retcode":0,"status":"ok"}
+2022-04-03 13:56:05.422 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/join
+2022-04-03 13:56:05.424 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
+2022-04-03 13:56:05.424 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
+2022-04-03 13:56:05.424 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
+2022-04-03 13:56:05.426 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.Impl.UserImpl - 进入注册流程
+2022-04-03 13:56:05.426 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户来自群: 887921706 QQ号: 412543224
+2022-04-03 13:56:05.435 [http-nio-8099-exec-9] INFO  com.darcklh.louise.Service.Impl.UserImpl - {"data":{"area":"","last_sent_time":1646052639,"unfriendly":false,"role":"owner","level":"1","sex":"male","title_expire_time":0,"card_changeable":false,"title":"","join_time":1627983776,"group_id":887921706,"user_id":412543224,"nickname":"DarckLH","shut_up_timestamp":0,"age":0,"card":""},"retcode":0,"status":"ok"}
+2022-04-03 14:00:50.974 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.6 on DESKTOP-O1GAJDD with PID 12556 (D:\CodingLife\MyLouise\target\classes started by darcklh in D:\CodingLife\MyLouise)
+2022-04-03 14:00:50.978 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-03 14:00:51.047 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-03 14:00:51.048 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-03 14:00:52.429 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-03 14:00:52.439 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-03 14:00:52.440 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-03 14:00:52.517 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-03 14:00:52.518 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1470 ms
+2022-04-03 14:00:53.167 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-03 14:00:54.675 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-03 14:00:54.841 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了"}
+2022-04-03 14:00:54.843 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-03 14:00:55.222 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-03 14:00:55.527 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-03 14:00:55.676 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-03 14:00:55.697 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.296 seconds (JVM running for 6.192)
+2022-04-03 14:00:58.782 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-03 14:00:58.783 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-03 14:00:58.785 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2022-04-03 14:03:20.563 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.6 on DESKTOP-O1GAJDD with PID 3740 (D:\CodingLife\MyLouise\target\classes started by darcklh in D:\CodingLife\MyLouise)
+2022-04-03 14:03:20.566 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-03 14:03:20.624 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-03 14:03:20.625 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-03 14:03:21.962 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-03 14:03:21.972 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-03 14:03:21.972 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-03 14:03:22.050 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-03 14:03:22.051 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1425 ms
+2022-04-03 14:03:22.704 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-03 14:03:24.075 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-03 14:03:24.263 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了"}
+2022-04-03 14:03:24.265 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-03 14:03:24.652 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-03 14:03:24.958 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-03 14:03:25.109 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-03 14:03:25.129 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.187 seconds (JVM running for 6.087)
+2022-04-03 14:03:28.598 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-03 14:03:28.600 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-03 14:03:28.601 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-03 14:03:28.609 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/join
+2022-04-03 14:03:28.626 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
+2022-04-03 14:03:28.627 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
+2022-04-03 14:03:28.636 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
+2022-04-03 14:03:28.667 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.Impl.UserImpl - 进入注册流程
+2022-04-03 14:03:28.670 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户来自群: null QQ号: 412543224
+2022-04-03 14:03:28.693 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Service.Impl.UserImpl - {"msg":"GROUP_NOT_FOUND","wording":"群聊不存在","retcode":100,"status":"failed"}
+2022-04-03 14:03:28.714 [http-nio-8099-exec-1] INFO  com.darcklh.louise.Model.R - 快速操作: {"reply":"露易丝没有听懂诶，如果需要帮助的话请说!help"}
+2022-04-03 14:04:30.834 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Starting MyLouiseApplication using Java 11.0.6 on DESKTOP-O1GAJDD with PID 10296 (D:\CodingLife\MyLouise\target\classes started by darcklh in D:\CodingLife\MyLouise)
+2022-04-03 14:04:30.837 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - No active profile set, falling back to default profiles: default
+2022-04-03 14:04:30.897 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-03 14:04:30.898 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-03 14:04:32.307 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8099 (http)
+2022-04-03 14:04:32.318 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2022-04-03 14:04:32.318 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-04-03 14:04:32.401 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-04-03 14:04:32.402 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1504 ms
+2022-04-03 14:04:33.077 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-04-03 14:04:34.627 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-04-03 14:04:34.817 [restartedMain] INFO  com.darcklh.louise.Model.R - 发送报文: {"user_id":"412543224","message":"露易丝启动了"}
+2022-04-03 14:04:34.819 [restartedMain] INFO  com.darcklh.louise.Model.R - 请求接口: send_msg
+2022-04-03 14:04:35.204 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2022-04-03 14:04:35.546 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2022-04-03 14:04:35.713 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8099 (http) with context path ''
+2022-04-03 14:04:35.733 [restartedMain] INFO  com.darcklh.louise.MyLouiseApplication - Started MyLouiseApplication in 5.49 seconds (JVM running for 6.383)
+2022-04-03 14:04:38.782 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-03 14:04:38.784 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-04-03 14:04:38.785 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-03 14:04:59.107 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.LouiseFilter - 127.0.0.1 >>> 进入过滤器 1 流程 >>> http://127.0.0.1:8099/louise/join
+2022-04-03 14:04:59.126 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.LouiseFilter - 请求 <Louise> 
+2022-04-03 14:04:59.127 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.LouiseFilter - 过滤器 1 流程结束
+2022-04-03 14:04:59.137 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Filter.Handler.LouiseHandler - 拦截器合法性校验
+2022-04-03 14:04:59.169 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.Impl.UserImpl - 进入注册流程
+2022-04-03 14:04:59.172 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户来自群: 887921706 QQ号: 412543224
+2022-04-03 14:04:59.194 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.Impl.UserImpl - {"data":{"area":"","last_sent_time":1646052639,"unfriendly":false,"role":"owner","level":"1","sex":"male","title_expire_time":0,"card_changeable":false,"title":"","join_time":1627983776,"group_id":887921706,"user_id":412543224,"nickname":"DarckLH","shut_up_timestamp":0,"age":0,"card":""},"retcode":0,"status":"ok"}
+2022-04-03 14:04:59.611 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.Impl.UserImpl - 用户 412543224(DarckLH) 注册成功!

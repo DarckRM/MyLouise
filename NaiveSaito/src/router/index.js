@@ -37,7 +37,11 @@ const routes = [
             {
                 path: 'role-info',
                 component: () => import('../pages/saito/RoleInfo.vue')
-            } 
+            },
+            {
+              path: 'image-manage',
+              component: () => import('../pages/louise/ImageManagement.vue')
+            }
         ]
     },
     {

@@ -72,14 +72,19 @@ public class UserImpl implements UserService {
         //TODO 没搞懂腾讯返回的时间格式 日后再搞
         //user.setJoin_time(result.getTimestamp("join_time"));
         try {
-            if (userDao.insert(user) == 0)
-                jsonObject.put("reply","注册失败了，遗憾！请稍后再试吧");
+            if (userDao.insert(user) == 0) {
+                jsonObject.put("reply", "注册失败了，遗憾！请稍后再试吧");
+                logger.info("用户 " + user.getUser_id() + "(" + user.getNickname() + ") 注册失败!");
+            }
             else
                 jsonObject.put("reply","注册成功了！请输入!help获得进一步帮助");
+                logger.info("用户 " + user.getUser_id() + "(" + user.getNickname() + ") 注册成功!");
         } catch (Exception e) {
             if (e.getCause() instanceof java.sql.SQLIntegrityConstraintViolationException) {
-                logger.debug("用户"+user_id+"重复注册了");
+                logger.info("用户"+user_id+"重复注册了");
                 jsonObject.put("reply","你已经注册过了哦！");
+            } else {
+                logger.info("注册失败，堆栈信息：" + e.getMessage());
             }
         }
 

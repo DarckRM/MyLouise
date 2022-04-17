@@ -61,6 +61,9 @@ public class LouiseFilter implements Filter {
                 post_type = jsonObject.getString("post_type");
                 if (!isEmpty.isEmpty(post_type)) {
                     logger.info("请求 <Louise> ");
+                    switch (post_type) {
+                        case "meta_event": {logger.debug("心跳检测"); return;}
+                    }
                     //排除心跳检测
                     if (post_type.equals("meta_event")) {
                         logger.debug("心跳检测");

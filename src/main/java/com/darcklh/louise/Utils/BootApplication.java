@@ -54,23 +54,23 @@ public class BootApplication {
         //从数据库中更新配置
         louiseConfig.refreshConfig(sysConfigDao.selectList(null));
 
-        logger.info("<--加载MyLouise插件-->");
-        List<PluginInfo> pluginInfos = pluginInfoDao.selectList(null);
-        if (pluginInfos == null) {
-            logger.info("MyLouise未安装插件");
-            return;
-        }
-        int i = 0;
-        try {
-            pluginManager.loadPlugins(pluginInfos);
-            for (PluginInfo pluginInfo : pluginInfos) {
-                logger.info("加载插件 <--" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"-- >");
-                i++;
-            }
-            saitoController.PluginInit(i);
-        } catch (Exception e) {
-            logger.info("加载插件失败: " + e.getMessage());
-        }
+//        logger.info("<--加载MyLouise插件-->");
+//        List<PluginInfo> pluginInfos = pluginInfoDao.selectList(null);
+//        if (pluginInfos == null) {
+//            logger.info("MyLouise未安装插件");
+//            return;
+//        }
+//        int i = 0;
+//        try {
+//            pluginManager.loadPlugins(pluginInfos);
+//            for (PluginInfo pluginInfo : pluginInfos) {
+//                logger.info("加载插件 <--" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"-- >");
+//                i++;
+//            }
+//            saitoController.PluginInit(i);
+//        } catch (Exception e) {
+//            logger.info("加载插件失败: " + e.getMessage());
+//        }
 
         r.put("user_id", louiseConfig.getLOUISE_ADMIN_NUMBER());
         r.put("message", louiseConfig.getLOUISE_WELCOME_SENTENCE());
@@ -82,7 +82,7 @@ public class BootApplication {
             logger.info("louiseConfig向R中自动注入失败");
         }
 
-        logger.info("插件加载完毕，共" + i + "个");
+//        logger.info("插件加载完毕，共" + i + "个");
 
     }
 
