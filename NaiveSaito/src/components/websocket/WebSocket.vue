@@ -1,7 +1,4 @@
 <template>
-    <n-button @click="sendDataToServer">
-        确认发送
-    </n-button>
 </template>
 
 <script>
@@ -22,20 +19,19 @@ export default defineComponent({
         }
     },
     data() {
-        
-        return {
-            // 连接状态
-            isConn: false,
-            // ws是否启动
-            wsIsRun: false,
-            // 定义ws对象
-            webSocket: null,
-            // ws请求链接（类似于ws后台地址）
-            // ws: 'ws://127.0.0.1:8099/saito_ws/' + this.client_name,
-            ws: 'ws://121.4.179.240:8099/saito_ws/' + this.client_name,
-            // ws定时器
-            wsTimer: null,
-        }
+      return {
+        // 连接状态
+        isConn: false,
+        // ws是否启动
+        wsIsRun: false,
+        // 定义ws对象
+        webSocket: null,
+        // ws请求链接（类似于ws后台地址）
+        ws: 'ws://127.0.0.1:8099/saito_ws/' + this.client_name,
+        // ws: 'ws://121.4.179.240:8099/saito_ws/' + this.client_name,
+        // ws定时器
+          wsTimer: null,
+      }
     },    
     async mounted() {
         this.wsIsRun = true
@@ -83,8 +79,8 @@ export default defineComponent({
             }, 3000)
         },
         wsOpenHanler(event) {
-            this.isConn = true
-            console.log('ws建立连接成功')
+          this.isConn = true
+          console.log('ws客户端:' + this.client_name + '建立连接成功')
         },
         wsMessageHanler(e) {
             const redata = JSON.parse(e.data)
@@ -95,7 +91,7 @@ export default defineComponent({
          */
         wsErrorHanler(event) {
             this.isConn = false
-            console.log(event, '通信发生错误')
+            console.log(event, 'ws客户端:' + this.client_name + '通信发生错误')
             this.wsInit()
         },
         /**
@@ -103,8 +99,8 @@ export default defineComponent({
          */
         wsCloseHanler(event) {
             this.isConn = false
-            console.log(event, 'ws关闭')
-            this.wsInit()
+            console.log('ws客户端:' + this.client_name + '关闭')
+            this.wsDestroy()
         },
         /**
          * 销毁ws
@@ -120,7 +116,10 @@ export default defineComponent({
                 clearInterval(this.wsTimer)
             }
         },
-    }
+    },
+    unmounted() {
+      this.wsCloseHanler()
+    },
 
 })
 

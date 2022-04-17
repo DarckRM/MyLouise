@@ -21,8 +21,9 @@
 </n-alert>
 <n-card title="输出">
     <div v-html="terminal_output" style="height: 300px; overflow: scroll"></div>
-    <WebSocket ref="webSocket" client_name="terminal_info" data=""></WebSocket>
-    <n-button @click="displayLog">显示日志</n-button>
+    <WebSocket ref="webSocket" :client_name="client_name" data=""></WebSocket>
+    <n-button>追踪日志</n-button>
+    <n-button @click="clear">停止追踪</n-button>
 </n-card>
 </template>
 
@@ -36,34 +37,37 @@ import {
 import WebSocket from '../components/websocket/WebSocket.vue'
 
     export default defineComponent({
-        name: 'ConfigInfoPage',
-        components: {
-            AlertIcon,
-            HelpIcon,
-            WebSocket
-        },
-        data() {
-            return {
-                terminal_output: ''
-            }
-        },
-        mounted() {
-
-            axios.get('/output_log').then(result => {
-            })
-        },
-        methods: {
-            displayLog() {
-                this.terminal_output = this.$refs.webSocket.data
-                setInterval(this.displayLog, 1000)
-                this.clear()
-            },
-            clear() {
-                this.displayLog = null
-                clearInterval(this.displayLog)
-            }
+      name: 'ConfigInfoPage',
+      components: {
+          AlertIcon,
+          HelpIcon,
+          WebSocket
+      },
+      data() {
+          return {
+              terminal_output: '',
+              client_name: 'terminal_info' + (new Date()).valueOf(),
+              displayLog: null
+          }
+      },
+      mounted() {
+        axios.get('/output_log/' + this.client_name).then(result => {
+        })
+        this.displayLog = setInterval(() => {
+          this.terminal_output = this.$refs.webSocket.data
+        }, 1000)
+      },
+      methods: {
+        clear() {
+          clearInterval(this.displayLog)
+          this.displayLog = null
         }
-
+      },
+      watch: {
+        $route() {
+          this.clear()
+        }
+      }
     })
     
 </script>
