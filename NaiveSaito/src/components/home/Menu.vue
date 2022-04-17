@@ -19,7 +19,8 @@ import {
   HardwareChipOutline as ChipIcon,
   HomeOutline as HomeIcon,
   NotificationsOutline as NoticeIcon,
-  Cube as CubeIcon
+  Cube as CubeIcon,
+  ImagesOutline as ImagesIcon
 } from '@vicons/ionicons5'
 import  { useMessage, NIcon } from 'naive-ui'
 import { router } from '../../router'
@@ -77,6 +78,11 @@ const menuOptions = [
             label: '群组管理',
             key: 'group-manage',
             icon: renderIcon(PeopleIcon)
+        },
+        {
+          label: '图片管理',
+          key: 'image-manage',
+          icon: renderIcon(ImagesIcon)
         }
     ]
   },
