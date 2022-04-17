@@ -17,7 +17,7 @@
 </div>
 <n-divider />
 <n-card title="运行状态" style="margin-bottom: 40px">
-  <n-grid x-gap="30" :cols="3">
+  <n-grid cols="1 620:3" :x-gap="12" :y-gap="8" item-responsive >
     <n-gi>
       <n-card content-style hoverable title="CQ-HTTP 机器人">
           <div>
@@ -56,57 +56,53 @@
     </n-gi>
   </n-grid>
 </n-card>
-<WebSocket ref="webSocket" client_name="status_conn" data=""></WebSocket>
+<WebSocket ref="webSocket" :client_name="client_name" data=""></WebSocket>
 </template>
 
 <script>
 import { defineComponent } from "vue"
 import WebSocket from '../components/websocket/WebSocket.vue'
 import {
-    AlertCircleOutline as AlertIcon,
     HelpCircleOutline as HelpIcon
 } from '@vicons/ionicons5'
 
     export default defineComponent({
-        name: 'StatusPanel',
-        components: {
-            WebSocket,
-            HelpIcon
-        },
-        mounted() {
-            this.nowTimes()
-        },
-        unmounted() {
-          console.log("清除计时器")
-          this.clear()
-        },
-        data() {
-            return {
-                nowTime: '',
-                louiseStatus: 'error',
-                louiseText: '未知'
-            }
-        },
-        methods: {
-            nowTimes(){
-                if(this.$refs.webSocket.data == null) {
-                    return
-                }
-                this.nowTime = this.$refs.webSocket.data
-                if(this.$refs.webSocket.isConn) {
-                    this.louiseStatus = 'success'
-                    this.louiseText = '运行良好'
-                }
-                else {
-                    this.louiseStatus = 'error'
-                    this.louiseText = '停机中'
-                } 
-                setInterval(this.nowTimes,5000)
-            },
-            clear(){
-                this.nowTimes = null
-                clearInterval(this.nowTimes)
-            }
+      name: 'StatusPanel',
+      components: {
+          WebSocket,
+          HelpIcon
+      },
+      data() {
+        return {
+          nowTime: '',
+          louiseStatus: 'error',
+          louiseText: '未知',
+          client_name: 'status_conn' + (new Date()).valueOf(),
+          nowTimes: null
         }
+      },
+      mounted() {
+        this.nowTimes = setInterval(() => {
+            if(this.$refs.webSocket.isConn) {
+                this.louiseStatus = 'success'
+                this.louiseText = '运行良好'
+            }
+            else {
+                this.louiseStatus = 'error'
+                this.louiseText = '停机中'
+            } 
+        }, 5000)
+      },
+      methods: {
+        clear(){
+          clearInterval(this.nowTimes)
+          this.nowTimes = null
+        }
+      },
+      watch: {
+        $route() {
+          this.clear()
+        }
+      }
     })
 </script>

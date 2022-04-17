@@ -4,12 +4,11 @@
             <n-layout-header bordered style="padding: 0 30px; height: 100%">
                 <Top></Top>
             </n-layout-header>
-            <div style="height: 600px;"></div>
-            <n-layout has-sider position="absolute" style="top: 100px">
+            <n-layout has-sider>
                 <n-layout-sider  content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80" :width="280" show-trigger="bar">            
                     <Menu></Menu>
                 </n-layout-sider>
-                <n-layout content-style="margin-top: 30px; padding-right: 30px; padding-left: 30px" :native-scrollbar="false">
+                <n-layout content-style="margin-top: 30px; padding-right: 30px; padding-left: 30px; height: 800px" :native-scrollbar="false">
                     <router-view>
                     </router-view>
                     <n-layout-footer
