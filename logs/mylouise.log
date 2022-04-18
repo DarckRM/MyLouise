@@ -2196,3 +2196,24 @@ Error starting ApplicationContext. To display the conditions report re-run your 
 2022-04-18 09:18:18.699 [http-nio-8099-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
 2022-04-18 09:18:18.700 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
 2022-04-18 09:18:18.702 [http-nio-8099-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2022-04-18 12:19:13.800 [http-nio-8099-exec-4] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650255553491 连接,当前在线人数为:1
+2022-04-18 12:20:23.579 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650255553491 断开了连接
+2022-04-18 12:20:23.580 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650255553491 退出,当前在线人数为:0
+2022-04-18 12:38:48.227 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info1650256728204 连接,当前在线人数为:1
+2022-04-18 12:38:48.250 [Thread-9] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-18 12:39:02.130 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info1650256728204 断开了连接
+2022-04-18 12:39:02.131 [http-nio-8099-exec-6] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info1650256728204 退出,当前在线人数为:0
+2022-04-18 12:39:02.134 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650256742100 连接,当前在线人数为:1
+2022-04-18 12:39:07.964 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650256742100 断开了连接
+2022-04-18 12:39:07.965 [http-nio-8099-exec-2] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650256742100 退出,当前在线人数为:0
+2022-04-18 12:39:15.738 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info1650256755716 连接,当前在线人数为:1
+2022-04-18 12:39:15.774 [Thread-12] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-18 12:40:06.596 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info1650256755716 断开了连接
+2022-04-18 12:40:06.597 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info1650256755716 退出,当前在线人数为:0
+2022-04-18 12:49:40.080 [http-nio-8099-exec-5] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info1650257380059 连接,当前在线人数为:1
+2022-04-18 12:49:40.100 [Thread-14] INFO  com.darcklh.louise.Controller.SaitoController - 日志输出任务开始
+2022-04-18 12:49:40.903 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info1650257380059 断开了连接
+2022-04-18 12:49:40.904 [http-nio-8099-exec-3] INFO  com.darcklh.louise.Service.WebSocketService - 用户 terminal_info1650257380059 退出,当前在线人数为:0
+2022-04-18 12:49:40.910 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650257380883 连接,当前在线人数为:1
+2022-04-18 12:49:42.560 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650257380883 断开了连接
+2022-04-18 12:49:42.560 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650257380883 退出,当前在线人数为:0

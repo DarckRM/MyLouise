@@ -106,7 +106,6 @@
 
 <script>
 import { defineComponent } from 'vue'
-import Header from '../components/home/Header.vue'
 import Menu from '../components/home/Menu.vue'
 import Top from '../components/home/Top.vue'
 
@@ -126,7 +125,6 @@ export default defineComponent({
     setup() {
     },
     components: {
-        Header,
         Menu,
         Top,
         Heart,

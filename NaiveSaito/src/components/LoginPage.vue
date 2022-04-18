@@ -25,12 +25,12 @@
                     />
                 </n-form-item>
             </n-form>
-            <n-button>Reset</n-button>
-            <n-button @click="signUp()" type="primary">Confirm</n-button>
+            <n-button style="margin: 20px 25px;">Reset</n-button>
+            <n-button @click="signUp()" type="primary" style="margin: 20px 25px;">Confirm</n-button>
             </n-tab-pane>
             <n-tab-pane name="signup" tab="注册">
-            <n-button>Reset</n-button>
-            <n-button @click="signUp()" type="primary">Confirm</n-button>
+            <n-button style="margin: 20px 25px;">Reset</n-button>
+            <n-button @click="signUp()" type="primary" style="margin: 20px 25px;">Confirm</n-button>
             </n-tab-pane>
         </n-tabs>
         </n-card>
@@ -41,12 +41,6 @@
 #loginCard {
   max-width: 300px;
   margin: 50px auto;
-}
-.n-input {
-    margin-bottom: 10px;
-}
-.n-button {
-    margin: 20px 25px;
 }
 #loginDiv {
     margin-top: 60px;

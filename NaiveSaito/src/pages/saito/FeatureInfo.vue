@@ -25,7 +25,7 @@
 </n-card>
 <n-modal v-model:show="showModal">
     <n-card style="width: 1100px;" title="新增功能" :bordered="false" size="huge">
-        <FeatureCard type="save" :data="dataList" width="width: 1000px"/>
+        <FeatureCard type="save" :data="empty" width="width: 1000px"/>
     </n-card>
 </n-modal>
 </template>
@@ -166,7 +166,8 @@ export default defineComponent({
     },
     data() {
         return {
-            dataList: []
+            dataList: [],
+            empty: []
         }
     },
     mounted() {
