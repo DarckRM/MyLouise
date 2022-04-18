@@ -40,7 +40,6 @@
           <n-form-item label="角色等级">
             <n-select v-model:value="model.role_id" placeholder="请选择角色等级" :options="roleOptions" />
           </n-form-item>
-
         </n-gi>
       </n-grid>
     </n-form>

@@ -2,6 +2,7 @@
 cache/
 
 logs/
+logs
 
 ### Maven template
 target/
