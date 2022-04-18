@@ -25,7 +25,7 @@
 </n-card>
 <n-modal v-model:show="showModal">
     <n-card style="width: 1100px;" title="新增用户" :bordered="false" size="huge">
-      <UserCard type="save" :data="dataList"></UserCard>
+      <UserCard type="save" :data="empty"></UserCard>
     </n-card>
 </n-modal>
 </template>
@@ -160,12 +160,24 @@ export default defineComponent({
     },
     data() {
         return {
-            dataList: []
+            dataList: [],
+            roleList: [],
+            empty: [{
+              roles: []
+            }]
         }
     },
     mounted() {
         this.$axios.post('user/findAll').then(result => {
-        this.dataList = result.data.datas
+          this.dataList = result.data.datas
+          // 获取Role列表
+          this.$axios.post('role/findBy').then(result => {
+            this.roleList = result.data.datas
+            this.dataList.map((v) => {
+              v.roles = this.roleList
+              this.empty.roles = this.roleList
+            })
+          })
         })
     },
     components: {
