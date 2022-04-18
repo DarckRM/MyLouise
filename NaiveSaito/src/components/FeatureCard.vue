@@ -60,18 +60,10 @@
 
 <script>
 import { defineComponent } from 'vue'
-import {
-  CaretForward as CaretForwardIcon,
-  TerminalOutline as Ternimal,
-} from '@vicons/ionicons5'
 
 export default defineComponent({
     setup() {
         
-    },
-    components: {
-        CaretForwardIcon,
-        Ternimal
     },
     props: {
         data: {
@@ -86,22 +78,22 @@ export default defineComponent({
 
     },
     methods: {
-        saveFormData() {
-            let formData = {
-                feature_id: this.model.feature_id,
-                feature_name: this.model.feature_name,
-                feature_cmd: this.model.feature_cmd,
-                feature_url: this.model.feature_url,
-                info: this.model.info,
-                description: this.model.description,
-                invoke_limit: this.model.invoke_limit,
-                is_original: this.model.is_original,
-                credit_cost: this.model.credit_cost
-            }
-            this.$axios.post('feature-info/' + this.type, formData).then(result => {
-                let msg = result.data.msg
-            })
+      saveFormData() {
+        let formData = {
+          feature_id: this.model.feature_id,
+          feature_name: this.model.feature_name,
+          feature_cmd: this.model.feature_cmd,
+          feature_url: this.model.feature_url,
+          info: this.model.info,
+          description: this.model.description,
+          invoke_limit: this.model.invoke_limit,
+          is_original: this.model.is_original,
+          credit_cost: this.model.credit_cost
         }
+        this.$axios.post('feature-info/' + this.type, formData).then(result => {
+          let msg = result.data.msg
+        })
+      }
     }
 })
 </script>

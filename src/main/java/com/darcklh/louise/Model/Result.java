@@ -13,9 +13,9 @@ import java.util.List;
 @Data
 public class Result<T> {
 
-    public List<T> datas;
-    public T data;
-    public Integer code;
-    public String msg;
+    private List<T> datas;
+    private T data;
+    private Integer code;
+    private String msg;
 
 }
