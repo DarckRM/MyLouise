@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Model.Louise.User;
 import com.darcklh.louise.Model.Result;
 import com.darcklh.louise.Model.Saito.SysUser;
+import com.darcklh.louise.Model.SpecificException;
 import com.darcklh.louise.Model.VO.UserRole;
 import com.darcklh.louise.Service.SysUserService;
 import com.darcklh.louise.Service.UserService;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestController
@@ -41,6 +44,14 @@ public class UserController {
     public Result test(@RequestBody JSONObject jsonObject) {
         Result result = new Result();
         result.setMsg(userService.banUser(jsonObject.getString("user_id")));
+        result.setCode(200);
+        return result;
+    }
+
+    @RequestMapping("save")
+    public Result edit(@RequestBody UserRole userRole) {
+        Result result = new Result();
+        result.setMsg(userService.joinLouise(userRole.getUser_id(), userRole.getGroup_id()).toString());
         result.setCode(200);
         return result;
     }

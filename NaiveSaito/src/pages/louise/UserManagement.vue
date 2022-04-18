@@ -1,19 +1,19 @@
 <template>
 <div>
-    <n-h1 prefix="bar" style="font-weight: 400; font-size: 32px">
-        用户管理
-    <span style="font-weight: 200; font-size: 16px">(User management)</span>
-    <n-popover trigger="click">
-        <template #trigger>
-            <n-button text style="font-size: 26px">
-                <n-icon>
-                    <HelpIcon /> 
-                </n-icon>
-            </n-button>
-        </template>
-        <p>可以对QQ用户进行一些基础管理</p>
-    </n-popover>
-    </n-h1>
+  <n-h1 prefix="bar" style="font-weight: 400; font-size: 32px">
+      用户管理
+  <span style="font-weight: 200; font-size: 16px">(User management)</span>
+  <n-popover trigger="click">
+    <template #trigger>
+      <n-button text style="font-size: 26px">
+        <n-icon>
+          <HelpIcon /> 
+        </n-icon>
+      </n-button>
+    </template>
+    <p>可以对QQ用户进行一些基础管理</p>
+  </n-popover>
+  </n-h1>
 </div>
 <n-divider />
 <n-card title="用户列表">
@@ -42,92 +42,93 @@ import {
 
 const creatColumns = ({ popMessage }) => {
 
-    return [
-    {
-        type: 'selection'
-    },
-    {
-        type: 'expand',
-        renderExpand: (rowData) => {
-            return h(
-                UserCard,
-                {
-                  data: rowData,
-                  hoverable: true
-                }
-            )
+  return [
+  {
+      type: 'selection'
+  },
+  {
+    type: 'expand',
+    renderExpand: (rowData) => {
+      return h(
+        UserCard,
+        {
+          data: rowData,
+          hoverable: true,
+          type: 'edit'
         }
-    },
-    {
-        title: '用户QQ',
-        key: 'user_id',
-        width: 200,
-        ellipsis: true
-    },
-    {
-        title: '昵称',
-        key: 'nickname',
-        width: 300,
-        ellipsis: true
-    },
-    {
-        title: '角色',
-        key: 'role_name',
-        render(row) {
-          var tag = ''
-          switch(row.role_id) {
-            case 1: tag = 'info'
-            break
-            case 2: tag = 'error'
-            break
-            default: tag = 'warning'
-          }
-            return h(
-                NTag,
-                {
-                    type: tag
-                },
-                {
-                    default: () => row.role_name
-                }
-            )
-        }
-    },
-    {
-        title: '创建时间',
-        key: 'create_time',
-        ellipsis: true
-    },
-    {
-        title: '状态',
-        key: 'isEnabled',
-        render(row) {
-            return h(
-                NButton,
-                {
-                    circle: true,
-                    style: 'margin: 0; width: 80px',
-                    type: row.isEnabled == 1 ? 'primary' : 'error',
-                    ghost: row.isEnabled == 1 ? true : false,
-                    disabled: row.tag,
-                    onClick() {
-                        row.tag = true
-                        axios.post('user/switchStatus', row).then(result => {
-                            let msg = result.data.msg
-                            //let code = result.data.code
-                            row.isEnabled = -row.isEnabled
-                            popMessage(msg, row.isEnabled)
-                        })
-                        row.tag = false
-                    }
-                },
-                {
-                    default: () => row.isEnabled == 1 ? '良好' : '禁用'
-                }
-            )
-        },
+      )
     }
-    ]
+  },
+  {
+    title: '用户QQ',
+    key: 'user_id',
+    width: 200,
+    ellipsis: true
+  },
+  {
+    title: '昵称',
+    key: 'nickname',
+    width: 300,
+    ellipsis: true
+  },
+  {
+    title: '角色',
+    key: 'role_name',
+    render(row) {
+      var tag = ''
+      switch(row.role_id) {
+        case 1: tag = 'info'
+        break
+        case 2: tag = 'error'
+        break
+        default: tag = 'warning'
+      }
+      return h(
+        NTag,
+        {
+          type: tag
+        },
+        {
+          default: () => row.role_name
+        }
+      )
+    }
+  },
+  {
+      title: '创建时间',
+      key: 'create_time',
+      ellipsis: true
+  },
+  {
+      title: '状态',
+      key: 'isEnabled',
+      render(row) {
+          return h(
+              NButton,
+              {
+                circle: true,
+                style: 'margin: 0; width: 80px',
+                type: row.isEnabled == 1 ? 'primary' : 'error',
+                ghost: row.isEnabled == 1 ? true : false,
+                disabled: row.tag,
+                onClick() {
+                  row.tag = true
+                  axios.post('user/switchStatus', row).then(result => {
+                    let msg = result.data.msg
+                    //let code = result.data.code
+                    row.isEnabled = -row.isEnabled
+                    popMessage(msg, row.isEnabled)
+                  })
+                  row.tag = false
+                }
+              },
+              {
+                default: () => row.isEnabled == 1 ? '良好' : '禁用'
+              }
+          )
+      },
+  }
+  ]
 }
 
 export default defineComponent({

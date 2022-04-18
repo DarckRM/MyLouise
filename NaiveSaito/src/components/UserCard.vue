@@ -68,7 +68,21 @@ export default defineComponent({
     },
     methods: {
       saveFormData() {
-
+        let formData = {
+          user_id: this.model.user_id,
+          nickname: this.model.nickname,
+          group_id: this.model.group_id,
+          join_time: this.model.join_time,
+          create_time: this.model.create_time,
+          credit: this.model.credit,
+          count_setu: this.model.count_setu,
+          credit_buff: this.model.credit_buff,
+          role_id: this.model.role_id
+        }
+        this.$axios.post('user/' + this.type, formData).then(result => {
+          let msg = result.data
+          console.log(msg)
+        })
       }
     }
 })
