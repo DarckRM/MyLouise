@@ -81,7 +81,6 @@ public class SaitoController {
                 BufferedReader reader = null;
                 try {
                     //日志文件路径，获取最新的
-                    //String filePath = System.getProperty("user.home") + "logs/" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + "/mylouise.log";
                     String filePath = "logs/mylouise.log";
                     //字符流
                     reader = new BufferedReader(new FileReader(filePath));

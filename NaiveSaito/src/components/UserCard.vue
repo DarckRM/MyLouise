@@ -1,33 +1,62 @@
 <template>
-    <n-card>
-        <n-avatar style="float: left" :size=140 round :src="avatar" />
-        <div v-if="credit_buff > 0">
-        <n-h1 prefix="bar" style="margin: 10px 0 0 30px; float: left">CREDIT余额 {{credit}}</n-h1>
-        <span style="margin: 50px 0 0 -250px; float: left">周期CREDIT回复 <span style="color: green">{{credit_buff}}</span></span>
-        <n-h2 prefix="bar" style="float: left; margin: 95px 0 0 -276px;">总功能请求 {{invoke_count}}</n-h2>
-        </div>
-        <div v-else>
-        <n-h1 type="error" prefix="bar" style="margin: 10px 0 0 30px; float: left">CREDIT余额 {{credit}}</n-h1>
-        <span style="margin: 50px 0 0 -250px; float: left">周期CREDIT回复 <span style="color: red">{{credit_buff}}</span></span>
-        <n-h2 prefix="bar" style="float: left; margin: 95px 0 0 -276px;">总功能请求 {{invoke_count}}</n-h2>
-        </div>
-        
-        
-    </n-card>
+  <n-card>
+    <n-form label-placement="left" size="medium" label-width="100">
+      <n-grid :x-gap="12" :y-gap="8" item-responsive :cols="5">
+        <n-gi span=1>
+            <div style="margin: 0 auto">
+                <n-image object-fit="cover" round :src="model.avatar" width="200" height="200" style="border-radius: 200px;"/>
+            </div>
+            <div style="float: left">
+                <n-button type="primary" style="width: 105px; height: 40px; margin: 5px 50px" @click="saveFormData">保存</n-button>
+            </div>      
+          </n-gi>
+        <n-gi span=2>
+          <n-form-item label="用户QQ">
+            <n-input placeholder="请输入用户QQ" v-model:value="model.user_id"/>
+          </n-form-item>
+          <n-form-item label="昵称">
+            <n-input placeholder="请输入用户昵称" v-model:value="model.nickname"/>
+          </n-form-item>
+          <n-form-item label="所属群聊">
+            <n-input placeholder="请输入所属群聊" v-model:value="model.group_id"/>
+          </n-form-item>
+        </n-gi>
+        <n-gi span=2>
+          <n-form-item label="加入日期">
+            <n-input placeholder="请输入加入到MyLouise的日期" v-model:value="model.create_time"/>
+          </n-form-item>
+          <n-form-item label="CREDIT BUFF">
+            <n-input-number v-model:value="value" size="large" clearable />
+          </n-form-item>
+        </n-gi>
+      </n-grid>
+    </n-form>
+  </n-card>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
     setup() {
-        
+        return {
+          value: ref(0)
+        }
     },
     props: {
-        avatar: String,
-        credit: Number,
-        credit_buff: Number,
-        invoke_count: Number
+      data : {
+      },
+      type: String
+    },
+    data() {
+      return {
+        model: this.data
+      }
+    },
+    methods: {
+      saveFormData() {
+
+      }
     }
 })
 </script>

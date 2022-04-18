@@ -1,5 +1,5 @@
 <template>
-    <n-card :style="width">
+    <n-card>
         <n-form label-placement="left" size="medium" label-width="100">
             <n-grid x-gap=16 :cols="5">
                 <n-gi span=1>
@@ -87,7 +87,6 @@ export default defineComponent({
     },
     methods: {
         saveFormData() {
-
             let formData = {
                 feature_id: this.model.feature_id,
                 feature_name: this.model.feature_name,
