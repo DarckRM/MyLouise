@@ -74,10 +74,18 @@ const creatColumns = ({ popMessage }) => {
         title: '角色',
         key: 'role_name',
         render(row) {
+          var tag = ''
+          switch(row.role_id) {
+            case 1: tag = 'info'
+            break
+            case 2: tag = 'error'
+            break
+            default: tag = 'warning'
+          }
             return h(
                 NTag,
                 {
-                    type: row.role_id == 1 ? 'primary' : 'info'
+                    type: tag
                 },
                 {
                     default: () => row.role_name

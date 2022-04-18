@@ -2217,3 +2217,4 @@ Error starting ApplicationContext. To display the conditions report re-run your 
 2022-04-18 12:49:40.910 [http-nio-8099-exec-8] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650257380883 连接,当前在线人数为:1
 2022-04-18 12:49:42.560 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650257380883 断开了连接
 2022-04-18 12:49:42.560 [http-nio-8099-exec-10] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650257380883 退出,当前在线人数为:0
+2022-04-18 19:06:54.925 [http-nio-8099-exec-7] INFO  com.darcklh.louise.Service.WebSocketService - 用户 status_conn1650280014704 连接,当前在线人数为:1
