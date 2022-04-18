@@ -17,13 +17,21 @@
 </div>
 <n-divider />
 <n-card title="用户列表">
-    <n-data-table :columns="columns" :data="userList" :pagination="pagination" :row-key="row => row.user_id" @update:checked-row-keys="handleCheck" />
+  <div>
+    <n-button ghost type="primary" size="large" style="margin: 0 10px 10px 0; width: 80px" @click="showModal = true">新增</n-button>
+    <n-button type="error" size="large" style="margin: 0 10px 10px 0; width: 80px">删除</n-button>
+  </div>
+  <n-data-table :columns="columns" :data="dataList" :pagination="pagination" :row-key="row => row.user_id" @update:checked-row-keys="handleCheck" />
 </n-card>
+<n-modal v-model:show="showModal">
+    <n-card style="width: 1100px;" title="新增用户" :bordered="false" size="huge">
+      <UserCard type="save" :data="dataList"></UserCard>
+    </n-card>
+</n-modal>
 </template>
 
 <script>
 import { defineComponent, reactive, h, ref } from 'vue'
-import { router } from '../../router'
 import { NButton, useMessage, NTag } from 'naive-ui'
 import UserCard from '../../components/UserCard.vue'
 import axios from '../../utils/request'
@@ -44,22 +52,14 @@ const creatColumns = ({ popMessage }) => {
             return h(
                 UserCard,
                 {
-                    avatar: rowData.avatar,
-                    credit: rowData.credit,
-                    credit_buff: rowData.credit_buff,
-                    invoke_count: rowData.count_setu,
-                    hoverable: true
+                  data: rowData,
+                  hoverable: true
                 }
             )
         }
     },
     {
-        key: 'tag',
-        value: false,
-        width: 0
-    },
-    {
-        title: 'QQ',
+        title: '用户QQ',
         key: 'user_id',
         width: 200,
         ellipsis: true
@@ -140,38 +140,40 @@ export default defineComponent({
             }
         })
         return {
-            pagination: paginationReactive,
-            columns: creatColumns({
-                popMessage (msg, type) {
-                    if(type == 1) {
-                        message.success(msg)
-                    } else {
-                        message.warning(msg)
-                    }
-                    
-                }
-            }),
-            checkedRowKeys: checkedRowKeysRef,
-            handleCheck(rowKeys) {
-                checkedRowKeysRef.value = rowKeys
-            }
+          showModal: ref(false),
+          pagination: paginationReactive,
+          columns: creatColumns({
+              popMessage (msg, type) {
+                  if(type == 1) {
+                      message.success(msg)
+                  } else {
+                      message.warning(msg)
+                  }
+                  
+              }
+          }),
+          checkedRowKeys: checkedRowKeysRef,
+          handleCheck(rowKeys) {
+            checkedRowKeysRef.value = rowKeys
+          }
         }
     },
     data() {
         return {
-            userList: []
+            dataList: []
         }
     },
     mounted() {
         this.$axios.post('user/findAll').then(result => {
-        this.userList = result.data.datas
+        this.dataList = result.data.datas
         })
     },
     components: {
-        AlertIcon,
-        HelpIcon,
-        NTag
-    },
+    AlertIcon,
+    HelpIcon,
+    NTag,
+    UserCard
+},
     methods: {
     }
 })

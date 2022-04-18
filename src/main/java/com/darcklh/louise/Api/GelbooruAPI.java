@@ -43,37 +43,20 @@ public class GelbooruAPI {
 
         //返回值
         JSONObject returnJson = new JSONObject();
-        //解析上传的信息 拿到图片URL还有一些相关参数
-        String url = message.getString("message");
         //获取请求元数据信息
-        String message_type = message.getString("message_type");
-        String number = "";
         String nickname = message.getJSONObject("sender").getString("nickname");
-
-        //判断私聊或是群聊
-        String senderType = "";
-        if (message_type.equals("group")) {
-            number = message.getString("group_id");
-            senderType = "group_id";
-
-        } else if (message_type.equals("private")) {
-            number = message.getString("user_id");
-            senderType = "user_id";
-        }
 
         String uri = "https://gelbooru.com/index.php?page=post&s=list&tags=all";
         String page = "post";
         String s = "list";
         String tags = "all";
-        String api_key = "8e67c397f5ffc2e6320694ed12ef696ef0833e0ca885b0ae886891e786ca8508";
-        String user_id = "829309";
+//      String api_key = "8e67c397f5ffc2e6320694ed12ef696ef0833e0ca885b0ae886891e786ca8508";
+//      String user_id = "829309";
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("page", page);
         params.add("s", s);
         params.add("tags", tags);
-//        params.add("api_key", s);
-//        params.add("user_id", s);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.USER_AGENT, "PostmanRuntime/7.26.8");
