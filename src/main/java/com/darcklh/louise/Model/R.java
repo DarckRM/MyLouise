@@ -71,8 +71,9 @@ public class R {
         HttpEntity<String> cqhttp = new HttpEntity<>(sendJson.toString(), headers);
         //开始请求
         logger.info("请求接口: " + api);
+        JSONObject jsonObject = restTemplate.postForObject(louiseConfig.getBOT_BASE_URL() + api, cqhttp, JSONObject.class);
         this.refresh();
-        return restTemplate.postForObject(louiseConfig.getBOT_BASE_URL() + api, cqhttp, JSONObject.class);
+        return jsonObject;
     }
 
     /**

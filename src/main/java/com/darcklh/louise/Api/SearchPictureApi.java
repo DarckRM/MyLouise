@@ -26,7 +26,7 @@ import java.util.Map;
  * 识别发送的图片的Api
  */
 @Service
-public class SearchPictureApi {
+public class SearchPictureApi{
 
     Logger logger = LoggerFactory.getLogger(SearchPictureApi.class);
 
@@ -58,7 +58,7 @@ public class SearchPictureApi {
         sendJson.put(r.getSenderType(), r.getNumber());
 
         //TODO 线程名过长
-        new Thread(() -> findWithAscii2d(r.getNickname(), sendJson), UniqueGenerator.uniqueThreadName("", "A2d")).start();
+//        new Thread(() -> findWithAscii2d(r.getNickname(), sendJson), UniqueGenerator.uniqueThreadName("", "A2d")).start();
         new Thread(() -> findWithSourceNAO(r.getNickname(), sendJson), UniqueGenerator.uniqueThreadName("", "NAO")).start();
 
         return null;
@@ -405,34 +405,31 @@ public class SearchPictureApi {
         String finalUrl = "https://img3.gelbooru.com//images/" + imageFinalUrlPrefix + imageUrl + imageUrlEndfix;
         String exampleUrl = "https://img3.gelbooru.com//samples/" + imageExampleUrlPrefix + imageUrl + imageUrlEndfix;
 
-        fileControlApi.downloadPictureURL(finalUrl, imageUrl, "Gelbooru");
-        fileControlApi.downloadPictureURL(exampleUrl, imageUrl, "Gelbooru");
+        boolean isImage = fileControlApi.downloadPictureURL(finalUrl, "image_" + imageUrl, "Gelbooru");
+        boolean isSample = fileControlApi.downloadPictureURL(exampleUrl, "sample_" + imageUrl, "Gelbooru");
 
-        if (index_id == 12) {
+        if (isImage) {
             reply.put("message",
-                    nickname+"，查询出来咯"+
-                    "\n来源Yande.re"+
-                    "\n角色:"+characters+
-                    "\n作者:"+creator+
-                    "\n相似度:"+similarity+
-                    "\n可能的图片地址:" + sourceNaoArray +
-                    "\n[CQ:image,file="+thumbnail+"]" +
-                    "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "Gelbooru/" + imageUrl + ".jpg]" +
-                    "\n信息来自Yande.re，结果可能不准确，请通过上面的链接访问");
-        } else {
+                nickname+"，查询出来咯"+
+                "\n来源Yande.re"+
+                "\n角色:"+characters+
+                "\n作者:"+creator+
+                "\n相似度:"+similarity+
+                "\n可能的图片地址:" + sourceNaoArray +
+                "\n[CQ:image,file="+thumbnail+"]" +
+                "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "Gelbooru/image_" + imageUrl + ".jpg]" +
+                "\n信息来自Yande.re，结果可能不准确，请通过上面的链接访问");
+        } else if (isSample) {
             reply.put("message",
-                    nickname+"，查询出来咯"+
-                    "\n来源Gelbooru"+
-                    "\n角色:"+characters+
-                    "\n作者:"+creator+
-                    "\n相似度:"+similarity+
-                    "\n可能的图片地址:" + sourceNaoArray +
-                    "\n[CQ:image,file="+thumbnail+"]" +
-                    "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "Gelbooru/" + imageUrl +".jpg]");
+                nickname+"，查询出来咯"+
+                "\n来源Gelbooru"+
+                "\n角色:"+characters+
+                "\n作者:"+creator+
+                "\n相似度:"+similarity+
+                "\n可能的图片地址:" + sourceNaoArray +
+                "\n[CQ:image,file="+thumbnail+"]" +
+                "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "Gelbooru/sample_" + imageUrl +".jpg]");
         }
-
-        logger.info("图片地址1:"+finalUrl);
-        logger.info("图片地址2:"+exampleUrl);
         return reply;
     }
 

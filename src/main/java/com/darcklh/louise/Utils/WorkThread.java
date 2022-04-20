@@ -2,6 +2,7 @@ package com.darcklh.louise.Utils;
 
 import com.darcklh.louise.Model.SpecificException;
 import com.darcklh.louise.Service.MultiTaskService;
+import org.springframework.util.StopWatch;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -41,13 +42,16 @@ public class WorkThread extends Thread {
         } catch ( NoSuchAlgorithmException e) {
             throw new SpecificException("不懂这是什么错误");
         }
-
     }
 
     public void callBackFunc() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         restTask--;
         if (restTask == 0) {
-            System.out.println(threadId + "任务已完成");
+            stopWatch.stop();
+            System.out.println("任务 " + threadId + " 已完成, 执行时间: " + stopWatch.getLastTaskTimeMillis());
         }
+
     }
 }
