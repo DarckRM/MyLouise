@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CBIRServiceImpl implements CBIRService {
+
     @Override
     public float minkowskiDist(double[] InHist, double[] sampleHist) {
         float minkDist = 0;

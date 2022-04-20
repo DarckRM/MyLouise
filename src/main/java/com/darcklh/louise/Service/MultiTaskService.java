@@ -31,5 +31,4 @@ public interface MultiTaskService {
     public void setTaskId(int taskId);
     public void setStatus(int taskId);
 
-
 }
