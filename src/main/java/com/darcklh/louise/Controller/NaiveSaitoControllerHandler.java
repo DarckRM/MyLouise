@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.sql.SQLException;
@@ -73,6 +74,16 @@ public class NaiveSaitoControllerHandler {
         setData(result, e.getMessage(), e.getErrorCode(), e);
         jsonObject.put("result", result);
         return jsonObject;
+    }
+
+    public JSONObject handleIOException(IOException e) throws UnsupportedEncodingException {
+
+        JSONObject jsonObject = new JSONObject();
+        Result result = new Result();
+        setData(result, "文件读写异常！", 503, e);
+        jsonObject.put("result", result);
+        return jsonObject;
+
     }
 
     void setData(Result result,String errorMsg, Integer innerCode, Exception e) throws UnsupportedEncodingException {
