@@ -74,14 +74,7 @@ public class BootApplication {
 
         r.put("user_id", louiseConfig.getLOUISE_ADMIN_NUMBER());
         r.put("message", louiseConfig.getLOUISE_WELCOME_SENTENCE());
-        try {
-            r.sendMessage(r.getMessage());
-        } catch (ResourceAccessException e) {
-            logger.info("与BOT建立连接失败");
-        } catch (NullPointerException e) {
-            logger.info("louiseConfig向R中自动注入失败");
-        }
-
+        r.sendMessage(r.getMessage());
 //        logger.info("插件加载完毕，共" + i + "个");
 
     }

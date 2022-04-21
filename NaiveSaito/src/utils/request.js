@@ -1,6 +1,19 @@
 import axios from "axios";
-axios.defaults.baseURL = "http://127.0.0.1:8099/saito/"; //此路径为配置代理服务器时的代理路径
-// axios.defaults.baseURL = "http://121.4.179.240:8099/saito/"; //此路径为配置代理服务器时的代理路径
+import router from "../router";
+// axios.defaults.baseURL = "http://127.0.0.1:8099/saito/"; //此路径为配置代理服务器时的代理路径
+axios.defaults.baseURL = "http://121.4.179.240:8099/saito/"; //此路径为配置代理服务器时的代理路径
+
+axios.interceptors.request.use(config => {
+  // 在发送请求之前做些什么
+  const token = window.localStorage.getItem('token');
+  if (token) {
+      config.headers.token = 'Bearer ' + token;
+  }
+  return config;
+}, function (error) {
+  // 对请求错误做些什么
+  return Promise.reject(error);
+})
 
 export default {
   get(url, data, responseType) {

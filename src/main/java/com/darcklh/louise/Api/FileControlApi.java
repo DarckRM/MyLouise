@@ -1,7 +1,9 @@
 package com.darcklh.louise.Api;
 
+import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
-import com.darcklh.louise.Model.SpecificException;
+import com.darcklh.louise.Model.Result;
+import com.darcklh.louise.Utils.UniqueGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -11,15 +13,18 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -28,11 +33,90 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @Description 处理文件操作相关的接口
  */
 @Slf4j
-@Service
+@RestController
 public class FileControlApi {
 
     @Autowired
     LouiseConfig louiseConfig;
+
+    /**
+     * 上传图片
+     * @param file
+     * @return
+     */
+    @RequestMapping(value = "/saito/upload/image", produces = "application/json")
+    public JSONObject uploadImage(MultipartFile file) throws IOException {
+        JSONObject jsonObject = new JSONObject();
+        Result<String> result = new Result<>();
+        log.info("上传图片: " + file.getOriginalFilename());
+
+        if (!file.isEmpty()) {
+
+            String fileName = file.getOriginalFilename(); //获取上传的文件名
+            String suffixName = fileName.substring(fileName.lastIndexOf("." )+ 1); //获取后缀名
+            fileName = "Image_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "_" + UniqueGenerator.generateShortUuid() + "." + suffixName;
+            result.setData(fileName);
+            File dest = new File(new File(louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION()).getAbsolutePath() + "/upload/" + fileName);
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+
+            file.transferTo(dest);
+            String realUrl = "/saito/image/" + fileName;
+            result.setMsg("上传成功");
+            result.setData(realUrl);
+            jsonObject.put("result", result);
+            return jsonObject;
+
+        } else {
+            result.setMsg("上传失败");
+            jsonObject.put("result", result);
+            return jsonObject;
+        }
+    }
+
+    /**
+     * images图片下载
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping("/saito/image/**")
+    @ResponseBody
+    public JSONObject imagesDownLoad(HttpServletRequest request, HttpServletResponse response){
+        String url = request.getRequestURI();
+        JSONObject jsonObject = new JSONObject();
+        Result<String> result = new Result<>();
+        String fileName = url.replace("/saito/image/","");
+
+        File file = new File(louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION() + "/upload/" + fileName);
+        if(!file.exists()){
+            jsonObject.put("success",2);
+            jsonObject.put("result","下载文件不存在");
+            return jsonObject;
+        }
+        response.reset();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+        response.setContentLength((int) file.length());
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName );
+        try(BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));) {
+            byte[] buff = new byte[1024];
+            OutputStream os  = response.getOutputStream();
+            int i = 0;
+            while ((i = bis.read(buff)) != -1) {
+                os.write(buff, 0, i);
+                os.flush();
+            }
+        } catch (IOException e) {
+            jsonObject.put("success",2);
+            jsonObject.put("result","下载文件不存在");
+            return jsonObject;
+        }
+        jsonObject.put("success",0);
+        jsonObject.put("result","下载文件成功");
+        return jsonObject;
+    }
 
     /**
      * 根据传入的URL下载图片到本地

@@ -75,26 +75,27 @@
       useMessage,
     },
     methods: {
-        signUp() {
-            this.message.loading("登录中")
-            this.loginPageTitle = "Sign Up"
-            this.$axios.post('login', this.loginForm).then(result => {
-                let data = result.data
-                if(data.code == 200) {
-                    this.message.destroyAll()
-                    this.message.success('登录成功')
-                    router.push({
-                        path: '/home/index'
-                    })
-                } else if(data.code == 403) {
-                    this.message.destroyAll()
-                    this.message.warning('用户已被禁用')
-                } else {
-                    this.message.destroyAll()
-                    this.message.error('用户名或密码错误')
-                }
-            })
-        }
+      signUp() {
+          this.message.loading("登录中")
+          this.loginPageTitle = "Sign Up"
+          this.$axios.post('login', this.loginForm).then(result => {
+            let data = result.data
+            if(data.code == 200) {
+              this.message.destroyAll()
+              this.message.success('登录成功')
+              this.$store.commit('set_token', "123456")
+              router.push({
+                path: '/home/index'
+              })
+            } else if(data.code == 403) {
+              this.message.destroyAll()
+              this.message.warning('用户已被禁用')
+            } else {
+              this.message.destroyAll()
+              this.message.error('用户名或密码错误')
+            }
+          })
+      }
     }
     
   })

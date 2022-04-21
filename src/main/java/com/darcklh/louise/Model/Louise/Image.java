@@ -13,26 +13,26 @@ import java.security.NoSuchAlgorithmException;
 
 @Data
 public class Image {
-    private String imagePath;
-    private String imageName;
-    private String hashCode;
-    private BufferedImage bufferedImage;
-    private double[] histogramInfo;
+    private String image_path;
+    private String image_name;
+    private String hash_code;
+    private BufferedImage buffered_image;
+    private double[] histogram_info;
 
     public Image(String imagePath, String imageName) throws IOException, NoSuchAlgorithmException {
 
-        this.imagePath = imagePath;
-        this.imageName = imageName;
-        this.bufferedImage = readImage(imagePath);
-        this.hashCode = EncryptUtils.checkSumMD5(imagePath);
-        this.histogramInfo = getNormalizedHistogram(this.bufferedImage);
+        this.image_path = imagePath;
+        this.image_name = imageName;
+        this.buffered_image = readImage(imagePath);
+        this.hash_code = EncryptUtils.checkSumMD5(imagePath);
+        this.histogram_info = getNormalizedHistogram(this.buffered_image);
 
     }
 
     private BufferedImage readImage(String imagePath) throws SpecificException, IOException {
 
         BufferedImage bImage;
-        File imageFile = new File(this.imagePath);
+        File imageFile = new File(this.image_path);
         bImage = ImageIO.read(imageFile);
         // Check
         return bImage;

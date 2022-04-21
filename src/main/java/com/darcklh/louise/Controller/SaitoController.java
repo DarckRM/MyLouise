@@ -30,7 +30,6 @@ import java.util.concurrent.Executors;
  */
 @Slf4j
 @RestController
-@RequestMapping("saito/")
 public class SaitoController {
 
     @Autowired
@@ -42,7 +41,17 @@ public class SaitoController {
     @Autowired
     PluginManager pluginManager;
 
-    @RequestMapping("login")
+    @RequestMapping("/error")
+    public JSONObject error() {
+        JSONObject jsonObject = new JSONObject();
+        Result<String> result = new Result();
+        result.setMsg("资源未找到");
+        result.setData("/404");
+        jsonObject.put("result", result);
+        return jsonObject;
+    }
+
+    @RequestMapping("saito/login")
     public Result<SysUser> Login(@RequestBody SysUser sysUser) {
 
         Result<SysUser> result = sysUserService.Login(sysUser);
@@ -50,12 +59,7 @@ public class SaitoController {
         return result;
     }
 
-    @RequestMapping("/index")
-    public String index() {
-        return "index";
-    }
-
-    @RequestMapping("plugin-init")
+    @RequestMapping("saito/plugin-init")
     public void PluginInit(Integer number) {
         try {
             for (int i = 0; i < number; i++) {
@@ -70,7 +74,7 @@ public class SaitoController {
     /**
      * 心跳检测 检查各系统运行状况
      */
-    @GetMapping("/output_log/{client_name}")
+    @GetMapping("saito/output_log/{client_name}")
     public void outputLog(@PathVariable String client_name) {
 
         //获取日志信息

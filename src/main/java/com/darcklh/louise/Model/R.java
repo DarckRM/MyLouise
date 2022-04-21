@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.net.*;
+
 /**
  * 和Cqhttp通信的实体
  */
 @Data
 @Component
+@Slf4j
 public class R {
 
     //自动注入信息载体
@@ -43,7 +48,19 @@ public class R {
     //构造Rest请求模板
     private RestTemplate restTemplate = new RestTemplate();
 
-    Logger logger = LoggerFactory.getLogger(R.class);
+    private boolean testConnWithBot() {
+        Socket socket = new Socket();
+        SocketAddress address = new InetSocketAddress("127.0.0.1", 5700);
+        try {
+            socket.setSoTimeout(1000);
+            socket.connect(address, 1000);
+            socket.close();
+        } catch (IOException e){
+            log.info("无法与BOT建立连接: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
 
     /**
      * 请求cqhttp接口
@@ -51,11 +68,12 @@ public class R {
      * @return
      */
     private JSONObject requestAPI(String api) {
-
+        if (!testConnWithBot())
+            return null;
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> cqhttp = new HttpEntity<>(headers);
         //开始请求
-        logger.info("请求接口: " + api);
+        log.info("请求接口: " + api);
         this.refresh();
         return restTemplate.postForObject(louiseConfig.getBOT_BASE_URL() + api, cqhttp, JSONObject.class);
     }
@@ -67,10 +85,12 @@ public class R {
      * @return
      */
     private JSONObject requestAPI(String api, JSONObject sendJson) {
+        if (!testConnWithBot())
+            return null;
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> cqhttp = new HttpEntity<>(sendJson.toString(), headers);
         //开始请求
-        logger.info("请求接口: " + api);
+        log.info("请求接口: " + api);
         JSONObject jsonObject = restTemplate.postForObject(louiseConfig.getBOT_BASE_URL() + api, cqhttp, JSONObject.class);
         this.refresh();
         return jsonObject;
@@ -84,7 +104,7 @@ public class R {
     public JSONObject sendMessage(JSONObject sendJson) {
 
         //让Bot发送信息
-        logger.info("发送报文: " + sendJson);
+        log.info("发送报文: " + sendJson);
         return this.requestAPI("send_msg", sendJson);
     }
 
@@ -107,7 +127,7 @@ public class R {
      * @return
      */
     public JSONObject fastResponse(JSONObject fastJson) {
-        logger.info("快速操作: " + fastJson);
+        log.info("快速操作: " + fastJson);
         return fastJson;
     }
 

@@ -5,7 +5,6 @@ import com.darcklh.louise.Utils.HttpServletWrapper;
 import com.darcklh.louise.Utils.isEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -46,40 +45,24 @@ public class LouiseFilter implements Filter {
         HttpServletWrapper wrapper = new HttpServletWrapper(request);
         String body = wrapper.getBody();
 
-        //判断请求来源
-        if (urlCopy.contains("saito")) {
+        JSONObject jsonObject = JSONObject.parseObject(body);
+        String post_type = "";
 
-            logger.info("请求 <Saito> ");
-            filterChain.doFilter(servletRequest, servletResponse);
-
-        } else {
-
-            JSONObject jsonObject = JSONObject.parseObject(body);
-            String post_type = "";
-
-            if (!isEmpty.isEmpty(jsonObject)) {
-                post_type = jsonObject.getString("post_type");
-                if (!isEmpty.isEmpty(post_type)) {
-                    logger.info("请求 <Louise> ");
-                    switch (post_type) {
-                        case "meta_event": {logger.debug("心跳检测"); return;}
-                    }
-                    //排除心跳检测
-                    if (post_type.equals("meta_event")) {
-                        logger.debug("心跳检测");
-                        return;
-                    } else if (post_type.equals("notice")) {
-                        logger.debug("暂不处理notice消息");
-                        return;
-                    }
-                    logger.info("过滤器 1 流程结束"); // 调用filter链中的下一个filter
-
-                    // 在chain.doFiler方法中传递新的request对象
-                    filterChain.doFilter(wrapper, servletResponse);
+        if (!isEmpty.isEmpty(jsonObject)) {
+            post_type = jsonObject.getString("post_type");
+            if (!isEmpty.isEmpty(post_type)) {
+                logger.info("请求 <Louise> ");
+                switch (post_type) {
+                    case "meta_event": {logger.debug("心跳检测"); return;}
+                    case "notice": {logger.info("暂不处理notice消息"); return;}
                 }
+                logger.info("过滤器 1 流程结束"); // 调用filter链中的下一个filter
+                // 在chain.doFiler方法中传递新的request对象
+                filterChain.doFilter(wrapper, servletResponse);
             }
-
         }
+
+
     }
 
     @Override

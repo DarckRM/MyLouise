@@ -1,7 +1,9 @@
 import { createApp } from 'vue'
 import router from './router'
 import 'vfonts/Lato.css'
-import App from './App.vue' 
+import store from './store/store'
+import App from './App.vue'
+import axios from './utils/request'
 import {
         create,
         NTransfer,
@@ -112,8 +114,8 @@ const naive = create({
     ]
 })
 const app = createApp(App)
+app.use(store)
 app.use(router)
 app.use(naive)
 app.mount('#app')
-import axios from './utils/request'
 app.config.globalProperties.$axios = axios

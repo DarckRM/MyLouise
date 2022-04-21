@@ -14,7 +14,10 @@ spring:
     #静态资源路径
     mvc:
         static-path-pattern: /templates/asserts/**
-
+    servlet:
+        multipart:
+            max-request-size: 10MB
+            max-file-size: 5000KB
 
 #配饰mybatisPlus
 mybatis-plus:
