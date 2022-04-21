@@ -3,7 +3,7 @@
   <n-grid cols="1 1000:3" :x-gap="12" :y-gap="8" item-responsive style="align-items: center">
     <n-grid-item>
       <n-card title="上传图片" style="height: 460px">
-          <n-upload :create-thumbnail-url="createThumbnailUrl" list-type="image" >
+        <n-upload action="http://121.4.179.240:8099/saito/upload/image"  list-type="image">
           <n-upload-dragger>
             <div style="margin-bottom: 12px">
               <n-icon size="48" :depth="3">
@@ -20,7 +20,8 @@
         </n-upload>
         <n-select :options="retrieveMethod">
         </n-select>
-        <n-button type="primary" style="margin: 20 100">
+
+        <n-button type="primary">
           开始检索
         </n-button>
       </n-card>
@@ -50,6 +51,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5"
+import { e } from '../../dist/templates/assets/index.df5ba0fc'
 
 export default defineComponent({
   name: 'ImageRetrieve',
@@ -89,10 +91,14 @@ export default defineComponent({
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve(
-            'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'
+            'http://127.0.0.1:8099/saito/image/Image_20220421213351_3w8n.jpg'
           )
         }, 1000)
       })
+    },
+    handleFinish (file) {
+      var result = JSON.parse(file.event.currentTarget.response)
+      file.thumbnailUrl = 'http://121.4.179.240:8099/' + result.data
     }
   }
 })

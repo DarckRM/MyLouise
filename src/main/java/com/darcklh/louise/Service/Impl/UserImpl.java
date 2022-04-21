@@ -4,22 +4,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Mapper.RoleDao;
 import com.darcklh.louise.Mapper.UserDao;
-import com.darcklh.louise.Model.Louise.Role;
 import com.darcklh.louise.Model.Louise.User;
 import com.darcklh.louise.Model.SpecificException;
 import com.darcklh.louise.Model.VO.UserRole;
 import com.darcklh.louise.Service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Timestamp;
 import java.util.List;
 
 import static com.darcklh.louise.Utils.isEmpty.isEmpty;
@@ -29,10 +24,9 @@ import static com.darcklh.louise.Utils.isEmpty.isEmpty;
  * @date 2021/8/7 19:14
  * @Description 用户信息相关接口
  */
+@Slf4j
 @Service
 public class UserImpl implements UserService {
-
-    Logger logger = LoggerFactory.getLogger(UserImpl.class);
 
     @Autowired
     UserDao userDao;
@@ -42,14 +36,23 @@ public class UserImpl implements UserService {
 
     public JSONObject joinLouise(String user_id, String group_id) {
 
-        logger.info("进入注册流程");
-        logger.info("用户来自群: " + group_id + " QQ号: " + user_id);
+        log.info("进入注册流程");
+        log.info("用户来自群: " + group_id + " QQ号: " + user_id);
+        JSONObject jsonObject = new JSONObject();
+        //判断用户是否注册
+        List<String> users_id = findAllUserID();
+        for (String id : users_id)
+            if (id.equals(user_id)) {
+                jsonObject.put("reply", "你已经注册过了哦");
+                throw new SpecificException("U101", "用户 " + user_id + " 已注册", jsonObject, "没有原始异常");
+            }
+
         //构造Rest请求模板
         RestTemplate restTemplate = new RestTemplate();
         //请求go-cqhhtp的参数和请求头
         HttpHeaders headers= new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        JSONObject jsonObject = new JSONObject();
+
         //构造请求体
         JSONObject userInfo = new JSONObject();
         userInfo.put("user_id", user_id);
@@ -57,7 +60,7 @@ public class UserImpl implements UserService {
 
         //请求bot获取用户信息
         JSONObject result = JSON.parseObject(restTemplate.postForObject("http://localhost:5700/get_group_member_info", userInfo, String.class));
-        logger.info(result.toString());
+        log.info(result.toString());
 
         User user = new User();
         result = result.getJSONObject("data");
@@ -74,13 +77,14 @@ public class UserImpl implements UserService {
         user.setIsEnabled(1);
         //TODO 没搞懂腾讯返回的时间格式 日后再搞
         //user.setJoin_time(result.getTimestamp("join_time"));
+
         if (userDao.insert(user) == 0) {
             jsonObject.put("reply", "注册失败了，遗憾！请稍后再试吧");
-            logger.info("用户 " + user.getUser_id() + "(" + user.getNickname() + ") 注册失败!");
+            log.info("用户 " + user.getUser_id() + "(" + user.getNickname() + ") 注册失败!");
         }
         else
             jsonObject.put("reply","注册成功了！请输入!help获得进一步帮助");
-            logger.info("用户 " + user.getUser_id() + "(" + user.getNickname() + ") 注册成功!");
+            log.info("用户 " + user.getUser_id() + "(" + user.getNickname() + ") 注册成功!");
         return jsonObject;
     }
 
@@ -88,7 +92,7 @@ public class UserImpl implements UserService {
     public User selectById(String user_id) {
         User user = userDao.selectById(user_id);
         if (isEmpty(user)) {
-            logger.info("用户 " + user_id + " 不存在");
+            log.info("用户 " + user_id + " 不存在");
             return null;
         }
         return user;
@@ -145,12 +149,16 @@ public class UserImpl implements UserService {
         if (balance < 0)
             return balance;
         userDao.minusCredit(credit, user_id);
-        logger.info("用户 " + user_id + " CREDIT余额还有 " + balance);
+        log.info("用户 " + user_id + " CREDIT余额还有 " + balance);
         return balance;
     }
 
     @Override
     public List<UserRole> findAll() {
         return userDao.findBy();
+    }
+
+    public List<String> findAllUserID() {
+        return userDao.findAllUserID();
     }
 }

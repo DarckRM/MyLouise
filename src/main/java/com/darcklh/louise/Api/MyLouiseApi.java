@@ -59,16 +59,6 @@ public class MyLouiseApi implements ErrorController {
         return null;
     }
 
-    //TODO 接管了所有的请求错误 需要修改
-    @RequestMapping("/error")
-    public JSONObject error() {
-        JSONObject returnJson = new JSONObject();
-        //如果请求失败了
-        logger.debug("未知的命令请求");
-        returnJson.put("reply", louiseConfig.getLOUISE_ERROR_UNKNOWN_COMMAND());
-        return r.fastResponse(returnJson);
-    }
-
     /**
      * 刷新配置
      */
@@ -76,7 +66,6 @@ public class MyLouiseApi implements ErrorController {
     public String refreshConfig() {
         return "API: " + louiseConfig.getBOT_LOUISE_CACHE_IMAGE();
     }
-
 
     /**
      * 返回帮助信息

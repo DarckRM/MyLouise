@@ -38,9 +38,9 @@ public class WorkThread extends Thread {
                 if (taskService.execute())
                     callBackFunc();
         } catch (IOException e) {
-            throw new SpecificException("文件读写错误");
+            throw new SpecificException("500", "文件读写错误", e.getMessage());
         } catch ( NoSuchAlgorithmException e) {
-            throw new SpecificException("不懂这是什么错误");
+            throw new SpecificException("501", "未知的错误", e.getClass() + "-" + e.getMessage());
         }
     }
 

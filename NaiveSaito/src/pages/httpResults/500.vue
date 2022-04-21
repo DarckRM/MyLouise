@@ -1,5 +1,5 @@
 <template>
-<div style="margin: 300px auto">
+<div style="margin: 200px auto">
   <n-result
     status="500"
     title="500 服务器错误"

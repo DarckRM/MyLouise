@@ -29,6 +29,9 @@ public interface UserDao extends BaseMapper<User> {
     @Select("SELECT *, role_name, info FROM t_user LEFT JOIN t_role ON t_role.role_id = t_user.role_id")
     public List<UserRole> findBy();
 
+    @Select("SELECT user_id FROM t_user")
+    public List<String> findAllUserID();
+
     @Select("SELECT COUNT(user_id) FROM t_user WHERE user_id = #{user_id}")
     public Integer isUserExist(String user_id);
 

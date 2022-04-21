@@ -36,7 +36,8 @@ public class SearchPictureApi{
     @Autowired
     FileControlApi fileControlApi;
 
-    @Autowired R r;
+    @Autowired
+    R r;
 
     private String uploadImgUrl;
 
@@ -49,7 +50,7 @@ public class SearchPictureApi{
      * @param message
      * @return
      */
-    public JSONObject searchPictureCenter(JSONObject message, R r) {
+    public void searchPictureCenter(JSONObject message, R r) {
 
         logger.info("进入搜图流程, 发起用户为:"+r.getNickname()+" QQ:"+r.getNumber());
         logger.debug(message.toString());
@@ -58,10 +59,8 @@ public class SearchPictureApi{
         sendJson.put(r.getSenderType(), r.getNumber());
 
         //TODO 线程名过长
-//        new Thread(() -> findWithAscii2d(r.getNickname(), sendJson), UniqueGenerator.uniqueThreadName("", "A2d")).start();
+        new Thread(() -> findWithAscii2d(r.getNickname(), sendJson), UniqueGenerator.uniqueThreadName("", "A2d")).start();
         new Thread(() -> findWithSourceNAO(r.getNickname(), sendJson), UniqueGenerator.uniqueThreadName("", "NAO")).start();
-
-        return null;
     }
 
     /**
@@ -217,10 +216,8 @@ public class SearchPictureApi{
                 //TODO 暂时禁用推特来源 未解决图片缓存路径问题
                 case 41: sendJson = handleFromTwitter(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 case 9:
-                case 12:
-                    sendJson = handleFromDanbooru(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
+                case 12: sendJson = handleFromGelbooru(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 default: {
-
                     sendJson.put("message", "暂不支持返回该来源的具体信息" +
                             "来源信息: " + index_name +
                             "相似度: " + similarity +
@@ -386,15 +383,14 @@ public class SearchPictureApi{
      * @param sourceNaoHeader JSONObject
      * @return JSONObject
      */
-    private JSONObject handleFromDanbooru(String nickname, String similarity, JSONObject reply, JSONObject sourceNaoData, JSONObject sourceNaoHeader) {
+    private JSONObject handleFromGelbooru(String nickname, String similarity, JSONObject reply, JSONObject sourceNaoData, JSONObject sourceNaoHeader) {
 
-        logger.info("处理Danbooru来源");
+        logger.info("处理Gelbooru来源");
         String sourceNaoArray = sourceNaoData.getJSONArray("ext_urls").toString();
         String thumbnail = sourceNaoHeader.getString("thumbnail");
         String characters = sourceNaoData.getString("characters");
         String creator = sourceNaoData.getString("creator");
         String index_name = sourceNaoHeader.getString("index_name");
-        Integer index_id = sourceNaoHeader.getInteger("index_id");
 
         String imageUrl;
         imageUrl = index_name.substring(index_name.indexOf(" - ")+3, index_name.length()-4);
@@ -408,28 +404,16 @@ public class SearchPictureApi{
         boolean isImage = fileControlApi.downloadPictureURL(finalUrl, "image_" + imageUrl, "Gelbooru");
         boolean isSample = fileControlApi.downloadPictureURL(exampleUrl, "sample_" + imageUrl, "Gelbooru");
 
-        if (isImage) {
-            reply.put("message",
-                nickname+"，查询出来咯"+
-                "\n来源Yande.re"+
-                "\n角色:"+characters+
-                "\n作者:"+creator+
-                "\n相似度:"+similarity+
-                "\n可能的图片地址:" + sourceNaoArray +
-                "\n[CQ:image,file="+thumbnail+"]" +
-                "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "Gelbooru/image_" + imageUrl + ".jpg]" +
-                "\n信息来自Yande.re，结果可能不准确，请通过上面的链接访问");
-        } else if (isSample) {
-            reply.put("message",
-                nickname+"，查询出来咯"+
+        String message = nickname+"，查询出来咯"+
                 "\n来源Gelbooru"+
                 "\n角色:"+characters+
                 "\n作者:"+creator+
                 "\n相似度:"+similarity+
                 "\n可能的图片地址:" + sourceNaoArray +
                 "\n[CQ:image,file="+thumbnail+"]" +
-                "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "Gelbooru/sample_" + imageUrl +".jpg]");
-        }
+                "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + (isImage ? "Gelbooru/image_" : "Gelbooru/sample_") + imageUrl + ".jpg]" +
+                "\n信息来自Yande.re，结果可能不准确，请通过上面的链接访问";
+        reply.put("message", message);
         return reply;
     }
 
