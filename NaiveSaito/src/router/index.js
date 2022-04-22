@@ -96,7 +96,7 @@ export const router = createRouter({
 export default router
 
 router.beforeEach((to, from, next) => {
-  if(to.meta.auth && store.state.status === false) {
+  if(to.meta.auth && store.state.status != true) {
     return next('/403')
   } else {
     next()

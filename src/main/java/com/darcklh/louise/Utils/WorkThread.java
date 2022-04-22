@@ -45,12 +45,9 @@ public class WorkThread extends Thread {
     }
 
     public void callBackFunc() {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
         restTask--;
         if (restTask == 0) {
-            stopWatch.stop();
-            System.out.println("任务 " + threadId + " 已完成, 执行时间: " + stopWatch.getLastTaskTimeMillis());
+            System.out.println("任务 " + threadId + " 已完成 ");
         }
 
     }

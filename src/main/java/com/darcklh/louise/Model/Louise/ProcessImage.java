@@ -1,25 +1,38 @@
 package com.darcklh.louise.Model.Louise;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.darcklh.louise.Model.SpecificException;
 import com.darcklh.louise.Utils.EncryptUtils;
 import lombok.Data;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
+import java.util.Iterator;
 
 @Data
-public class Image {
+public class ProcessImage {
+
+    @TableId
+    private String hash_code;
     private String image_path;
     private String image_name;
-    private String hash_code;
-    private BufferedImage buffered_image;
     private double[] histogram_info;
 
-    public Image(String imagePath, String imageName) throws IOException, NoSuchAlgorithmException {
+    @TableField(exist = false)
+    private BufferedImage buffered_image;
+
+    public ProcessImage(String imagePath, String imageName) throws IOException, NoSuchAlgorithmException {
 
         this.image_path = imagePath;
         this.image_name = imageName;
@@ -27,6 +40,11 @@ public class Image {
         this.hash_code = EncryptUtils.checkSumMD5(imagePath);
         this.histogram_info = getNormalizedHistogram(this.buffered_image);
 
+    }
+
+    public ProcessImage(String image_path, String image_name, boolean is_init) {
+        this.image_path = image_path;
+        this.image_name = image_name;
     }
 
     private BufferedImage readImage(String imagePath) throws SpecificException, IOException {

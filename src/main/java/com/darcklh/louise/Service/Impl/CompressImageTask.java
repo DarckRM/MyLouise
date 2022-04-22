@@ -3,6 +3,7 @@ package com.darcklh.louise.Service.Impl;
 import com.darcklh.louise.Model.Louise.ProcessImage;
 import com.darcklh.louise.Service.MultiTaskService;
 import com.darcklh.louise.Utils.EncryptUtils;
+import com.darcklh.louise.Utils.ImageCompress;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,10 +14,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author DarckLH
+ * @date 2022/4/22 19:20
+ * @Description
+ */
 @Data
 @Slf4j
-public class CalcImageTask implements MultiTaskService {
-
+public class CompressImageTask implements MultiTaskService {
     private int status;
     // 声明一个任务的自有业务含义的变量，用于标识任务
     private int taskId;
@@ -25,7 +30,7 @@ public class CalcImageTask implements MultiTaskService {
 
     public static Map<String, ProcessImage> NewMap = Collections.synchronizedMap(new HashMap<String, ProcessImage>());
 
-    public CalcImageTask(int taskId, String taskInfo, File image) {
+    public CompressImageTask(int taskId, String taskInfo, File image) {
         this.status = READY;
         this.taskId = taskId;
         this.taskInfo = taskInfo;
@@ -33,17 +38,14 @@ public class CalcImageTask implements MultiTaskService {
     }
 
     @Override
-    public boolean execute() throws NoSuchAlgorithmException, IOException {
+    public boolean execute() throws IOException {
         setStatus(MultiTaskService.RUNNING);
-
-        String md5 = EncryptUtils.checkSumMD5(image.getAbsolutePath());
         try {
-            ProcessImage ig = new ProcessImage(image.getPath(), image.getName());
-            NewMap.put(md5, ig);
+            ImageCompress.resize(image.getPath(), image.getName());
         }
         catch(NullPointerException e) {
             this.status = ERROR;
-            log.info("读取图片: " + image.getName() + " 失败了");
+            log.info("压缩图片: " + image.getName() + " 失败了");
         }
         setStatus(FINISHED);
         return true;
