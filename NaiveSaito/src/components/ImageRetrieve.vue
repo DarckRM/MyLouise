@@ -3,7 +3,7 @@
   <n-grid cols="1 1000:3" :x-gap="12" :y-gap="8" item-responsive style="align-items: center">
     <n-grid-item>
       <n-card title="上传图片" style="height: 460px">
-        <n-upload action="http://121.4.179.240:8099/saito/upload/image"  list-type="image">
+        <n-upload action="http://121.4.179.240:8099/saito/upload/processImage"  list-type="processImage">
           <n-upload-dragger>
             <div style="margin-bottom: 12px">
               <n-icon size="48" :depth="3">
@@ -28,7 +28,7 @@
     </n-grid-item>
     <n-grid-item>
       <n-card title="结果" style="height: 460px">
-          <n-image
+          <n-processImage
             width="300"
             src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
           />
@@ -37,8 +37,8 @@
     <n-grid-item>
       <n-card title="可能的" style="height: 460px">
         <n-grid cols="4" :x-gap="12" :y-gap="8">
-          <n-grid-item v-for="image in results" :key="image.name">
-            <n-image height="100" width="100" :src="image.url"></n-image>
+          <n-grid-item v-for="processImage in results" :key="processImage.name">
+            <n-processImage height="100" width="100" :src="processImage.url"></n-processImage>
           </n-grid-item>
         </n-grid>
       </n-card>
@@ -91,7 +91,7 @@ export default defineComponent({
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve(
-            'http://127.0.0.1:8099/saito/image/Image_20220421213351_3w8n.jpg'
+            'http://127.0.0.1:8099/saito/processImage/Image_20220421213351_3w8n.jpg'
           )
         }, 1000)
       })

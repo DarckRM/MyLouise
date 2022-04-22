@@ -28,7 +28,7 @@
                             <n-button style="margin: 15px 30px 0 0" text @click="openTab('https://www.xicons.org/#/')">
                                 <template #icon>
                                     <n-icon>
-                                        <image-icon />
+                                        <processImage-icon />
                                     </n-icon>
                                 </template>
                                 图标库
