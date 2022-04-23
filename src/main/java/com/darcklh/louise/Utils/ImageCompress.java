@@ -19,9 +19,17 @@ import java.util.Iterator;
 public class ImageCompress {
 
 
-    public static void compress(BufferedImage image, String filename) throws IOException {
+    public static void compress(BufferedImage image, String filePath, String filename) throws IOException {
 
-        File compressedImageFile = new File(filename);
+        //判断目录是否存在
+        File folder = new File(filePath);
+
+        if (!folder.exists() && !folder.isDirectory()) {
+            log.info("创建了图片索引库缓存文件夹" + filePath);
+            folder.mkdirs();
+        }
+
+        File compressedImageFile = new File(filePath + filename);
         OutputStream os = new FileOutputStream(compressedImageFile);
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
 
@@ -41,17 +49,17 @@ public class ImageCompress {
 
     public static void resize(String src, String filename) throws IOException {
 
-        Image img = null;
+        BufferedImage img = null;
         BufferedImage tempPNG = null;
 
-        img = ImageIO.read(new File(src));
-        tempPNG = resizeImage(img, ((BufferedImage) img).getWidth() / 2, ((BufferedImage) img).getHeight() / 2);
+        img = ImageIO.read(new File(src + "/" + filename));
+        tempPNG = resizeImage(img, img.getWidth() / 2, img.getHeight() / 2);
 
         //裁剪不压缩,存储
         // ImageIO.write(tempPNG, "png", new File(dest));
         //压缩后输出
-        compress(tempPNG, "cache/images/compress/" + filename);
-        log.info("压缩完成");
+        compress(tempPNG, src.replaceAll("images", "images_index") + "/", filename);
+        log.info("图片 " + filename + " 压缩完成");
     }
 
     public static BufferedImage resizeImage(final Image image, int width, int height) {

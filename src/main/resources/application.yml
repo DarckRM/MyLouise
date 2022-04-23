@@ -40,6 +40,7 @@ LOUISE:
     ADMIN_NUMBER: 412543224
     #图片缓存位置
     CACHE:
+        LOCATION: cache/
         IMAGE_LOCATION: cache/images/
     #报错信息
     ERROR:

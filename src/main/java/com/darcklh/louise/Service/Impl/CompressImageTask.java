@@ -28,12 +28,12 @@ public class CompressImageTask implements MultiTaskService {
     private String taskInfo;
     private File image;
 
-    public static Map<String, ProcessImage> NewMap = Collections.synchronizedMap(new HashMap<String, ProcessImage>());
+    public static int totalTask = 0;
 
     public CompressImageTask(int taskId, String taskInfo, File image) {
         this.status = READY;
         this.taskId = taskId;
-        this.taskInfo = taskInfo;
+        this.taskInfo = image.getPath();
         this.image = image;
     }
 
@@ -41,12 +41,13 @@ public class CompressImageTask implements MultiTaskService {
     public boolean execute() throws IOException {
         setStatus(MultiTaskService.RUNNING);
         try {
-            ImageCompress.resize(image.getPath(), image.getName());
+            ImageCompress.resize(image.getParent(), image.getName());
         }
         catch(NullPointerException e) {
             this.status = ERROR;
             log.info("压缩图片: " + image.getName() + " 失败了");
         }
+        totalTask++;
         setStatus(FINISHED);
         return true;
     }

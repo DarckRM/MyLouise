@@ -1,6 +1,7 @@
 package com.darcklh.louise.Service.Impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.Louise.ProcessImage;
 import com.darcklh.louise.Service.CBIRService;
 import com.darcklh.louise.Service.MultiTaskService;
@@ -9,6 +10,7 @@ import com.darcklh.louise.Utils.ImageCompress;
 import com.darcklh.louise.Utils.TaskDistributor;
 import com.darcklh.louise.Utils.WorkThread;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
@@ -18,46 +20,100 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
 public class CBIRServiceImpl implements CBIRService {
 
+    //默认启用多线程数
+    private static int THREAD_COUNT = 12;
+
+    @Autowired
+    private LouiseConfig louiseConfig;
+
     public JSONObject startCBIR(String compare_image) throws InterruptedException, IOException, NoSuchAlgorithmException {
 
-        File file = new File("cache/images/compress/");
+        File file = new File(louiseConfig.getLOUISE_CACHE_LOCATION() + "/images_index/");
 
-        List taskList = new ArrayList();
-        initTaskList(file, taskList);
-        log.info("共有: " + taskList.size() + " 个任务");
-        // 设定要启动的工作线程数为 4 个
-        int threadCount = 12;
-        List[] taskListPerThread = TaskDistributor.distributeTasks(taskList, threadCount);
-        System.out.println("实际要启动的工作线程数：" + taskListPerThread.length);
+        List<CalcImageTask> taskList = new ArrayList<>();
+        initCalcImageTaskList(file, taskList);
+        log.info("共有: " + taskList.size() + " 个 CalcImage 任务");
+        List[] taskListPerThread = TaskDistributor.distributeTasks(taskList, THREAD_COUNT);
+        log.debug("实际启动的工作线程数：" + taskListPerThread.length);
+        startCalcImageWorkThread(taskListPerThread, taskList.size());
+        return compareImage(compare_image);
+    }
+
+    public JSONObject startCompress() throws InterruptedException {
+
+        File file = new File(louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION());
+        List<CompressImageTask> taskList = new ArrayList<>();
+        initCompressImageTask(file, taskList);
+        log.info("共有: " + taskList.size() + " 个 CompressImage 任务");
+        List[] taskListPerThread = TaskDistributor.distributeTasks(taskList, THREAD_COUNT);
+        log.debug("实际要启动的工作线程数：" + taskListPerThread.length);
+        startCompressWorkThread(taskListPerThread, taskList.size());
+        return null;
+    }
+
+    private void startCompressWorkThread(List[] taskListPerThread, int taskList_size) throws InterruptedException {
+        int i = 0;
+        for (List singleTask : taskListPerThread) {
+            Thread workThread = new WorkThread(singleTask, i);
+            workThread.start();
+            i++;
+        }
+        Thread.sleep(1500);
+        int status = 0;
+        int flag = 0;
+        while(CompressImageTask.totalTask != taskList_size) {
+            log.info("当前处理数: " + CompressImageTask.totalTask);
+            if (status != CompressImageTask.totalTask) {
+                status = CompressImageTask.totalTask;
+                Thread.sleep(1000);
+            } else {
+                if (flag == 3) {
+                    log.info("任务 CompressImage 执行超时");
+                    break;
+                }
+                flag++;
+            }
+        }
+    }
+
+    private void startCalcImageWorkThread(List[] taskListPerThread, int taskList_size) throws InterruptedException {
         for (int j = 0; j < taskListPerThread.length; j++) {
             Thread workThread = new WorkThread(taskListPerThread[j], j);
             workThread.start();
         }
-        while(CalcImageTask.NewMap.size() != 395) {
+        Thread.sleep(1500);
+        int status = 0;
+        int flag = 0;
+        while(CalcImageTask.NewMap.size() != taskList_size) {
             log.info("当前处理数: " + CalcImageTask.NewMap.size());
-            Thread.sleep(500);
+            if (status != CalcImageTask.NewMap.size()) {
+                status = CalcImageTask.NewMap.size();
+                Thread.sleep(1000);
+            } else {
+                if (flag == 3) {
+                    log.info("任务 CalImage 执行超时");
+                    break;
+                }
+                flag++;
+            }
         }
-
-        return compareImage(compare_image);
     }
 
     public JSONObject compareImageCompress(String compare_image) throws IOException, NoSuchAlgorithmException, InterruptedException {
 
-        File testFile = new File(compare_image);
-        Image src = ImageIO.read(testFile);
-        BufferedImage bufferedImage = ImageCompress.resizeImage(src, ((BufferedImage) src).getWidth() / 2, ((BufferedImage) src).getHeight() / 2);
-        ImageCompress.compress(bufferedImage, "cache/ready_compare/ready.jpg");
+        File compareFile = new File(compare_image);
+        BufferedImage src = ImageIO.read(compareFile);
+        BufferedImage bufferedImage = ImageCompress.resizeImage(src, src.getWidth() / 2, src.getHeight() / 2);
+        ImageCompress.compress(bufferedImage, "cache/ready_compare/", "ready.jpg");
         if (CalcImageTask.NewMap.size() != 0)
-            return compareImage(compare_image);
+            return compareImage("cache/ready_compare/ready.jpg");
         return startCBIR("cache/ready_compare/ready.jpg");
     }
 
@@ -66,38 +122,78 @@ public class CBIRServiceImpl implements CBIRService {
         File compare_file = new File(compare_image);
         ProcessImage ig = null;
         try {
-            ig = new ProcessImage(compare_file.getPath(), compare_file.getName());
+            ig = new ProcessImage(compare_file.getParent(), compare_file.getName());
         }
         catch(NullPointerException | IOException | NoSuchAlgorithmException e) {
             log.info("读取图片: " + compare_file.getName() + " 失败了");
         }
         JSONObject jsonObject = new JSONObject();
-        float max = 5000;
+        double max = 0;
         String result_image = "";
-        List<ProcessImage> result_imageList = new ArrayList<>();
+
+        List<ProcessImage> result_mkList = new ArrayList<>();
+        List<ProcessImage> result_hiList = new ArrayList<>();
+        List<ProcessImage> result_rdList = new ArrayList<>();
         Map<String, ProcessImage> finalList = CalcImageTask.NewMap;
+
+        jsonObject.put("result_mkList", result_mkList);
+        max = 0;
+        TreeMap<Double, String> resultMap = new TreeMap<>();
         for(Map.Entry<String, ProcessImage> entry : finalList.entrySet()) {
-            float hisID = relativeDeviationDist(ig.getHistogram_info(), entry.getValue().getHistogram_info());
-            if (hisID < max) {
-                max = hisID;
-                result_image = entry.getValue().getImage_name();
-                result_imageList.add(new ProcessImage("/saito/image/", result_image, false));
-                log.info("测试图片和数据图片" + result_image + "的距离为: " + max);
-            }
+            double hisID = getHISimilarity(ig.getHistogram_info(), entry.getValue().getHistogram_info());
+            String image_path = entry.getValue().getImage_path().substring(18);
+            String image_name = entry.getValue().getImage_name();
+            resultMap.put(hisID, image_path + "/" + image_name);
         }
-        jsonObject.put("result_imageList", result_imageList);
+        int number = 0;
+        while( number <= 4) {
+            result_hiList.add(new ProcessImage("/saito/image/", resultMap.lastEntry().getValue(), false));
+            number++;
+            resultMap.remove(resultMap.lastKey());
+        }
+
+        number = 0;
+        jsonObject.put("result_hiList", result_hiList);
+        resultMap.clear();
+
+        for(Map.Entry<String, ProcessImage> entry : finalList.entrySet()) {
+            double hisID = getEDSimilarity(ig.getHistogram_info(), entry.getValue().getHistogram_info());
+            String image_path = entry.getValue().getImage_path().substring(18);
+            String image_name = entry.getValue().getImage_name();
+
+            resultMap.put(hisID, image_path + "/" + image_name);
+        }
+        while( number <= 4) {
+            result_rdList.add(new ProcessImage("/saito/image/", resultMap.firstEntry().getValue(), false));
+            number++;
+            resultMap.remove(resultMap.firstKey());
+        }
+        jsonObject.put("result_rdList", result_rdList);
         return jsonObject;
     }
 
-    public void initTaskList(File file, List taskList) {
+    private void initCalcImageTaskList(File file, List<CalcImageTask> taskList) {
         int i = 0;
-
-        for (File image : file.listFiles()) {
+        for (File image : Objects.requireNonNull(file.listFiles())) {
             if (image.isDirectory()) {
-                initTaskList(image, taskList);
+                initCalcImageTaskList(image, taskList);
                 continue;
             }
             CalcImageTask task = new CalcImageTask(i, "task: " + i,  image);
+            if (task.getStatus() != 9)
+                taskList.add(task);
+            i++;
+        }
+    }
+
+    private void initCompressImageTask(File file, List<CompressImageTask> taskList) {
+        int i = 0;
+        for (File image : Objects.requireNonNull(file.listFiles())) {
+            if (image.isDirectory()) {
+                initCompressImageTask(image, taskList);
+                continue;
+            }
+            CompressImageTask task = new CompressImageTask(i, "task: " + i,  image);
             if (task.getStatus() != 9)
                 taskList.add(task);
             i++;
@@ -135,5 +231,32 @@ public class CBIRServiceImpl implements CBIRService {
         }
         RDDist=2*Numerator/(Denom1+Denom2);
         return RDDist;
+    }
+
+    //欧式距离求图片的相似度
+    public double getEDSimilarity(double [][] inHist, double  [][] sampleHist)//欧式距离法，匹配值越小，越相似
+    {
+        double similar = (double) 0.0;//相似度
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < inHist[i].length; j++){
+                similar += (inHist[i][j] - sampleHist[i][j]) * (inHist[i][j] - sampleHist[i][j]);
+            }
+        }
+        similar=similar/6;
+        similar=Math.sqrt(similar);
+        return similar;
+    }
+
+    //传统的直方图相交法  统计RGB  归一化 后用交来求两个图片的相似度
+    public double getHISimilarity(double [][] inHist,double  [][] sampleHist)
+    {
+        double similar = (double) 0.0;//相似度
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < inHist[i].length; j++) {
+                similar += Math.min(inHist[i][j], sampleHist[i][j]);
+            }
+        }
+        similar = similar / 3;
+        return similar;
     }
 }

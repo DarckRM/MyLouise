@@ -18,7 +18,7 @@ public interface MultiTaskService {
     public static final int FINISHED = 2;
     public static final int ERROR = 9;
 
-    static Map<String, ProcessImage> NewMap = Collections.synchronizedMap(new HashMap<String, ProcessImage>());
+//    static Map<String, ProcessImage> NewMap = Collections.synchronizedMap(new HashMap<String, ProcessImage>());
 
     /**
      * 执行任务
