@@ -38,7 +38,7 @@ public class CalcImageTask implements MultiTaskService {
 
         String md5 = EncryptUtils.checkSumMD5(image.getAbsolutePath());
         try {
-            ProcessImage ig = new ProcessImage(image.getPath(), image.getName());
+            ProcessImage ig = new ProcessImage(image.getParent(), image.getName());
             NewMap.put(md5, ig);
         }
         catch(NullPointerException e) {

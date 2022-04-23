@@ -2,12 +2,14 @@ package com.darcklh.louise.Utils;
 
 import com.darcklh.louise.Model.SpecificException;
 import com.darcklh.louise.Service.MultiTaskService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StopWatch;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+@Slf4j
 public class WorkThread extends Thread {
 
     // 本线程待执行的任务列表，你也可以指为任务索引的起始值
@@ -47,7 +49,7 @@ public class WorkThread extends Thread {
     public void callBackFunc() {
         restTask--;
         if (restTask == 0) {
-            System.out.println("任务 " + threadId + " 已完成 ");
+            log.info("任务 " + threadId + " 已完成 ");
         }
 
     }

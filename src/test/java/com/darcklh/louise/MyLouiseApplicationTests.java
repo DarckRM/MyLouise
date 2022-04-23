@@ -3,7 +3,6 @@ package com.darcklh.louise;
 import com.darcklh.louise.Model.Louise.ProcessImage;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Service.CBIRService;
-import com.darcklh.louise.Service.Impl.CBIRServiceImpl;
 import com.darcklh.louise.Service.Impl.CalcImageTask;
 import com.darcklh.louise.Service.Impl.CompressImageTask;
 import com.darcklh.louise.Utils.*;
@@ -14,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.StopWatch;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -31,6 +29,13 @@ class MyLouiseApplicationTests {
 
     @Autowired
     R r;
+
+    @Test
+    public void test1() throws InterruptedException, IOException {
+//        cbirService.startCompress();
+        String url = "cache/images_index/pixiv/roeiur238974.jpg".substring(19);
+        log.info(url);
+    }
 
     @Test
     public void imageReadTest() {
@@ -77,7 +82,7 @@ class MyLouiseApplicationTests {
     }
 
     @Test
-    public void multiTaskTest(String compare_image) throws InterruptedException, IOException, NoSuchAlgorithmException {
+    public void multiTaskTest() throws InterruptedException, IOException, NoSuchAlgorithmException {
         File file = new File("cache/images/compress/");
 
         List taskList = new ArrayList();
@@ -91,29 +96,11 @@ class MyLouiseApplicationTests {
             Thread workThread = new WorkThread(taskListPerThread[j], j);
             workThread.start();
         }
-        Thread.sleep(10000);
-
-        File testFile = new File(compare_image);
-        Image src = ImageIO.read(testFile);
-        ProcessImage ig = null;
-        try {
-            ig = new ProcessImage(testFile.getPath(), testFile.getName());
+        while(CalcImageTask.NewMap.size() != 395) {
+            log.info("当前处理数: " + CalcImageTask.NewMap.size());
+            Thread.sleep(500);
         }
-        catch(NullPointerException e) {
-            log.info("读取图片: " + testFile.getName() + " 失败了");
-        }
-        float max = 5000;
-        String result_image = "";
-        Map<String, ProcessImage> finalList = CalcImageTask.NewMap;
-        for(Map.Entry<String, ProcessImage> entry : finalList.entrySet()) {
-            float hisID = cbirService.relativeDeviationDist(ig.getHistogram_info(), entry.getValue().getHistogram_info());
-            if (hisID < max) {
-                max = hisID;
-                result_image = entry.getValue().getImage_name();
-                log.info("测试图片和数据图片" + result_image + "的距离为: " + max);
-            }
-        }
-
+        log.info("wc");
     }
 
     @Test
@@ -165,40 +152,6 @@ class MyLouiseApplicationTests {
     }
 
     @Test
-    public void testBotSendPicture() throws InterruptedException {
-
-        File file = new File("cache/images/");
-        List taskList = new ArrayList();
-        testFunc3(file, taskList);
-        log.info("共有: " + taskList.size() + " 个任务");
-
-        // 设定要启动的工作线程数为 4 个
-        int threadCount = 12;
-        List[] taskListPerThread = TaskDistributor.distributeTasks(taskList, threadCount);
-        System.out.println("实际要启动的工作线程数：" + taskListPerThread.length);
-        for (int j = 0; j < taskListPerThread.length; j++) {
-            Thread workThread = new WorkThread(taskListPerThread[j], j);
-            workThread.start();
-        }
-        Thread.sleep(30000);
-    }
-
-    public void testFunc3(File file, List taskList) {
-        int i = 0;
-
-        for (File image : file.listFiles()) {
-            if (image.isDirectory()) {
-                testFunc3(image, taskList);
-                continue;
-            }
-            CompressImageTask task = new CompressImageTask(i, "task: " + i,  image);
-            if (task.getStatus() != 9)
-                taskList.add(task);
-            i++;
-        }
-    }
-
-    @Test
     public void checkRepeat() throws IOException, NoSuchAlgorithmException {
         List<String> list = new ArrayList();
         for( File check : Objects.requireNonNull(new File("cache/images/compress").listFiles())) {
@@ -223,7 +176,47 @@ class MyLouiseApplicationTests {
         File testFile = new File("cache/temp/75377838.jpg");
         Image src = ImageIO.read(testFile);
         BufferedImage bufferedImage = ImageCompress.resizeImage(src, ((BufferedImage) src).getWidth() / 2, ((BufferedImage) src).getHeight() / 2);
-        ImageCompress.compress(bufferedImage, "cache/ready_compare/ready.jpg");
-        multiTaskTest("cache/ready_compare/ready.jpg");
+        ImageCompress.compress(bufferedImage, "cache/ready_compare/", "ready.jpg");
+        //multiTaskTest("cache/ready_compare/ready.jpg");
+    }
+
+    @Test
+    public void testNewImage() throws IOException {
+
+        File testFile = new File("cache/temp/75377838.jpg");
+        BufferedImage testImage = ImageIO.read(testFile);
+        Map<Integer, Double> temp = transverseImage(testImage);
+        System.out.println("rua");
+    }
+
+    public Map<Integer, Double> transverseImage(BufferedImage testImage) {
+
+        int width = testImage.getWidth();
+        int height = testImage.getHeight();
+        Map<Integer, Double> map = new HashMap<>();
+        for(int i = 0; i < 4096; i++) {
+            map.put(i, 0.0);
+        }
+        for(int i = 0; i < width; i++) {
+            for(int j = 0; j < height; j++) {
+                int rgb = testImage.getRGB(i, j);
+                int R = (rgb >> 16) & 0xff;
+                int G = (rgb >> 8) & 0xff;
+                int B = rgb & 0xff;
+                int rgbs = transverseRGBToInt(R, G, B);
+                map.put(rgbs, map.get(rgbs) + 1);
+            }
+        }
+        int totalPix = height * width;
+        for(int i = 0; i < 4096; i++) {
+            double value = map.get(i) / totalPix;
+            map.put(i, value);
+        }
+        return map;
+    }
+
+    private int transverseRGBToInt(int R, int G, int B) {
+        int value = (R / 16) << 8 | (G / 16) << 4 | (B / 16);
+        return value;
     }
 }

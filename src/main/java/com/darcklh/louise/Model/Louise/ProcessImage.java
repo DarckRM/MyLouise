@@ -18,7 +18,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 @Data
 public class ProcessImage {
@@ -27,7 +29,7 @@ public class ProcessImage {
     private String hash_code;
     private String image_path;
     private String image_name;
-    private double[] histogram_info;
+    private double[][] histogram_info;
 
     @TableField(exist = false)
     private BufferedImage buffered_image;
@@ -36,9 +38,9 @@ public class ProcessImage {
 
         this.image_path = imagePath;
         this.image_name = imageName;
-        this.buffered_image = readImage(imagePath);
-        this.hash_code = EncryptUtils.checkSumMD5(imagePath);
-        this.histogram_info = getNormalizedHistogram(this.buffered_image);
+        this.buffered_image = readImage();
+        this.hash_code = EncryptUtils.checkSumMD5(imagePath + "/" + imageName);
+        this.histogram_info = getDifferentHistogram(this.buffered_image);
 
     }
 
@@ -47,13 +49,43 @@ public class ProcessImage {
         this.image_name = image_name;
     }
 
-    private BufferedImage readImage(String imagePath) throws SpecificException, IOException {
+    private BufferedImage readImage() throws SpecificException, IOException {
 
         BufferedImage bImage;
-        File imageFile = new File(this.image_path);
+        File imageFile = new File(this.image_path + "/" + this.image_name);
         bImage = ImageIO.read(imageFile);
         // Check
         return bImage;
+    }
+
+    private double[][] getDifferentHistogram(BufferedImage inImage) {
+        double [][] histgram = new double [3][256];
+        int width = inImage.getWidth();//图片宽度
+        int height = inImage.getHeight();//图片高度
+        int pix[] = new int [width*height];//像素个数
+        int r,g,b;//记录R、G、B的值
+        pix = inImage.getRGB(0, 0, width, height, pix, 0, width);//将图片的像素值存到数组里
+        for(int i=0; i<width*height; i++) {
+            r = pix[i]>>16 & 0xff; //提取R
+            g = pix[i]>>8 & 0xff;
+            b = pix[i] & 0xff;
+            histgram[0][r] ++;
+            histgram[1][g] ++;
+            histgram[2][b] ++;
+        }
+        for(int j=0;j<256;j++)//将直方图每个像素值的总个数进行量化
+        {
+            for(int i=0;i<3;i++)
+            {
+                histgram[i][j]=histgram[i][j]/(width*height);
+            }
+        }
+        return histgram;
+    }
+
+    private int transverseRGBToInt(int R, int G, int B) {
+        int value = (R / 16) << 8 | (G / 16) << 4 | (B / 16);
+        return value;
     }
 
     private double[] getNormalizedHistogram(BufferedImage inImage) {

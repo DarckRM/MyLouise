@@ -32,6 +32,8 @@ public class LouiseConfig {
     private String LOUISE_ADMIN_NUMBER;
     @Value("${LOUISE.CACHE.IMAGE_LOCATION}")
     private String LOUISE_CACHE_IMAGE_LOCATION;
+    @Value("${LOUISE.CACHE.LOCATION}")
+    private String LOUISE_CACHE_LOCATION;
     @Value("${LOUISE.ERROR.UNKNOWN_COMMAND}")
     private String LOUISE_ERROR_UNKNOWN_COMMAND;
     @Value("${LOUISE.ERROR.THIRD_API_REQUEST_FAILED}")
@@ -79,6 +81,7 @@ public class LouiseConfig {
         this.setLOUISE_WELCOME_SENTENCE(configs.get("LOUISE.WELCOME_SENTENCE"));
         this.setLOUISE_HELP_PAGE(configs.get("LOUISE.HELP_PAGE"));
         this.setLOUISE_ADMIN_NUMBER(configs.get("LOUISE.ADMIN_NUMBER"));
+        this.setLOUISE_CACHE_LOCATION(configs.get("LOUISE.CACHE.LOCATION"));
         this.setLOUISE_CACHE_IMAGE_LOCATION(configs.get("LOUISE.CACHE.IMAGE_LOCATION"));
 
         this.setBOT_LOUISE_CACHE_IMAGE(configs.get("BOT.LOUISE_CACHE_IMAGE"));

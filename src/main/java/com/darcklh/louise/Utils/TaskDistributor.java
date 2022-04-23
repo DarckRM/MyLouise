@@ -1,10 +1,12 @@
 package com.darcklh.louise.Utils;
 
 import com.darcklh.louise.Service.MultiTaskService;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class TaskDistributor {
 
     public static List[] distributeTasks(List taskList, int threadCount) {
@@ -39,15 +41,14 @@ public class TaskDistributor {
                 remainIndces--;
             }
         }
-
         // 打印任务的分配情况
-        for (int i = 0; i < taskListPerThread.length; i++) {
-            System.out.println("线程 "+i+ "的任务数：" + taskListPerThread[i].size()+ " 区间["
-                    + ((MultiTaskService) taskListPerThread[i].get(0)).getTaskId()
-                    + ","
-                    + ((MultiTaskService) taskListPerThread[i].get(taskListPerThread[i].size() - 1))
-                    .getTaskId() + "]");
-        }
+//        for (int i = 0; i < taskListPerThread.length; i++) {
+//            log.debug("线程 "+i+ "的任务数：" + taskListPerThread[i].size()+ " 区间["
+//                    + ((MultiTaskService) taskListPerThread[i].get(0)).getTaskId()
+//                    + ","
+//                    + ((MultiTaskService) taskListPerThread[i].get(taskListPerThread[i].size() - 1))
+//                    .getTaskId() + "]");
+//        }
         return taskListPerThread;
     }
 }

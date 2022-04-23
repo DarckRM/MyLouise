@@ -65,6 +65,7 @@ public class FileControlApi {
             String realUrl = "/saito/image/" + fileName;
             result.setMsg("上传成功");
             result.setData(realUrl);
+            jsonObject.put("file_name", fileName);
             jsonObject.put("result", result);
             return jsonObject;
 
@@ -89,7 +90,7 @@ public class FileControlApi {
         Result<String> result = new Result<>();
         String fileName = url.replace("/saito/image/","");
 
-        File file = new File(louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION() + "/upload/" + fileName);
+        File file = new File(louiseConfig.getLOUISE_CACHE_LOCATION() + "/images/" + fileName);
         if(!file.exists()){
             jsonObject.put("success",2);
             jsonObject.put("result","下载文件不存在");
@@ -248,7 +249,7 @@ public class FileControlApi {
                     e.printStackTrace();
                 }
             } while (downloadExecutor.getActiveCount() > 0);
-            downloadExecutor.shutdown();
+                downloadExecutor.shutdown();
 
             //把总字节数组写入到文件;
             FileOutputStream fos = new FileOutputStream(file);
