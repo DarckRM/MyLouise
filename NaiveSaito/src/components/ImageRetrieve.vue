@@ -38,7 +38,7 @@
       <n-card title="闵可夫斯基距离" style="height: 460px">
         <n-grid cols="4" :x-gap="12" :y-gap="8">
           <n-grid-item v-for="image in results_mk" :key="image.name">
-            <n-image height="100" width="100" :src="image.url"></n-image>
+            <n-image width="100" :src="image.url"></n-image>
           </n-grid-item>
         </n-grid>
       </n-card>
@@ -47,7 +47,7 @@
       <n-card title="直方信息距离" style="height: 460px">
         <n-grid cols="4" :x-gap="12" :y-gap="8">
           <n-grid-item v-for="image in results_hi" :key="image.name">
-            <n-image height="100" width="100" :src="image.url"></n-image>
+            <n-image width="100" :src="image.url"></n-image>
           </n-grid-item>
         </n-grid>
       </n-card>
@@ -56,7 +56,7 @@
       <n-card title="相关性偏差距离" style="height: 460px">
         <n-grid cols="4" :x-gap="12" :y-gap="8">
           <n-grid-item v-for="image in results_rd" :key="image.name">
-            <n-image height="100" width="100" :src="image.url"></n-image>
+            <n-image width="100" :src="image.url"></n-image>
           </n-grid-item>
         </n-grid>
       </n-card>

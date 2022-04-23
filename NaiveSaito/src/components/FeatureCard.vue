@@ -4,7 +4,7 @@
             <n-grid x-gap=16 :cols="5">
                 <n-gi span=1>
                     <div style="margin: 0 auto">
-                        <n-processImage object-fit="cover" round :src="model.avatar" width="200" height="200" style="border-radius: 200px;"/>
+                        <n-image object-fit="cover" round :src="model.avatar" width="200" height="200" style="border-radius: 200px;"/>
                     </div>
                     
                     <div style="float: left">
