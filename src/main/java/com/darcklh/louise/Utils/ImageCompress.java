@@ -31,6 +31,7 @@ public class ImageCompress {
 
         File compressedImageFile = new File(filePath + filename);
         OutputStream os = new FileOutputStream(compressedImageFile);
+
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
 
         ImageWriter writer = writers.next();

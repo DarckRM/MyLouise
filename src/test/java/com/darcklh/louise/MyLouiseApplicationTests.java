@@ -24,18 +24,18 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MyLouiseApplicationTests {
 
-//    @Autowired
-//    CBIRService cbirService;
-//
+    @Autowired
+    CBIRService cbirService;
+
 //    @Autowired
 //    R r;
 //
-//    @Test
-//    public void test1() throws InterruptedException, IOException {
-////        cbirService.startCompress();
+    @Test
+    public void test1() throws InterruptedException, IOException {
+        cbirService.startCompress();
 //        String url = "cache/images_index/pixiv/roeiur238974.jpg".substring(19);
 //        log.info(url);
-//    }
+    }
 //
 //    @Test
 //    public void imageReadTest() {

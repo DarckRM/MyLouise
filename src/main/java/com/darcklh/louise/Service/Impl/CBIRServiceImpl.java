@@ -43,7 +43,7 @@ public class CBIRServiceImpl implements CBIRService {
         List[] taskListPerThread = TaskDistributor.distributeTasks(taskList, THREAD_COUNT);
         log.debug("实际启动的工作线程数：" + taskListPerThread.length);
         startCalcImageWorkThread(taskListPerThread, taskList.size());
-        return compareImage(compare_image);
+        return compareImage(new File("cache/ready_compare/ready.jpg"));
     }
 
     public JSONObject startCompress() throws InterruptedException {
@@ -112,24 +112,26 @@ public class CBIRServiceImpl implements CBIRService {
         BufferedImage src = ImageIO.read(compareFile);
         BufferedImage bufferedImage = ImageCompress.resizeImage(src, src.getWidth() / 2, src.getHeight() / 2);
         ImageCompress.compress(bufferedImage, "cache/ready_compare/", "ready.jpg");
+
+        //释放内存
+        src = null;
+        bufferedImage = null;
+
         if (CalcImageTask.NewMap.size() != 0)
-            return compareImage("cache/ready_compare/ready.jpg");
+            return compareImage(compareFile);
         return startCBIR("cache/ready_compare/ready.jpg");
     }
 
-    private JSONObject compareImage(String compare_image) {
+    private JSONObject compareImage(File compare_image) {
 
-        File compare_file = new File(compare_image);
         ProcessImage ig = null;
         try {
-            ig = new ProcessImage(compare_file.getParent(), compare_file.getName());
+            ig = new ProcessImage(compare_image.getParent(), compare_image.getName());
         }
         catch(NullPointerException | IOException | NoSuchAlgorithmException e) {
-            log.info("读取图片: " + compare_file.getName() + " 失败了");
+            log.info("读取图片: " + compare_image.getName() + " 失败了");
         }
         JSONObject jsonObject = new JSONObject();
-        double max = 0;
-        String result_image = "";
 
         List<ProcessImage> result_mkList = new ArrayList<>();
         List<ProcessImage> result_hiList = new ArrayList<>();
@@ -137,7 +139,6 @@ public class CBIRServiceImpl implements CBIRService {
         Map<String, ProcessImage> finalList = CalcImageTask.NewMap;
 
         jsonObject.put("result_mkList", result_mkList);
-        max = 0;
         TreeMap<Double, String> resultMap = new TreeMap<>();
         for(Map.Entry<String, ProcessImage> entry : finalList.entrySet()) {
             double hisID = getHISimilarity(ig.getHistogram_info(), entry.getValue().getHistogram_info());
@@ -180,8 +181,10 @@ public class CBIRServiceImpl implements CBIRService {
                 continue;
             }
             CalcImageTask task = new CalcImageTask(i, "task: " + i,  image);
-            if (task.getStatus() != 9)
+            if (task.getStatus() != 9) {
                 taskList.add(task);
+                task = null;
+            }
             i++;
         }
     }

@@ -145,6 +145,7 @@ public class FileControlApi {
             fileOutputStream.write(output.toByteArray());
             dataInputStream.close();
             fileOutputStream.close();
+            output.close();
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return false;
