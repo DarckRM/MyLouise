@@ -1,40 +1,26 @@
 package com.darcklh.louise;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.darcklh.louise.Mapper.UploadInfoDao;
-import com.darcklh.louise.Mapper.UserDao;
-import com.darcklh.louise.Utils.UniqueGenerator;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import com.darcklh.louise.Model.Louise.ProcessImage;
+import com.darcklh.louise.Model.R;
+import com.darcklh.louise.Service.CBIRService;
+import com.darcklh.louise.Service.Impl.CalcImageTask;
+import com.darcklh.louise.Service.Impl.CompressImageTask;
+import com.darcklh.louise.Utils.*;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.util.StopWatch;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
+import java.util.List;
 
-@SpringBootTest
+@Slf4j
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MyLouiseApplicationTests {
-
-    @Test
-    void test() {
-        System.out.println(UniqueGenerator.uniqueThreadName("Darck", "Ascii2d"));
-    }
-
 }
