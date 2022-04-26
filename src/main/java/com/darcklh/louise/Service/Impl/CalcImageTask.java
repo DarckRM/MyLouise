@@ -46,6 +46,7 @@ public class CalcImageTask implements MultiTaskService {
             log.info("读取图片: " + image.getName() + " 失败了");
         }
         setStatus(FINISHED);
+        this.image = null;
         return true;
     }
 }

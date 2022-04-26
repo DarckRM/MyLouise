@@ -41,6 +41,8 @@ public class SaitoController {
     @Autowired
     PluginManager pluginManager;
 
+    static private boolean output_log = true;
+
     @RequestMapping("/error")
     public JSONObject error() {
         JSONObject jsonObject = new JSONObject();
@@ -72,15 +74,24 @@ public class SaitoController {
     }
 
     /**
-     * 心跳检测 检查各系统运行状况
+     * 停止输出日志信息的线程
+     */
+    @GetMapping("saito/stop_output")
+    public void stopOutputLog() {
+        output_log = false;
+        log.info("日志输出任务结束");
+    }
+
+    /**
+     * 输出日志信息
      */
     @GetMapping("saito/output_log/{client_name}")
     public void outputLog(@PathVariable String client_name) {
-
+        output_log = true;
         //获取日志信息
         new Thread(() -> {
             log.info("日志输出任务开始");
-            while(true) {
+            while(output_log) {
                 boolean first = true;
                 BufferedReader reader = null;
                 try {
@@ -148,8 +159,8 @@ public class SaitoController {
                     }
                 }
             }
-
-        }).start();
+            Thread.interrupted();
+        }, "output-log").start();
 
     }
 

@@ -81,7 +81,7 @@ const menuOptions = [
         },
         {
           label: '图片管理',
-          key: 'processImage-manage',
+          key: 'image-manage',
           icon: renderIcon(ImagesIcon)
         }
     ]

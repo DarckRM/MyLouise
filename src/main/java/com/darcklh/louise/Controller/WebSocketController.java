@@ -29,7 +29,7 @@ public class WebSocketController {
      * 心跳检测 检查各系统运行状况
      */
     @GetMapping("/system_check")
-    @Scheduled(cron = "*/5 * * * * *")
+    @Scheduled(cron = "*/3 * * * * *")
     public void pushOne() {
 
         JSONObject jsonObject = new JSONObject();
