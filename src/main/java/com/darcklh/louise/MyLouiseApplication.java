@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @MapperScan("com.darcklh.louise.Mapper")
-@PropertySource(value="classpath:myLouise.properties")
 @EnableScheduling
 public class MyLouiseApplication {
 
