@@ -32,9 +32,9 @@ class MyLouiseApplicationTests {
 
     @Test
     public void test1() throws InterruptedException, IOException {
-//        cbirService.startCompress();
-        String url = "cache/images_index/pixiv/roeiur238974.jpg".substring(19);
-        log.info(url);
+        cbirService.startCompress();
+//        String url = "cache/images_index/pixiv/roeiur238974.jpg".substring(19);
+//        log.info(url);
     }
 
     @Test
