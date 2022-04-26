@@ -1,0 +1,7 @@
+server:
+  #服务器端口
+  port: 8099
+
+spring:
+  profiles:
+    active: dev
