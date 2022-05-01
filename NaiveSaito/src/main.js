@@ -56,7 +56,11 @@ import {
         NUploadDragger,
         NP,
         NSelect,
-        NLog
+        NLog,
+        NRow,
+        NCol,
+        NTimeline,
+        NTimelineItem
 } from 'naive-ui'
 const naive = create({
     components: [
@@ -110,7 +114,11 @@ const naive = create({
         NUploadDragger,
         NP,
         NSelect,
-        NLog
+        NLog,
+        NRow,
+        NCol,
+        NTimeline,
+        NTimelineItem
     ]
 })
 const app = createApp(App)

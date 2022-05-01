@@ -1,40 +1,42 @@
 <template>
-    <div id="loginDiv">
+  <div id="loginDiv">
     <div style="margin: 0 auto; width: 400px">
         <img style="width: 150px" alt="Vue logo" src="../assets/logo.png">
         MyLouise Backfront Alpha
     </div>
-        <n-divider />
-        <n-card v-bind:title="loginPageTitle" id="loginCard">
-        <n-tabs default-value='signin'>
-            <n-tab-pane name="signin" tab='登录'>
-            <n-form :model="loginForm">    
-                <n-form-item>
-                    <n-input
-                        v-model:value="loginForm.username"
-                        placeholder="用户名"
-                    />
-                </n-form-item>
-                <n-form-item>
-                    <n-input
-                        type="password"
-                        show-password-on="mousedown"
-                        placeholder="密码"
-                        :maxlength="8"
-                        v-model:value="loginForm.password"
-                    />
-                </n-form-item>
-            </n-form>
-            <n-button style="margin: 20px 25px;">Reset</n-button>
-            <n-button @click="signUp()" type="primary" style="margin: 20px 25px;">Confirm</n-button>
-            </n-tab-pane>
-            <n-tab-pane name="signup" tab="注册">
-            <n-button style="margin: 20px 25px;">Reset</n-button>
-            <n-button @click="signUp()" type="primary" style="margin: 20px 25px;">Confirm</n-button>
-            </n-tab-pane>
-        </n-tabs>
-        </n-card>
-    </div>
+    <n-divider />
+    <n-card v-bind:title="loginPageTitle" id="loginCard">
+      <n-tabs @update:value="updateValue" default-value='signin'>
+        <n-tab-pane name="signin" tab='登录'>
+          <n-form :model="loginForm">    
+            <n-form-item>
+                <n-input
+                    v-model:value="loginForm.username"
+                    placeholder="用户名"
+                />
+            </n-form-item>
+            <n-form-item>
+                <n-input
+                    type="password"
+                    show-password-on="mousedown"
+                    placeholder="密码"
+                    :maxlength="8"
+                    v-model:value="loginForm.password"
+                />
+            </n-form-item>
+          </n-form>
+          <n-button @click="quickLogin()">Login</n-button>
+          <n-button style="margin-left: 60px" @click="signUp()" type="primary">Confirm</n-button>
+        </n-tab-pane>
+        <n-tab-pane name="signup" tab="注册">
+        <n-button style="margin: 20px 25px;">Reset</n-button>
+        <n-button @click="signUp()" type="primary" style="margin: 20px 25px;">Confirm</n-button>
+        </n-tab-pane>
+        <n-tab-pane name="image-retrieve" tab="图片检索">
+        </n-tab-pane>
+      </n-tabs>
+    </n-card>
+  </div>
 </template>
 
 <style>
@@ -75,6 +77,10 @@
       useMessage,
     },
     methods: {
+      updateValue(value) {
+        if(value == 'image-retrieve')
+          router.push('/image-retrieve')
+      },
       signUp() {
           this.message.loading("登录中")
           this.loginPageTitle = "Sign Up"
@@ -95,6 +101,14 @@
               this.message.error('用户名或密码错误')
             }
           })
+      },
+      quickLogin() {
+        this.message.destroyAll()
+        this.message.success('登录成功')
+        this.$store.commit('set_token', "123456")
+        router.push({
+          path: '/home/index'
+        })
       }
     }
     

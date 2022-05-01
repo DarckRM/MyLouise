@@ -109,26 +109,26 @@ export default defineComponent({
         let dataHI = result.data.result.data.result_hiList
         let dataRD = result.data.result.data.result_rdList
 
-        //this.bestResult = 'http://127.0.0.1:8099' + dataHI[0].image_path + dataHI[0].image_name
+        this.bestResult = 'http://127.0.0.1:8099' + dataHI[0].image_path + dataHI[0].image_name
 
         for(var result_image in dataMk) {
           this.results_mk.push({
             name: dataMk[result_image].image_name,
-           // url: 'http://127.0.0.1:8099' + dataMk[result_image].image_path + dataMk[result_image].image_name
+            url: 'http://127.0.0.1:8099' + dataMk[result_image].image_path + dataMk[result_image].image_name
           })
         }
 
         for(var result_image in dataHI) {
           this.results_hi.push({
             name: dataHI[result_image].image_name,
-            //url: 'http://127.0.0.1:8099' + dataHI[result_image].image_path + dataHI[result_image].image_name
+            url: 'http://127.0.0.1:8099' + dataHI[result_image].image_path + dataHI[result_image].image_name
           })
         }
 
         for(var result_image in dataRD) {
           this.results_rd.push({
             name: dataRD[result_image].image_name,
-            //url: 'http://127.0.0.1:8099' + dataRD[result_image].image_path + dataRD[result_image].image_name
+            url: 'http://127.0.0.1:8099' + dataRD[result_image].image_path + dataRD[result_image].image_name
           })
         }
       })

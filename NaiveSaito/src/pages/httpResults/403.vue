@@ -18,7 +18,7 @@ export default defineComponent({
   },
   methods: {
     goToLogin() {
-      router.push('/login')
+      router.push('/')
     }
   }
 })

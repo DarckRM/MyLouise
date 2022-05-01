@@ -4,7 +4,7 @@
       <n-grid :x-gap="12" :y-gap="8" item-responsive :cols="5">
         <n-gi span=1>
             <div style="margin: 0 auto">
-                <n-processImage object-fit="cover" round :src="'https://q1.qlogo.cn/g?b=qq&nk=' + model.user_id + '&s=640'" width="200" height="200" style="border-radius: 200px;"/>
+                <n-image object-fit="cover" round :src="'https://q1.qlogo.cn/g?b=qq&nk=' + model.user_id + '&s=640'" width="200" height="200" style="border-radius: 200px;"/>
             </div>
             <div style="float: left">
                 <n-button type="primary" style="width: 105px; height: 40px; margin: 5px 50px" @click="saveFormData">保存</n-button>
