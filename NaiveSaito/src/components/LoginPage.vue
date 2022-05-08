@@ -32,8 +32,6 @@
         <n-button style="margin: 20px 25px;">Reset</n-button>
         <n-button @click="signUp()" type="primary" style="margin: 20px 25px;">Confirm</n-button>
         </n-tab-pane>
-        <n-tab-pane name="image-retrieve" tab="图片检索">
-        </n-tab-pane>
       </n-tabs>
     </n-card>
   </div>

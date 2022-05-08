@@ -56,10 +56,7 @@
     </n-gi>
   </n-grid>
 </n-card>
-<<<<<<< HEAD
 <StatisticPanel></StatisticPanel>
-=======
->>>>>>> 8a2156fe989d2d6c66dc5ecaf9e55fc4e143f004
 <WebSocket ref="webSocket" :client_name="client_name" data=""></WebSocket>
 </template>
 
@@ -69,21 +66,14 @@ import WebSocket from '../components/websocket/WebSocket.vue'
 import {
     HelpCircleOutline as HelpIcon
 } from '@vicons/ionicons5'
-<<<<<<< HEAD
 import StatisticPanel from "../components/StatisticPanel.vue"
-=======
->>>>>>> 8a2156fe989d2d6c66dc5ecaf9e55fc4e143f004
 
     export default defineComponent({
       name: 'StatusPanel',
       components: {
           WebSocket,
-<<<<<<< HEAD
           HelpIcon,
             StatisticPanel
-=======
-          HelpIcon
->>>>>>> 8a2156fe989d2d6c66dc5ecaf9e55fc4e143f004
       },
       data() {
         return {

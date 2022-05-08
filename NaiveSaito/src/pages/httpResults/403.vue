@@ -14,11 +14,11 @@ import { router } from '../../router'
 
 export default defineComponent({
   setup() {
-    
   },
   methods: {
     goToLogin() {
       router.push('/')
+    }
   }
 })
 </script>
