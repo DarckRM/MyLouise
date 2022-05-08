@@ -32,7 +32,7 @@
     </n-gi>
     <n-gi>
         <n-card hoverable title="YUki 网关">
-            <div>
+            <div style="overflow: hidden">
                 <n-text italic>由好友Remid开发的，基于Go的网关，实现Bot请求转发</n-text>
             </div>
             <n-h3 type="info" prefix="bar" style="display: inline">运行时间</n-h3><n-text style="margin-left: 10px">{{nowTime}}</n-text>
@@ -56,6 +56,10 @@
     </n-gi>
   </n-grid>
 </n-card>
+<<<<<<< HEAD
+<StatisticPanel></StatisticPanel>
+=======
+>>>>>>> 8a2156fe989d2d6c66dc5ecaf9e55fc4e143f004
 <WebSocket ref="webSocket" :client_name="client_name" data=""></WebSocket>
 <WebSocket ref="webSocket_cpuInfo" :client_name="client_name_cp" data=""></WebSocket>
 </template>
@@ -67,12 +71,21 @@ import axios from "../utils/request"
 import {
     HelpCircleOutline as HelpIcon
 } from '@vicons/ionicons5'
+<<<<<<< HEAD
+import StatisticPanel from "../components/StatisticPanel.vue"
+=======
+>>>>>>> 8a2156fe989d2d6c66dc5ecaf9e55fc4e143f004
 
     export default defineComponent({
       name: 'StatusPanel',
       components: {
           WebSocket,
+<<<<<<< HEAD
+          HelpIcon,
+            StatisticPanel
+=======
           HelpIcon
+>>>>>>> 8a2156fe989d2d6c66dc5ecaf9e55fc4e143f004
       },
       data() {
         return {
