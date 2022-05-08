@@ -57,11 +57,13 @@
   </n-grid>
 </n-card>
 <WebSocket ref="webSocket" :client_name="client_name" data=""></WebSocket>
+<WebSocket ref="webSocket_cpuInfo" :client_name="client_name_cp" data=""></WebSocket>
 </template>
 
 <script>
 import { defineComponent } from "vue"
 import WebSocket from '../components/websocket/WebSocket.vue'
+import axios from "../utils/request"
 import {
     HelpCircleOutline as HelpIcon
 } from '@vicons/ionicons5'
@@ -78,19 +80,22 @@ import {
           louiseStatus: 'error',
           louiseText: '未知',
           client_name: 'status_conn' + (new Date()).valueOf(),
+          client_name_cp: 'cpu_payload' + (new Date()).valueOf(),
           nowTimes: null
         }
       },
       mounted() {
+        axios.get('/saito_ws/cpu_payload/' + this.client_name_cp).then(result => {
+        })
         this.nowTimes = setInterval(() => {
             if(this.$refs.webSocket.isConn) {
                 this.louiseStatus = 'success'
-                this.louiseText = '运行良好'
+                this.louiseText = 'CPU负载: ' + this.$refs.webSocket_cpuInfo.data.cpu_payload
             }
             else {
                 this.louiseStatus = 'error'
                 this.louiseText = '停机中'
-            } 
+            }
         }, 5000)
       },
       methods: {
