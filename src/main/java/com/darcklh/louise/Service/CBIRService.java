@@ -10,8 +10,10 @@ public interface CBIRService {
     /**
      *
      */
-    public JSONObject startCBIR(String compare_image) throws InterruptedException, IOException, NoSuchAlgorithmException;
-    public JSONObject startCompress() throws InterruptedException;
+    public int reCalculateImageLib() throws InterruptedException, IOException, NoSuchAlgorithmException;
+    public JSONObject startAllCBIR(boolean isFinding) throws InterruptedException, IOException, NoSuchAlgorithmException;
+    public void startAllCompress() throws InterruptedException;
+    public int startCompressAndCalc(String file_path) throws IOException, NoSuchAlgorithmException;
     public JSONObject compareImageCompress(String compare_image) throws IOException, NoSuchAlgorithmException, InterruptedException;
     public float minkowskiDist(double[] InHist, double[] sampleHist);
     public float histogramIntersectionDist(double[] InHist, double[] sampleHist);

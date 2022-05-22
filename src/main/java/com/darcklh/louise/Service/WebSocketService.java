@@ -32,7 +32,8 @@ public class WebSocketService {
     /**接收userName*/
     private String userName="";
     /**
-     * 连接建立成功调用的方法*/
+     * 连接建立成功调用的方法
+     * */
     @OnOpen
     public void onOpen(Session session, @PathParam("conn_name") String userName) {
         if(!webSocketMap.containsKey(userName))

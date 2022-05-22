@@ -82,7 +82,6 @@ public class WebSocketController {
 
                     jsonObject.put("cpu_payload", new DecimalFormat("#.##%").format((1.0-(idle * 1.0 / totalCpu)) * 2));
                     result.put("result", jsonObject);
-                    log.info(result.toString());
                     WebSocketService.sendMessage(client_name, result.toString());
                     Thread.sleep(3000);
                 }

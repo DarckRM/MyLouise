@@ -2,20 +2,17 @@ package com.darcklh.louise.Service.Impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Mapper.ProcessImageDao;
 import com.darcklh.louise.Model.Louise.ProcessImage;
 import com.darcklh.louise.Service.CBIRService;
-import com.darcklh.louise.Service.MultiTaskService;
-import com.darcklh.louise.Utils.EncryptUtils;
 import com.darcklh.louise.Utils.ImageCompress;
 import com.darcklh.louise.Utils.TaskDistributor;
 import com.darcklh.louise.Utils.WorkThread;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StopWatch;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +30,27 @@ public class CBIRServiceImpl implements CBIRService {
     @Autowired
     private LouiseConfig louiseConfig;
 
-    public JSONObject startCBIR(String compare_image) throws InterruptedException, IOException, NoSuchAlgorithmException {
+    @Autowired
+    private ProcessImageDao processImageDao;
+
+    public int reCalculateImageLib() throws InterruptedException, IOException, NoSuchAlgorithmException {
+
+        log.info("开始执行图片数据库重构任务");
+        // 重新生成缩略图文件夹
+        log.info("重新生成缩略图文件夹");
+        startAllCompress();
+        startAllCBIR(false);
+        log.info("清除数据库原有记录");
+        processImageDao.removeAllData();
+        log.info("写入新记录");
+        for(Map.Entry<String, ProcessImage> entry : CalcImageTask.NewMap.entrySet()) {
+            entry.getValue().setHistogram_json(Arrays.deepToString(entry.getValue().getHistogram_info()));
+            processImageDao.insert(entry.getValue());
+        }
+        return 1;
+    }
+
+    public JSONObject startAllCBIR(boolean isFinding) throws InterruptedException, IOException, NoSuchAlgorithmException {
 
         File file = new File(louiseConfig.getLOUISE_CACHE_LOCATION() + "/images_index/");
 
@@ -43,10 +60,12 @@ public class CBIRServiceImpl implements CBIRService {
         List[] taskListPerThread = TaskDistributor.distributeTasks(taskList, THREAD_COUNT);
         log.debug("实际启动的工作线程数：" + taskListPerThread.length);
         startCalcImageWorkThread(taskListPerThread, taskList.size());
-        return compareImage(new File("cache/ready_compare/ready.jpg"));
+        if (isFinding)
+            return compareImage(new File("cache/ready_compare/ready.jpg"));
+        return null;
     }
 
-    public JSONObject startCompress() throws InterruptedException {
+    public void startAllCompress() throws InterruptedException {
 
         File file = new File(louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION());
         List<CompressImageTask> taskList = new ArrayList<>();
@@ -55,7 +74,15 @@ public class CBIRServiceImpl implements CBIRService {
         List[] taskListPerThread = TaskDistributor.distributeTasks(taskList, THREAD_COUNT);
         log.debug("实际要启动的工作线程数：" + taskListPerThread.length);
         startCompressWorkThread(taskListPerThread, taskList.size());
-        return null;
+    }
+
+    public int startCompressAndCalc(String file_path) throws IOException, NoSuchAlgorithmException {
+        File file = new File(file_path);
+        ImageCompress.resize(file.getParent(), file.getName());
+        ProcessImage ig = new ProcessImage(file.getParent(), file.getName());
+        CalcImageTask.NewMap.put(ig.getHash_code(), ig);
+        processImageDao.insert(ig);
+        return 1;
     }
 
     private void startCompressWorkThread(List[] taskListPerThread, int taskList_size) throws InterruptedException {
@@ -113,16 +140,16 @@ public class CBIRServiceImpl implements CBIRService {
         BufferedImage bufferedImage = ImageCompress.resizeImage(src, src.getWidth() / 2, src.getHeight() / 2);
         ImageCompress.compress(bufferedImage, "cache/ready_compare/", "ready.jpg");
 
-        //释放内存
-        src = null;
-        bufferedImage = null;
+        if (ProcessImageImpl.isImageLibUpdate) {
+            Map<String, ProcessImage> ImageMap = new HashMap<>();
+        }
 
         if (CalcImageTask.NewMap.size() != 0)
             return compareImage(compareFile);
-        return startCBIR("cache/ready_compare/ready.jpg");
+        return startAllCBIR(true);
     }
 
-    private JSONObject compareImage(File compare_image) {
+    private JSONObject compareImage(File compare_image) throws IOException, NoSuchAlgorithmException {
 
         ProcessImage ig = null;
         try {
