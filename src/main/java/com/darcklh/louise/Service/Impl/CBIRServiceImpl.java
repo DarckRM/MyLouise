@@ -133,6 +133,56 @@ public class CBIRServiceImpl implements CBIRService {
         }
     }
 
+    private void startGetEDSWorkThread(List[] taskListPerThread, int taskList_size) throws InterruptedException {
+        int i = 0;
+        for (List singleTask : taskListPerThread) {
+            Thread workThread = new WorkThread(singleTask, i);
+            workThread.start();
+            i++;
+        }
+        Thread.sleep(1500);
+        int status = 0;
+        int flag = 0;
+        while(GetEDSTask.totalTask != taskList_size) {
+            log.info("当前处理数: " + GetEDSTask.totalTask);
+            if (status != GetEDSTask.totalTask) {
+                status = GetEDSTask.totalTask;
+                Thread.sleep(1000);
+            } else {
+                if (flag == 3) {
+                    log.info("任务 GetEDS 执行超时");
+                    break;
+                }
+                flag++;
+            }
+        }
+    }
+
+    private void startGetHISWorkThread(List[] taskListPerThread, int taskList_size) throws InterruptedException {
+        int i = 0;
+        for (List singleTask : taskListPerThread) {
+            Thread workThread = new WorkThread(singleTask, i);
+            workThread.start();
+            i++;
+        }
+        Thread.sleep(1500);
+        int status = 0;
+        int flag = 0;
+        while(GetHISTask.totalTask != taskList_size) {
+            log.info("当前处理数: " + GetHISTask.totalTask);
+            if (status != GetHISTask.totalTask) {
+                status = GetHISTask.totalTask;
+                Thread.sleep(1000);
+            } else {
+                if (flag == 3) {
+                    log.info("任务 GetHIS 执行超时");
+                    break;
+                }
+                flag++;
+            }
+        }
+    }
+
     public JSONObject compareImageCompress(String compare_image) throws IOException, NoSuchAlgorithmException, InterruptedException {
 
         File compareFile = new File(compare_image);
@@ -149,8 +199,12 @@ public class CBIRServiceImpl implements CBIRService {
         return startAllCBIR(true);
     }
 
-    private JSONObject compareImage(File compare_image) throws IOException, NoSuchAlgorithmException {
+    private JSONObject compareImage(File compare_image) throws InterruptedException {
 
+        // 清空之前的结果缓存
+        GetEDSTask.resultMap.clear();
+        GetHISTask.resultMap.clear();
+        int number = 0;
         ProcessImage ig = null;
         try {
             ig = new ProcessImage(compare_image.getParent(), compare_image.getName());
@@ -163,39 +217,30 @@ public class CBIRServiceImpl implements CBIRService {
         List<ProcessImage> result_mkList = new ArrayList<>();
         List<ProcessImage> result_hiList = new ArrayList<>();
         List<ProcessImage> result_rdList = new ArrayList<>();
-        Map<String, ProcessImage> finalList = CalcImageTask.NewMap;
 
+        List<GetEDSTask> edsTaskList = new ArrayList<>();
+        List<GetHISTask> hisTaskList = new ArrayList<>();
+        assert ig != null;
+        initGetEDSTask(ig.getHistogram_info(), edsTaskList);
+        initGetHISTask(ig.getHistogram_info(), hisTaskList);
+        log.info("共有: " + edsTaskList.size() + " 个 相似度计算 任务");
+        List[] getEDSPerThread = TaskDistributor.distributeTasks(edsTaskList, THREAD_COUNT);
+        List[] getHISPerThread = TaskDistributor.distributeTasks(hisTaskList, THREAD_COUNT);
+        log.debug("实际要启动的工作线程数：" + getEDSPerThread.length);
+        startGetEDSWorkThread(getEDSPerThread, edsTaskList.size());
+        startGetEDSWorkThread(getHISPerThread, edsTaskList.size());
+
+        while( number <= 4) {
+            result_rdList.add(new ProcessImage("/saito/image/", GetEDSTask.resultMap.firstEntry().getValue(), false));
+            result_hiList.add(new ProcessImage("/saito/image/", GetHISTask.resultMap.lastEntry().getValue(), false));
+
+            GetEDSTask.resultMap.remove(GetEDSTask.resultMap.firstKey());
+            GetHISTask.resultMap.remove(GetHISTask.resultMap.lastKey());
+
+            number++;
+        }
         jsonObject.put("result_mkList", result_mkList);
-        TreeMap<Double, String> resultMap = new TreeMap<>();
-        for(Map.Entry<String, ProcessImage> entry : finalList.entrySet()) {
-            double hisID = getHISimilarity(ig.getHistogram_info(), entry.getValue().getHistogram_info());
-            String image_path = entry.getValue().getImage_path().substring(18);
-            String image_name = entry.getValue().getImage_name();
-            resultMap.put(hisID, image_path + "/" + image_name);
-        }
-        int number = 0;
-        while( number <= 4) {
-            result_hiList.add(new ProcessImage("/saito/image/", resultMap.lastEntry().getValue(), false));
-            number++;
-            resultMap.remove(resultMap.lastKey());
-        }
-
-        number = 0;
         jsonObject.put("result_hiList", result_hiList);
-        resultMap.clear();
-
-        for(Map.Entry<String, ProcessImage> entry : finalList.entrySet()) {
-            double hisID = getEDSimilarity(ig.getHistogram_info(), entry.getValue().getHistogram_info());
-            String image_path = entry.getValue().getImage_path().substring(18);
-            String image_name = entry.getValue().getImage_name();
-
-            resultMap.put(hisID, image_path + "/" + image_name);
-        }
-        while( number <= 4) {
-            result_rdList.add(new ProcessImage("/saito/image/", resultMap.firstEntry().getValue(), false));
-            number++;
-            resultMap.remove(resultMap.firstKey());
-        }
         jsonObject.put("result_rdList", result_rdList);
         return jsonObject;
     }
@@ -230,63 +275,39 @@ public class CBIRServiceImpl implements CBIRService {
         }
     }
 
-    @Override
-    public float minkowskiDist(double[] InHist, double[] sampleHist) {
-        float minkDist = 0;
-        for (int i=0;i<InHist.length-1;i++)
-            minkDist+=Math.pow((InHist[i]-sampleHist[i]),2);
-        return (float) Math.sqrt(minkDist);
-    }
-
-    @Override
-    public float histogramIntersectionDist(double[] InHist, double[] sampleHist) {
-        float HIDist = 0;
-        for (int i=0;i<InHist.length-1;i++)
-            HIDist+=Math.min(InHist[i],sampleHist[i]);
-        return HIDist;
-    }
-
-    @Override
-    public float relativeDeviationDist(double[] InHist, double[] sampleHist) {
-        float RDDist = 0;
-        float Numerator=0;
-        float Denom1=0;
-        float Denom2=0;
-
-        for (int i=0;i<InHist.length-1;i++)
-        {
-            Numerator+= Math.sqrt(Math.pow((InHist[i]-sampleHist[i]),2));
-            Denom1+=Math.sqrt(Math.pow(InHist[i],2));
-            Denom2+=Math.sqrt(Math.pow(sampleHist[i],2));
+    private void initGetEDSTask(double[][] inHistogram, List<GetEDSTask> getEDSTaskList) {
+        int i = 0;
+        for(Map.Entry<String, ProcessImage> entry : CalcImageTask.NewMap.entrySet()) {
+            GetEDSTask getEDSTask = new GetEDSTask(i, entry.getValue(), inHistogram);
+            if (getEDSTask.getStatus() != 9)
+                getEDSTaskList.add(getEDSTask);
+            i++;
         }
-        RDDist=2*Numerator/(Denom1+Denom2);
-        return RDDist;
     }
 
-    //欧式距离求图片的相似度
-    public double getEDSimilarity(double [][] inHist, double  [][] sampleHist)//欧式距离法，匹配值越小，越相似
-    {
-        double similar = (double) 0.0;//相似度
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < inHist[i].length; j++){
-                similar += (inHist[i][j] - sampleHist[i][j]) * (inHist[i][j] - sampleHist[i][j]);
-            }
+    private void initGetHISTask(double[][] inHistogram, List<GetHISTask> getHISTaskList) {
+        int i = 0;
+        for(Map.Entry<String, ProcessImage> entry : CalcImageTask.NewMap.entrySet()) {
+            GetHISTask getHISTask = new GetHISTask(i, entry.getValue(), inHistogram);
+            if (getHISTask.getStatus() != 9)
+                getHISTaskList.add(getHISTask);
+            i++;
         }
-        similar=similar/6;
-        similar=Math.sqrt(similar);
-        return similar;
     }
 
     //传统的直方图相交法  统计RGB  归一化 后用交来求两个图片的相似度
-    public double getHISimilarity(double [][] inHist,double  [][] sampleHist)
+    private double getHISimilarity(double [][] inHist,double  [][] sampleHist)
     {
-        double similar = (double) 0.0;//相似度
+        double similar = 0.0;//相似度
+        double total = 0.0;
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < inHist[i].length; j++) {
                 similar += Math.min(inHist[i][j], sampleHist[i][j]);
+                total += inHist[i][j];
             }
         }
-        similar = similar / 3;
+        // 标准化
+        similar = similar / total;
         return similar;
     }
 }
