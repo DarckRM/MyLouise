@@ -35,11 +35,9 @@ public class CalcImageTask implements MultiTaskService {
     @Override
     public boolean execute() throws NoSuchAlgorithmException, IOException {
         setStatus(MultiTaskService.RUNNING);
-
-        String md5 = EncryptUtils.checkSumMD5(image.getAbsolutePath());
         try {
             ProcessImage ig = new ProcessImage(image.getParent(), image.getName());
-            NewMap.put(md5, ig);
+            NewMap.put(ig.getHash_code(), ig);
         }
         catch(NullPointerException e) {
             this.status = ERROR;

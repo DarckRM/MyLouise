@@ -101,13 +101,13 @@ export default defineComponent({
     handleFinish (file) {
       var result = JSON.parse(file.event.currentTarget.response)
       this.compareImage = result.file_name
-      console.log(result.result.file_name)
     },
     startCBIR() {
-      this.$axios.post('image-info/start_cbir', 'cache/images/upload/' + this.compareImage ).then(result => {
-        let dataMk = result.data.result.data.result_mkList
-        let dataHI = result.data.result.data.result_hiList
-        let dataRD = result.data.result.data.result_rdList
+      this.$axios.post('image-info/start_cbir', 'cache/images/' + this.compareImage ).then(result => {
+        console.log(result)
+        let dataMk = result.data.data.result_mkList
+        let dataHI = result.data.data.result_hiList
+        let dataRD = result.data.data.result_rdList
 
         this.bestResult = 'http://127.0.0.1:8099' + dataHI[0].image_path + dataHI[0].image_name
 

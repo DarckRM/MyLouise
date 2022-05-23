@@ -99,7 +99,7 @@ import StatisticPanel from "../components/StatisticPanel.vue"
                 this.louiseStatus = 'error'
                 this.louiseText = '停机中'
             }
-        }, 5000)
+        }, 3000)
       },
       methods: {
         clear(){
@@ -111,6 +111,7 @@ import StatisticPanel from "../components/StatisticPanel.vue"
         $route() {
           axios.get('/saito_ws/stop_run_cpu_payload')
           this.clear()
+          axios.get('saito_ws/stop_run_cpu_payload/')
         }
       }
     })
