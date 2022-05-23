@@ -108,6 +108,7 @@
 import { defineComponent } from 'vue'
 import Menu from '../components/home/Menu.vue'
 import Top from '../components/home/Top.vue'
+import { router } from '../router'
 
 import {
     HeartOutline as Heart,

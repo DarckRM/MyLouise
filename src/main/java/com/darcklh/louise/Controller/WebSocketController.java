@@ -66,7 +66,7 @@ public class WebSocketController {
                     SystemInfo systemInfo = new SystemInfo();
                     CentralProcessor processor = systemInfo.getHardware().getProcessor();
                     long[] prevTicks = processor.getSystemCpuLoadTicks();
-                    // 间隔获取CPU TICK
+                    // 间隔1000ms获取CPU TICK
                     Thread.sleep(1000);
                     long[] ticks = processor.getSystemCpuLoadTicks();
 

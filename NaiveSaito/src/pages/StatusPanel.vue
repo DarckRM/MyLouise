@@ -109,6 +109,7 @@ import StatisticPanel from "../components/StatisticPanel.vue"
       },
       watch: {
         $route() {
+          axios.get('/saito_ws/stop_run_cpu_payload')
           this.clear()
         }
       }
