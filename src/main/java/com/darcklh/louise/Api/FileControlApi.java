@@ -56,7 +56,7 @@ public class FileControlApi {
             String suffixName = fileName.substring(fileName.lastIndexOf("." )+ 1); //获取后缀名
             fileName = "Image_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "_" + UniqueGenerator.generateShortUuid() + "." + suffixName;
             result.setData(fileName);
-            File dest = new File(new File(louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION()).getAbsolutePath() + "/upload/" + fileName);
+            File dest = new File(new File(louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION()).getAbsolutePath() + "/" + fileName);
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();
             }
@@ -65,11 +65,13 @@ public class FileControlApi {
             String realUrl = "/saito/image/" + fileName;
             result.setMsg("上传成功");
             result.setData(realUrl);
+            result.setCode(1);
             jsonObject.put("file_name", fileName);
             jsonObject.put("result", result);
             return jsonObject;
 
         } else {
+            result.setCode(0);
             result.setMsg("上传失败");
             jsonObject.put("result", result);
             return jsonObject;

@@ -1,19 +1,19 @@
 <template>
     <div id="homeDiv" style="position: relative">
         <n-layout postion="absolute" bordered>
-            <n-layout-header bordered style="padding: 0 30px; height: 100%">
+            <n-layout-header bordered style="padding: 0 30px">
                 <Top></Top>
             </n-layout-header>
             <n-layout has-sider>
                 <n-layout-sider  content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80" :width="280" show-trigger="bar">            
                     <Menu></Menu>
                 </n-layout-sider>
-                <n-layout content-style="margin-top: 30px; padding-right: 30px; padding-left: 30px; height: 800px" :native-scrollbar="false">
+                <n-layout content-style="margin-top: 30px; padding-right: 30px; padding-left: 30px; height: 85vh" :native-scrollbar="false">
                     <router-view>
                     </router-view>
                     <n-layout-footer
                         bordered
-                        style=" padding: 34px 54px; margin-top: 150px"
+                        style=" padding: 34px 54px"
                     >
                     <n-descriptions label-placement="top" :column="4">
                         <n-descriptions-item label="资源">
@@ -108,6 +108,7 @@
 import { defineComponent } from 'vue'
 import Menu from '../components/home/Menu.vue'
 import Top from '../components/home/Top.vue'
+import { router } from '../router'
 
 import {
     HeartOutline as Heart,

@@ -25,7 +25,7 @@
 </n-card>
 <n-modal v-model:show="showModal">
     <n-card style="width: 1100px;" title="新增角色" :bordered="false" size="huge">
-        <RoleCard type="save" :data="dataList" :existFeature="featureList" width="width: 1000px"/>
+        <RoleCard type="save" :data="dataList" :existFeature="empty" :featureList="featureList" width="width: 1000px"/>
     </n-card>
 </n-modal>
 </template>
@@ -40,7 +40,7 @@ import {
     AlertCircleOutline as AlertIcon,
     HelpCircleOutline as HelpIcon
 } from '@vicons/ionicons5'
-
+let featureListProp = []
 const creatColumns = ({ popMessage }) => {
 
     return [
@@ -53,10 +53,11 @@ const creatColumns = ({ popMessage }) => {
             return h(
                 RoleCard,
                 {
-                    existFeature: rowData.featureInfoList,
-                    data: rowData,
-                    hoverable: true,
-                    type: 'edit'
+                  existFeature: rowData.featureInfoList,
+                  featureList: featureListProp,
+                  data: rowData,
+                  hoverable: true,
+                  type: 'edit'
                 }
             )
         }
@@ -77,26 +78,26 @@ const creatColumns = ({ popMessage }) => {
         title: '状态',
         key: 'is_enabled',
         render(row) {
-            return h(
-                NButton,
-                {
-                    circle: true,
-                    style: 'margin: 0; width: 80px',
-                    type: row.is_enabled == 1 ? 'primary' : 'error',
-                    ghost: row.is_enabled == 1 ? true : false,
-                    onClick() {
-                        axios.post('role/switchStatus', row).then(result => {
-                            let msg = result.data.msg
-                            //let code = result.data.code
-                            row.is_enabled = -row.is_enabled
-                            popMessage(msg, row.is_enabled)
-                        })
-                    }
-                },
-                {
-                    default: () => row.is_enabled == 1 ? '良好' : '禁用'
-                }
-            )
+          return h(
+            NButton,
+            {
+              circle: true,
+              style: 'margin: 0; width: 80px',
+              type: row.is_enabled == 1 ? 'primary' : 'error',
+              ghost: row.is_enabled == 1 ? true : false,
+              onClick() {
+                axios.post('role/switchStatus', row).then(result => {
+                  let msg = result.data.msg
+                  //let code = result.data.code
+                  row.is_enabled = -row.is_enabled
+                  popMessage(msg, row.is_enabled)
+                })
+              }
+            },
+            {
+              default: () => row.is_enabled == 1 ? '良好' : '禁用'
+            }
+          )
         },
     }
     ]
@@ -104,50 +105,63 @@ const creatColumns = ({ popMessage }) => {
 
 export default defineComponent({
     setup() {
-        const checkedRowKeysRef = ref([])
-        const message = useMessage()
-        const paginationReactive = reactive({
-                page: 1,
-                pageSize: 15,
-                showSizePicker: true,
-                pageSizes: [10, 15, 25],
-                onChange: (page) => {
-                    paginationReactive.page = page
-            },
-                onPageSizeChange: (pageSize) => {
-                    paginationReactive.pageSize = pageSize
-                    paginationReactive.page = 1
-            }
-        })
-        return {
-            showModal: ref(false),
-            pagination: paginationReactive,
-            columns: creatColumns({
-                popMessage (msg, type) {
-                    if(type == 1) {
-                        message.success(msg)
-                    } else {
-                        message.warning(msg)
-                    }
-                    
-                }
-            }),
-            checkedRowKeys: checkedRowKeysRef,
-            handleCheck(rowKeys) {
-                checkedRowKeysRef.value = rowKeys
-            }
+      const featureList = []
+      const checkedRowKeysRef = ref([])
+      const message = useMessage()
+      const paginationReactive = reactive({
+        page: 1,
+        pageSize: 15,
+        showSizePicker: true,
+        pageSizes: [10, 15, 25],
+        onChange: (page) => {
+          paginationReactive.page = page
+        },
+        onPageSizeChange: (pageSize) => {
+          paginationReactive.pageSize = pageSize
+          paginationReactive.page = 1
         }
+      })
+      return {
+        featureList,
+        showModal: ref(false),
+        pagination: paginationReactive,
+        columns: creatColumns({
+          popMessage (msg, type) {
+            if(type == 1) {
+              message.success(msg)
+            } else {
+              message.warning(msg)
+            }
+          }
+        }),
+        checkedRowKeys: checkedRowKeysRef,
+        handleCheck(rowKeys) {
+            checkedRowKeysRef.value = rowKeys
+        }
+      }
     },
     data() {
         return {
-            dataList: [],
-            featureList: []
+          dataList: [],
+          empty: []
         }
     },
     mounted() {
         this.$axios.post('role/findBy').then(result => {
             this.dataList = result.data.datas
         })
+
+        this.$axios.post('feature-info/findBy').then(result => {
+          result.data.datas.forEach(element => {
+            let temp = {
+              label: element.feature_name,
+              value: element.feature_id,
+              type: 'success'
+            }
+            this.featureList.push(temp)
+          })
+        })
+        featureListProp = this.featureList
     },
     components: {
         AlertIcon,

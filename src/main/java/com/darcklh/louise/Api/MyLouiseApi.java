@@ -1,13 +1,21 @@
 package com.darcklh.louise.Api;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Model.Louise.ProcessImage;
 import com.darcklh.louise.Model.Louise.Role;
 import com.darcklh.louise.Model.Louise.User;
+import com.darcklh.louise.Model.Result;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
+import com.darcklh.louise.Model.SpecificException;
+import com.darcklh.louise.Service.CBIRService;
 import com.darcklh.louise.Service.RoleService;
 import com.darcklh.louise.Service.UserService;
+import com.darcklh.louise.Utils.UniqueGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +23,21 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.darcklh.louise.Utils.isEmpty.isEmpty;
 
+@Slf4j
 @RestController
 public class MyLouiseApi implements ErrorController {
     Logger logger = LoggerFactory.getLogger(MyLouiseApi.class);
@@ -45,6 +62,9 @@ public class MyLouiseApi implements ErrorController {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private CBIRService cbirService;
 
     /**
      * 插件调用中心
@@ -243,6 +263,78 @@ public class MyLouiseApi implements ErrorController {
                 "\n目前Ascii2d搜索引擎仍在测试中，受网络影响较大！");
         return returnJson;
 
+    }
+
+    @RequestMapping("louise/search")
+    private JSONObject searchPicture(@RequestBody JSONObject message) {
+
+        //返回值
+        JSONObject returnJson = new JSONObject();
+        //解析上传的信息 拿到图片URL还有一些相关参数
+        String uri = message.getString("message");
+        uri = uri.substring(uri.indexOf("url=")+4, uri.length()-1);
+        //获取请求元数据信息
+        String message_type = message.getString("message_type");
+        String number = "";
+        String nickname = message.getJSONObject("sender").getString("nickname");
+
+        URL url = null;
+        String filePath = louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION() + "/";
+        String fileName = "Image_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "_" + UniqueGenerator.generateShortUuid() + "." + "jpg";
+        String imageName = filePath + fileName;
+        try {
+            log.info("开始下载" + imageName + " 图片地址: " + uri);
+            url = new URL(uri);
+            DataInputStream dataInputStream = new DataInputStream(url.openStream());
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(imageName));
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = dataInputStream.read(buffer)) > 0) {
+                output.write(buffer, 0, length);
+            }
+            fileOutputStream.write(output.toByteArray());
+            dataInputStream.close();
+            fileOutputStream.close();
+            output.close();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            returnJson.put("reply", "下载图片失败了，请检查命令是否包含图片");
+            return returnJson;
+        } catch (IOException e) {
+            log.info("下载图片" + imageName + "失败");
+            returnJson.put("reply", "获取上传图片失败");
+            return returnJson;
+        }
+
+        // 下载成功开始执行搜索任务
+        try {
+            returnJson.put("result", cbirService.compareImageCompress(imageName));
+        } catch (Exception e) {
+            returnJson.put("reply", "检索图片失败了");
+            return returnJson;
+        }
+        StringBuilder rdList = new StringBuilder();
+        StringBuilder mkList = new StringBuilder();
+        JSONArray rdArray = returnJson.getJSONObject("result").getJSONArray("result_rdList");
+        JSONArray mkArray = returnJson.getJSONObject("result").getJSONArray("result_mkList");
+
+        for (Object o : rdArray) {
+            JSONObject jsonObj = (JSONObject) o;
+            rdList.append("[CQ:image,file=http://127.0.0.1:8099/saito/image").append(jsonObj.getString("image_name")).append("]\n");
+        }
+
+        for (Object o : mkArray) {
+            JSONObject jsonObj = (JSONObject) o;
+            mkList.append("[CQ:image,file=http://127.0.0.1:8099/saito/image").append(jsonObj.getString("image_name")).append("]\n");
+        }
+
+        returnJson.put("reply", "搜索出来了，按准确度从高到低排列" +
+                "\n" + rdList +
+                "\n" + mkList);
+
+        return returnJson;
     }
 
     @RequestMapping("louise/pid/{pixiv_id}")

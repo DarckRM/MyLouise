@@ -53,12 +53,12 @@ const routes = [
       ]
   },
   {
-      path: '/',
+      path: '/image-retrieve',
       name: 'ImageRetrieve',
       component: () => import('../components/ImageRetrieve.vue')
   },
   {
-    path: '/login',
+    path: '/',
     name: 'Login',
     component: () => import('../components/LoginPage.vue')
   },
