@@ -8,6 +8,8 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
@@ -17,23 +19,29 @@ import java.security.NoSuchAlgorithmException;
 @Controller
 public class EncryptUtils {
 
-    public String hamcsha1(String data, String key)
+    public static String checkSumMD5(String path) throws IOException, NoSuchAlgorithmException
     {
-        try {
-            SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(), "HmacSHA1");
-            Mac mac = Mac.getInstance("HmacSHA1");
-            mac.init(signingKey);
-            return byte2hex(mac.doFinal(data.getBytes()));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
-        return null;
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        FileInputStream fis = new FileInputStream(path);
+        byte[] dataBytes = new byte[1024];
+
+        int nread = 0;
+
+        while ((nread = fis.read(dataBytes)) != -1)
+            md.update(dataBytes, 0, nread);
+
+        byte[] mdbytes = md.digest();
+
+        //convert the byte to hex format
+        StringBuffer sb = new StringBuffer("");
+        for (int i = 0; i < mdbytes.length; i++)
+            sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
+
+        return sb.toString();
     }
 
     //二行制转字符串
-    public String byte2hex(byte[] b)
+    public static String byte2hex(byte[] b)
     {
         StringBuilder hs = new StringBuilder();
         String stmp;

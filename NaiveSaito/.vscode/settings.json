@@ -1,0 +1,18 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "121.4.179.240",
+            "port": 3306,
+            "driver": "MySQL",
+            "username": "root",
+            "password": "RMTouHou.18",
+            "name": "TecentCloud",
+            "database": "mylouise"
+        }
+    ],
+    "vue3snippets.enable-compile-vue-file-on-did-save-code": false
+}

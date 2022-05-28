@@ -138,7 +138,7 @@ message:
   # 推荐选择string吧，API应用也可以直接解析成JSONObject对象（需要GSON依赖）（主要是我没试过array）
   post-format: string
   # 是否忽略无效的CQ码, 如果为假将原样发送
-  # CQ码实现建议看文档关于CQ码的介绍，可以理解成一种将你的信息解析成QQ可以理解的格式，或者直接指定一些QQ   # 的功能，举个栗子，发送请求JSON参数{"reply":"[CQ:image, file="url"]"}就可以在QQ里发送这个URL指   # 定的图片了，如果发送图片失败则会直接显示CQ码原文
+  # CQ码实现建议看文档关于CQ码的介绍，可以理解成一种将你的信息解析成QQ可以理解的格式，或者直接指定一些QQ   # 的功能，举个栗子，发送请求JSON参数{"reply":"[CQ:processImage, file="url"]"}就可以在QQ里发送这个URL指   # 定的图片了，如果发送图片失败则会直接显示CQ码原文
   ignore-invalid-cqcode: false
 ```
 
@@ -193,7 +193,7 @@ servers:
 > │   └── xx-xx-xx.log
 > └── data
 >     ├── images
->     │   └── xxxx.image
+>     │   └── xxxx.processImage
 >     └── db
 > ```
 >
@@ -241,3 +241,11 @@ servers:
 2. 返回简单的帮助信息图片
 3. 初步接收上传文件上报的接口
 4. 加入MySQL
+
+#### 2022年4月16日22:20:25
+
+目前存在的问题
+
+- 日志输出格式
+- WebSocket和前端通信存在问题
+- 部分CUDR功能尚未完成

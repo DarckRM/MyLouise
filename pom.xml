@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.darcklh</groupId>
     <artifactId>louise</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.9-ALPHA</version>
     <name>myLouise</name>
     <description>Demo project for Spring Boot</description>
     <properties>
@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -79,6 +79,17 @@
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.11.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+        </dependency>
+        <!--用于获取运行平台信息-->
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>4.0.0</version>
         </dependency>
     </dependencies>
 
