@@ -1,26 +1,34 @@
-# MyLouiseProject API应用
+# MyLouise Project API应用
 
-## 简介
+### 简介
 
-基于Java jdk11，SpringBoot，MySQL实现的轻量API应用，主要是配合<a url="https://github.com/Mrs4s/go-cqhttp">go-cqhttp</a>的接口标准实现QQ群聊机器人
+基于 Java jdk11，Spring Boot，MySQL，VUE3 实现的轻量API应用，主要是配合<a url="https://github.com/Mrs4s/go-cqhttp">go-cqhttp</a>的接口标准实现QQ群聊机器人
 
-## 项目结构
+Naive Saito是前端项目
 
+### 快速部署
+
+#### My Louise 部分
+
+使用 IDEA IDE 以及 Maven 自动完成包管理，在  `application.yml` 完成数据库的配置，数据库文件为 `mylouise.sql`
+
+#### Naive Saito 部分
+
+```bash
+npm install
+npm run dev
 ```
-|-- cache 		// 图片缓存
-|-- logs  		// 系统日志
-|-- NaiveSaito  // 前端部分
-	|-- 
-	|
+
+或者
+
+```bash
+yarn install
+yarn run dev
 ```
-
-
-
-## 快速部署
 
 ### 本地开发
 
-#### MyLouiseAPI部分
+#### MyLouise API部分
 
 首先是准备开发环境，目前需要的运行环境有JDK11和MySQL8，在本地环境上安装好即可，在application.yml中配置相关的数据源以及数据源连接信息，这里推荐对配置文件进行加密。需要注意的是，这个项目是配合cqhttp一起使用的，是作为服务的API应用，因此还会有一些关于cqhttp的事项。
 
