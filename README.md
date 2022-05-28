@@ -4,6 +4,18 @@
 
 基于Java jdk11，SpringBoot，MySQL实现的轻量API应用，主要是配合<a url="https://github.com/Mrs4s/go-cqhttp">go-cqhttp</a>的接口标准实现QQ群聊机器人
 
+## 项目结构
+
+```
+|-- cache 		// 图片缓存
+|-- logs  		// 系统日志
+|-- NaiveSaito  // 前端部分
+	|-- 
+	|
+```
+
+
+
 ## 快速部署
 
 ### 本地开发
