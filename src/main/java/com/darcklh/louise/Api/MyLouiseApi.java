@@ -315,24 +315,16 @@ public class MyLouiseApi implements ErrorController {
             returnJson.put("reply", "检索图片失败了");
             return returnJson;
         }
-        StringBuilder rdList = new StringBuilder();
-        StringBuilder mkList = new StringBuilder();
-        JSONArray rdArray = returnJson.getJSONObject("result").getJSONArray("result_rdList");
-        JSONArray mkArray = returnJson.getJSONObject("result").getJSONArray("result_mkList");
+        StringBuilder hiList = new StringBuilder();
+        JSONArray hiArray = returnJson.getJSONObject("result").getJSONArray("result_hiList");
 
-        for (Object o : rdArray) {
+        for (Object o : hiArray) {
             JSONObject jsonObj = (JSONObject) o;
-            rdList.append("[CQ:image,file=http://127.0.0.1:8099/saito/image").append(jsonObj.getString("image_name")).append("]\n");
-        }
-
-        for (Object o : mkArray) {
-            JSONObject jsonObj = (JSONObject) o;
-            mkList.append("[CQ:image,file=http://127.0.0.1:8099/saito/image").append(jsonObj.getString("image_name")).append("]\n");
+            hiList.append("[CQ:image,file=http://127.0.0.1:8099/saito/image").append(jsonObj.getString("image_name")).append("]\n");
         }
 
         returnJson.put("reply", "搜索出来了，按准确度从高到低排列" +
-                "\n" + rdList +
-                "\n" + mkList);
+                "\n" + hiList);
 
         return returnJson;
     }
