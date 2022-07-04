@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Model.Louise.Group;
 import com.darcklh.louise.Model.Louise.ProcessImage;
 import com.darcklh.louise.Model.Louise.Role;
 import com.darcklh.louise.Model.Louise.User;
@@ -12,6 +13,7 @@ import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.SpecificException;
 import com.darcklh.louise.Service.CBIRService;
+import com.darcklh.louise.Service.GroupService;
 import com.darcklh.louise.Service.RoleService;
 import com.darcklh.louise.Service.UserService;
 import com.darcklh.louise.Utils.UniqueGenerator;
@@ -56,6 +58,9 @@ public class MyLouiseApi implements ErrorController {
 
     @Autowired
     LouiseConfig louiseConfig;
+
+    @Autowired
+    private GroupService groupService;
 
     @Autowired
     private UserService userService;
@@ -162,6 +167,28 @@ public class MyLouiseApi implements ErrorController {
     }
 
     /**
+     * 注册新群组
+     * @return
+     */
+    @RequestMapping("louise/group_join")
+    public JSONObject groupJoin(@RequestBody JSONObject jsonObject) {
+
+        String group_id = jsonObject.getString("group_id");
+        Group group = new Group();
+        group.setGroup_id(group_id);
+        //快速返回
+        JSONObject returnJson = new JSONObject();
+        //注册用户
+        //判断如果是私聊禁止注册
+        if (group_id == null) {
+            returnJson.put("reply","露易丝不支持私聊注册群组哦，\n请在群聊里使用吧");
+            return returnJson;
+        }
+        returnJson.put("reply", groupService.add(group));
+        return returnJson;
+    }
+
+    /**
      * 注册新用户
      * @param jsonObject
      * @return
@@ -174,18 +201,14 @@ public class MyLouiseApi implements ErrorController {
 
         //快速返回
         JSONObject returnJson = new JSONObject();
-
         //注册用户
-        if (jsonObject.getString("raw_message").substring(1).split(" ")[0].equals("join")) {
-            //判断如果是私聊禁止注册
-            if (jsonObject.getString("group_id") == null) {
-                //TODO go-cqhttp只能根据qq号和群号获取某个用户的信息 但是这会导致数据库中使用双主键 比较麻烦 后期解决一下这个问题
-                returnJson.put("reply","露易丝不支持私聊注册哦，\n请在群聊里使用吧");
-                return returnJson;
-            }
-            return userService.joinLouise(user_id, group_id);
+        //判断如果是私聊禁止注册
+        if (group_id == null) {
+            //TODO go-cqhttp只能根据qq号和群号获取某个用户的信息 但是这会导致数据库中使用双主键 比较麻烦 后期解决一下这个问题
+            returnJson.put("reply","露易丝不支持私聊注册哦，\n请在群聊里使用吧");
+            return returnJson;
         }
-        return null;
+        return userService.joinLouise(user_id, group_id);
     }
 
     /**

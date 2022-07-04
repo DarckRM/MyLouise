@@ -67,7 +67,7 @@ public class SendPictureApi {
             author = loliArray.getJSONObject(i).getString("author");
             pid = loliArray.getJSONObject(i).getString("pid");
             url = loliArray.getJSONObject(i).getJSONObject("urls").getString("regular");
-            url = louiseConfig.getPIXIV_REVERSE_PROXY() + url.substring(20);
+            // url = louiseConfig.getPIXIV_REVERSE_PROXY() + url.substring(20);
             tags = loliArray.getJSONObject(i).getJSONArray("tags").toString();
         }
         logger.info("图片地址: " + url);

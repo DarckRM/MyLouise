@@ -67,7 +67,7 @@ public class R {
      * @param api
      * @return
      */
-    private JSONObject requestAPI(String api) {
+    public JSONObject requestAPI(String api) {
         if (!testConnWithBot())
             return null;
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -84,7 +84,7 @@ public class R {
      * @param sendJson
      * @return
      */
-    private JSONObject requestAPI(String api, JSONObject sendJson) {
+    public JSONObject requestAPI(String api, JSONObject sendJson) {
         if (!testConnWithBot())
             return null;
         headers.setContentType(MediaType.APPLICATION_JSON);

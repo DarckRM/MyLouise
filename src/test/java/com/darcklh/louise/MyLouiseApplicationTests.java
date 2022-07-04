@@ -32,36 +32,18 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MyLouiseApplicationTests {
 
-
-//    @Test
-//    public void getMemInfo() throws InterruptedException {
-//        while(true) {
-//            SystemInfo systemInfo = new SystemInfo();
-//            GlobalMemory memory = systemInfo.getHardware().getMemory();
-//            long totalMem = memory.getTotal();
-//            long restMem = memory.getAvailable();
+//    @Autowired
+//    R r;
 //
-//            log.info("可用内存：{}， 内存占用率：{}", formatByte(restMem), new DecimalFormat("#.##%").format((totalMem-restMem)*1.0/totalMem));
-//            Thread.sleep(5000);
-//        }
-//    }
-
-//    public static String formatByte(long byteNumber){
-//        //换算单位
-//        double FORMAT = 1024.0;
-//        double kbNumber = byteNumber/FORMAT;
-//        if(kbNumber<FORMAT){
-//            return new DecimalFormat("#.##KB").format(kbNumber);
-//        }
-//        double mbNumber = kbNumber/FORMAT;
-//        if(mbNumber<FORMAT){
-//            return new DecimalFormat("#.##MB").format(mbNumber);
-//        }
-//        double gbNumber = mbNumber/FORMAT;
-//        if(gbNumber<FORMAT){
-//            return new DecimalFormat("#.##GB").format(gbNumber);
-//        }
-//        double tbNumber = gbNumber/FORMAT;
-//        return new DecimalFormat("#.##TB").format(tbNumber);
+//    @Test
+//    public void test() {
+//        // 向Bot请求群聊数据
+//        JSONObject param = new JSONObject();
+//        param.put("group_id", 1081885076);
+//        // 禁用缓存
+//        param.put("no_cache", "true");
+//
+//        JSONObject botReturn = r.requestAPI("get_group_info", param);
+//        System.out.println(botReturn);
 //    }
 }

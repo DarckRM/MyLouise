@@ -142,9 +142,7 @@ export default defineComponent({
       return {
           dataList: [],
           roleList: [],
-          empty: [{
-            roles: []
-          }]
+          empty: {}
       }
   },
   mounted() {

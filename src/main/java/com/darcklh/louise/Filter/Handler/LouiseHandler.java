@@ -92,6 +92,11 @@ public class LouiseHandler implements HandlerInterceptor {
             return true;
         }
 
+        //放行group_join
+        if (command.equals("/louise/group_join")) {
+            return true;
+        }
+
         int isAvaliable = userService.isUserAvaliable(user_id);
 
         //判断用户是否存在并启用

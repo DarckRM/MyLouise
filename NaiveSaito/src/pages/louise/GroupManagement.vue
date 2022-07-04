@@ -17,8 +17,17 @@
 </div>
 <n-divider />
 <n-card title="功能列表">
+    <div>
+      <n-button ghost type="primary" size="large" style="margin: 0 10px 10px 0; width: 80px" @click="showModal = true">新增</n-button>
+      <n-button type="error" size="large" style="margin: 0 10px 10px 0; width: 80px">删除</n-button>
+    </div>
     <n-data-table :columns="columns" :data="dataList" :pagination="pagination" :row-key="row => row.group_id" @update:checked-row-keys="handleCheck" />
 </n-card>
+<n-modal v-model:show="showModal">
+    <n-card style="width: 1100px;" title="新增群组" :bordered="false" size="huge">
+      <GroupCard type="save" :data="empty"></GroupCard>
+    </n-card>
+</n-modal>
 </template>
 
 <script>
@@ -151,28 +160,30 @@ export default defineComponent({
             }
         })
         return {
-            tagA: false,
-            pagination: paginationReactive,
-            columns: creatColumns({
-                popMessage (msg, type) {
-                    if(type == 1) {
-                        message.success(msg)
-                    } else {
-                        message.warning(msg)
-                    }
-                    
-                }
-            }),
-            checkedRowKeys: checkedRowKeysRef,
-            handleCheck(rowKeys) {
-                checkedRowKeysRef.value = rowKeys
-            }
+          showModal: ref(false),
+          tagA: false,
+          pagination: paginationReactive,
+          columns: creatColumns({
+              popMessage (msg, type) {
+                  if(type == 1) {
+                      message.success(msg)
+                  } else {
+                      message.warning(msg)
+                  }
+                  
+              }
+          }),
+          checkedRowKeys: checkedRowKeysRef,
+          handleCheck(rowKeys) {
+              checkedRowKeysRef.value = rowKeys
+          }
         }
     },
     data() {
-        return {
-            dataList: []
-        }
+      return {
+        dataList: [],
+        empty: {}
+      }
     },
     mounted() {
         this.$axios.post('group/findBy').then(result => {
@@ -182,6 +193,7 @@ export default defineComponent({
     components: {
         AlertIcon,
         HelpIcon,
+        GroupCard
     },
     methods: {
     }
