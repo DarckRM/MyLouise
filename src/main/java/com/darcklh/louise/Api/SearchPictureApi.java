@@ -31,9 +31,6 @@ public class SearchPictureApi{
     Logger logger = LoggerFactory.getLogger(SearchPictureApi.class);
 
     @Autowired
-    LouiseConfig louiseConfig;
-
-    @Autowired
     FileControlApi fileControlApi;
 
     @Autowired
@@ -167,21 +164,21 @@ public class SearchPictureApi{
             //构造请求SourceNAO的请求体
             Map<String, String> map = new HashMap<>();
             map.put("url", url);
-            map.put("api_key", louiseConfig.getSOURCENAO_API_KEY());
+            map.put("api_key", LouiseConfig.SOURCENAO_API_KEY);
             map.put("db", "999");
             map.put("output_type", "2");
             map.put("numres", "1");
 
-            JSONObject result = JSON.parseObject(restTemplate.getForObject(louiseConfig.getSOURCENAO_URL()+"?url={url}&db={db}&api_key={api_key}&output_type={output_type}&numres={numres}", String.class, map));
+            JSONObject result = JSON.parseObject(restTemplate.getForObject(LouiseConfig.SOURCENAO_URL + "?url={url}&db={db}&api_key={api_key}&output_type={output_type}&numres={numres}", String.class, map));
             logger.debug("查询到的结果: "+result);
 
             //判断结果
             int status = result.getJSONObject("header").getInteger("status");
             if (status != 0) {
                 if (status > 0) {
-                    sendJson.put("message", louiseConfig.getLOUISE_ERROR_THIRD_API_REQUEST_FAILED());
+                    sendJson.put("message", LouiseConfig.LOUISE_ERROR_THIRD_API_REQUEST_FAILED);
                 } else {
-                    sendJson.put("message", louiseConfig.getLOUISE_ERROR_UPLOAD_IMAGE_FAILED());
+                    sendJson.put("message", LouiseConfig.LOUISE_ERROR_UPLOAD_IMAGE_FAILED);
                 }
                 r.sendMessage(sendJson);
                 return;
@@ -251,11 +248,11 @@ public class SearchPictureApi{
         String thumbnail = resultHeader.getString("thumbnail");
         String member_name = resultData.getString("member_name");
         String ext_urls = resultData.getJSONArray("ext_urls").toArray()[0].toString();
-        String url = louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "pixiv/" + pixiv_id + ".jpg";
+        String url = LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "pixiv/" + pixiv_id + ".jpg";
 
         //牺牲速度获得更好的图片显示 后台预解析图片信息
         try {
-            Document document = Jsoup.connect(louiseConfig.getPIXIV_PROXY_URL() + pixiv_id + ".jpg").ignoreHttpErrors(true).post();
+            Document document = Jsoup.connect(LouiseConfig.PIXIV_PROXY_URL + pixiv_id + ".jpg").ignoreHttpErrors(true).post();
             //试着确认是否多图结果
             String images_number = document.body().getElementsByTag("p").first().text();
             images_number = images_number.substring(images_number.indexOf(" ") + 1, images_number.lastIndexOf(" "));
@@ -306,8 +303,8 @@ public class SearchPictureApi{
             String images = "";
             for (int i = start; i <= end; i++) {
                 //下载图片到本地
-                fileControlApi.downloadPictureURL(louiseConfig.getPIXIV_PROXY_URL() + pixiv_id + "-" + i + ".jpg", pixiv_id + "-" + i, "pixiv");
-                images += "[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + "pixiv/" + pixiv_id + "-" + i + ".jpg]";
+                fileControlApi.downloadPictureURL(LouiseConfig.PIXIV_PROXY_URL + pixiv_id + "-" + i + ".jpg", pixiv_id + "-" + i, "pixiv");
+                images += "[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "pixiv/" + pixiv_id + "-" + i + ".jpg]";
             }
             reply.put("message",
                     nickname + "，查询出来咯，有" + count + "张结果" + "，精确结果在第" + index + "张" +
@@ -324,7 +321,7 @@ public class SearchPictureApi{
 
         } catch (Exception e) {
             logger.info(e.getLocalizedMessage());
-            fileControlApi.downloadPictureURL(louiseConfig.getPIXIV_PROXY_URL() + pixiv_id + ".jpg", pixiv_id, "pixiv");
+            fileControlApi.downloadPictureURL(LouiseConfig.PIXIV_PROXY_URL + pixiv_id + ".jpg", pixiv_id, "pixiv");
             reply.put("message",
                     nickname+"，查询出来咯"+
                             "\n来源Pixiv"+
@@ -411,7 +408,7 @@ public class SearchPictureApi{
                 "\n相似度:"+similarity+
                 "\n可能的图片地址:" + sourceNaoArray +
                 "\n[CQ:image,file="+thumbnail+"]" +
-                "\n[CQ:image,file=" + louiseConfig.getBOT_LOUISE_CACHE_IMAGE() + (isImage ? "Gelbooru/image_" : "Gelbooru/sample_") + imageUrl + ".jpg]" +
+                "\n[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + (isImage ? "Gelbooru/image_" : "Gelbooru/sample_") + imageUrl + ".jpg]" +
                 "\n信息来自Yande.re，结果可能不准确，请通过上面的链接访问";
         reply.put("message", message);
         return reply;

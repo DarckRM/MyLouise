@@ -57,9 +57,6 @@ public class MyLouiseApi implements ErrorController {
     private SearchPictureApi searchPictureApi;
 
     @Autowired
-    LouiseConfig louiseConfig;
-
-    @Autowired
     private GroupService groupService;
 
     @Autowired
@@ -89,7 +86,7 @@ public class MyLouiseApi implements ErrorController {
      */
     @RequestMapping("/louise/show")
     public String refreshConfig() {
-        return "API: " + louiseConfig.getBOT_LOUISE_CACHE_IMAGE();
+        return "API: " + LouiseConfig.BOT_LOUISE_CACHE_IMAGE;
     }
 
     /**
@@ -100,7 +97,7 @@ public class MyLouiseApi implements ErrorController {
     public JSONObject help() {
         JSONObject returnJson = new JSONObject();
         //TODO 暂时先请求网络图片 Linux和Windows对于本地路径的解析不同 很烦
-        returnJson.put("reply","[CQ:image,file="+louiseConfig.getLOUISE_HELP_PAGE()+"]");
+        returnJson.put("reply","[CQ:image,file="+LouiseConfig.LOUISE_HELP_PAGE+"]");
         return returnJson;
     }
 
@@ -113,7 +110,7 @@ public class MyLouiseApi implements ErrorController {
     public JSONObject banUser(@RequestBody JSONObject message) {
         JSONObject reply = new JSONObject();
         String admin = message.getString("user_id");
-        if (!admin.equals(louiseConfig.getLOUISE_ADMIN_NUMBER())) {
+        if (!admin.equals(LouiseConfig.LOUISE_ADMIN_NUMBER)) {
             reply.put("reply", "管理员限定");
             return reply;
         }
@@ -126,16 +123,16 @@ public class MyLouiseApi implements ErrorController {
     public JSONObject modifyConfig(@RequestBody JSONObject message, @PathVariable Integer type) {
         JSONObject reply = new JSONObject();
         String admin = message.getString("user_id");
-        if (!admin.equals(louiseConfig.getLOUISE_ADMIN_NUMBER())) {
+        if (!admin.equals(LouiseConfig.LOUISE_ADMIN_NUMBER)) {
             reply.put("reply", "管理员限定");
             return reply;
         }
         if (type == 0) {
-            louiseConfig.setBOT_LOUISE_CACHE_IMAGE("../../../../MyLouise/cache/images/");
+            LouiseConfig.BOT_LOUISE_CACHE_IMAGE = "../../../../MyLouise/cache/images/";
             logger.info("切换至 本地开发 配置");
             reply.put("reply", "切换到本地开发环境");
         } else {
-            louiseConfig.setBOT_LOUISE_CACHE_IMAGE("../../MyLouise/cache/images/");
+            LouiseConfig.BOT_LOUISE_CACHE_IMAGE = "../../MyLouise/cache/images/";
             logger.info("切换至 线上部署 配置");
             reply.put("reply", "切换到服务部署环境");
         }
@@ -149,7 +146,7 @@ public class MyLouiseApi implements ErrorController {
     @RequestMapping("louise/config")
     public JSONObject queryConfig() {
         JSONObject reply = new JSONObject();
-        reply.put("reply", louiseConfig.toString());
+        reply.put("reply", "开发中");
         return reply;
     }
 
@@ -157,7 +154,7 @@ public class MyLouiseApi implements ErrorController {
     public String testRequestCenter(HttpServletRequest request, @RequestBody String message) throws NoSuchAlgorithmException {
         JSONObject result = new JSONObject();
         result.put("reply","现在测试中");
-        return result.toString() + louiseConfig.getLOUISE_ERROR_UNKNOWN_COMMAND();
+        return result.toString() + LouiseConfig.LOUISE_ERROR_UNKNOWN_COMMAND;
 
     }
 
@@ -302,7 +299,7 @@ public class MyLouiseApi implements ErrorController {
         String nickname = message.getJSONObject("sender").getString("nickname");
 
         URL url = null;
-        String filePath = louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION() + "/";
+        String filePath = LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION + "/";
         String fileName = "Image_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "_" + UniqueGenerator.generateShortUuid() + "." + "jpg";
         String imageName = filePath + fileName;
         try {
@@ -359,7 +356,7 @@ public class MyLouiseApi implements ErrorController {
         String nickname = message.getJSONObject("sender").getString("nickname");
 
         returnJson.put("reply", nickname + "，你要的图片" + pixiv_id + "找到了" +
-                "\n[CQ:image,file=" +louiseConfig.getPIXIV_PROXY_URL() + pixiv_id + ".jpg]" +
+                "\n[CQ:image,file=" +LouiseConfig.PIXIV_PROXY_URL + pixiv_id + ".jpg]" +
                 "\n如果未显示出图片请在pixiv_id后指定第几张作品");
 
         return returnJson;

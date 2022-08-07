@@ -18,13 +18,10 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class SendPictureApi {
 
-    @Autowired
-    LouiseConfig louiseConfig;
-
     Logger logger = LoggerFactory.getLogger(SendPictureApi.class);
 
     public String test() {
-        return louiseConfig.getBOT_BASE_URL();
+        return LouiseConfig.BOT_BASE_URL;
     }
 
     public JSONObject sendPicture(String id, String nickname, String senderType, JSONObject message) {

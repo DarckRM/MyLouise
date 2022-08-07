@@ -3,6 +3,7 @@ package com.darcklh.louise.Api;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.Result;
+import com.darcklh.louise.Utils.HttpProxy;
 import com.darcklh.louise.Utils.UniqueGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
@@ -14,8 +15,14 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,8 +30,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -35,9 +45,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Slf4j
 @RestController
 public class FileControlApi {
-
-    @Autowired
-    LouiseConfig louiseConfig;
 
     /**
      * 上传图片
@@ -56,7 +63,7 @@ public class FileControlApi {
             String suffixName = fileName.substring(fileName.lastIndexOf("." )+ 1); //获取后缀名
             fileName = "Image_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "_" + UniqueGenerator.generateShortUuid() + "." + suffixName;
             result.setData(fileName);
-            File dest = new File(new File(louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION()).getAbsolutePath() + "/" + fileName);
+            File dest = new File(new File(LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION).getAbsolutePath() + "/" + fileName);
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();
             }
@@ -92,7 +99,7 @@ public class FileControlApi {
         Result<String> result = new Result<>();
         String fileName = url.replace("/saito/image/","");
 
-        File file = new File(louiseConfig.getLOUISE_CACHE_LOCATION() + "/images/" + fileName);
+        File file = new File(LouiseConfig.LOUISE_CACHE_LOCATION + "/images/" + fileName);
         if(!file.exists()){
             jsonObject.put("success",2);
             jsonObject.put("result","下载文件不存在");
@@ -122,17 +129,55 @@ public class FileControlApi {
     }
 
     /**
+     * 用 RestTemplate 添加代理进行请求
+     * @param urlList
+     * @param fileName
+     * @param fileOrigin
+     * @return
+     */
+    public boolean downloadPicture_RestTemplate(String urlList, String fileName, String fileOrigin) {
+        //判断目录是否存在
+        String filePath = LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION + fileOrigin + "/";
+        File folder = new File(filePath);
+        // 文件保存的本地路径
+        String targetPath = LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION + "/" + fileOrigin + "/" + fileName;
+
+        if (!folder.exists() && !folder.isDirectory()) {
+            log.info("创建了图片缓存文件夹" + fileOrigin);
+            folder.mkdirs();
+        }
+
+        File file = new File(targetPath);
+        if (file.exists()) {
+            log.info("已经存在图片 " + targetPath);
+            return true;
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        //定义请求头的接收类型
+        RequestCallback requestCallback = request -> request.getHeaders()
+                .setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
+        //对响应进行流式处理而不是将其全部加载到内存中
+        restTemplate.setRequestFactory(new HttpProxy().getFactory());
+        restTemplate.execute(urlList, HttpMethod.GET, requestCallback, clientHttpResponse -> {
+            Files.copy(clientHttpResponse.getBody(), Paths.get(targetPath));
+            return null;
+        });
+        return true;
+    }
+
+    /**
      * 根据传入的URL下载图片到本地
      * @param urlList
      */
     public boolean downloadPictureURL_Single(String urlList, String fileName, String fileOrigin) {
         URL url = null;
-        String filePath = louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION() + fileOrigin + "/";
+        String filePath = LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION + fileOrigin + "/";
         String imageName = filePath + fileName + ".jpg";
         try {
-
             log.info("开始下载" + imageName + " 图片地址: " + urlList);
-            url = new URL(urlList);
+
             DataInputStream dataInputStream = new DataInputStream(url.openStream());
             FileOutputStream fileOutputStream = new FileOutputStream(new File(imageName));
             ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -161,7 +206,7 @@ public class FileControlApi {
     public boolean downloadPictureURL(String urlList, String fileName, String fileOrigin) {
         long start = System.currentTimeMillis();
         //判断目录是否存在
-        String filePath = louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION() + fileOrigin + "/";
+        String filePath = LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION + fileOrigin + "/";
         File folder = new File(filePath);
 
         if (!folder.exists() && !folder.isDirectory()) {
