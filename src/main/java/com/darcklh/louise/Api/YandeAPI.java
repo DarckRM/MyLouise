@@ -44,10 +44,81 @@ public class YandeAPI {
     R r;
 
     /**
+     * 根据 Tag 返回可能的 Tags 列表
+     * @param messageInfo
+     * @param tag
+     * @return
+     */
+    @RequestMapping("louise/yande/tags/{tag}")
+    public JSONObject YandeTags(@RequestBody MessageInfo messageInfo, @PathVariable String tag) {
+
+        // 返回值
+        JSONObject returnJson = new JSONObject();
+
+        // TODO: 总记录条数太多 会引起 QQ 风控
+        String uri = "https://yande.re/tag.json?name=" + tag + "&limit=" + 10;
+        // 使用代理请求 Yande
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setRequestFactory(new HttpProxy().getFactory());
+
+        String result = restTemplate.getForObject(uri, String.class);
+        log.info("请求 Yande: " + uri);
+        String tagList = messageInfo.getSender().getNickname() + ", 你是否在找?\n";
+        JSONArray resultJsonArray = JSON.parseArray(result);
+
+        assert resultJsonArray != null;
+
+        if(resultJsonArray.size() == 0) {
+            returnJson.put("reply", "没有找到你想要的结果呢");
+            return returnJson;
+        }
+
+        for ( Object object: resultJsonArray) {
+            JSONObject tagObj = (JSONObject) object;
+            String name = tagObj.getString("name");
+            Integer count = tagObj.getInteger("count");
+            Integer typeId = tagObj.getInteger("type");
+
+            String type = "";
+            switch (typeId) {
+                case 0: type = "通常"; break;
+                case 1: type = "作者"; break;
+                case 3: type = "版权"; break;
+                case 4: type = "角色"; break;
+            }
+            tagList +=  name + " 类型:" + type + " 有" + count + "张\n";
+        }
+        returnJson.put("reply", tagList);
+//        if (messageInfo.getGroup_id() == -1) {
+//            returnJson.put("user_id", messageInfo.getUser_id());
+//            returnJson.put("message", tagList);
+//            r.sendMessage(returnJson);
+//        } else {
+//            returnJson.put("group_id", messageInfo.getGroup_id());
+//
+//            List<JSONObject> jsonObjectList = new ArrayList<>();
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("type", "node");
+//
+//            JSONObject data = new JSONObject();
+//            data.put("name", "Yande");
+//            data.put("uin", messageInfo.getSelf_id());
+//            data.put("content", tagList);
+//            jsonObject.put("data", data);
+//            jsonObjectList.add(jsonObject);
+//
+//            returnJson.put("messages", jsonObjectList);
+//            r.requestAPI("send_group_forward_msg", returnJson);
+//        }
+
+        return returnJson;
+    }
+
+    /**
      *  获取 Yandere 每日图片
      */
     @RequestMapping("louise/yande/{type}")
-    public JSONObject YandePic(@RequestBody MessageInfo messageInfo, @PathVariable String type) throws IOException {
+    public JSONObject YandePic(@RequestBody MessageInfo messageInfo, @PathVariable String type) {
 
         // 返回值
         JSONObject sendJson = new JSONObject();
@@ -91,6 +162,11 @@ public class YandeAPI {
             JSONArray resultJsonArray = JSON.parseArray(result);
 
             assert resultJsonArray != null;
+            if(resultJsonArray.size() == 0) {
+                sendJson.put("message", "没有找到你想要的结果呢");
+                r.sendMessage(sendJson);
+                return;
+            }
             sendYandeResult(finalSenderType, messageInfo, resultJsonArray, sendJson, LIMIT);
 
         }).start();
@@ -186,6 +262,11 @@ public class YandeAPI {
             JSONArray resultJsonArray = JSON.parseArray(result);
 
             assert resultJsonArray != null;
+            if(resultJsonArray.size() == 0) {
+                sendJson.put("message", "没有找到你想要的结果呢");
+                r.sendMessage(sendJson);
+                return;
+            }
             sendYandeResult(finalSenderType, messageInfo, resultJsonArray, sendJson, Integer.parseInt(finalPageNation[1]));
 
         }).start();

@@ -66,9 +66,11 @@ public class LouiseHandler implements HandlerInterceptor {
         if (command.contains("/louise/pid/"))
             command = "/louise/pid/{pid}";
 
-        //对command预处理
         if (command.contains("/louise/yande/"))
             command = "/louise/yande/{type}";
+
+        if (command.contains("/louise/yande/tags/"))
+            command = "/louise/yande/tags/{tag}";
 
         response.setContentType("application/json; charset=utf-8");
 
