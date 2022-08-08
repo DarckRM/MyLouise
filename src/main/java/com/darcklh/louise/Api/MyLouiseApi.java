@@ -277,7 +277,7 @@ public class MyLouiseApi implements ErrorController {
 
         logger.info("上传图片的地址:"+ url);
         //封装信息
-        new Thread(() -> searchPictureApi.searchPictureCenter(message, r)).start();
+            new Thread(() -> searchPictureApi.searchPictureCenter(message, r)).start();
 
         returnJson.put("reply", nickname+"!露易丝在搜索了哦！" +
                 "\n目前Ascii2d搜索引擎仍在测试中，受网络影响较大！");

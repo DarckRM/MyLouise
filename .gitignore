@@ -4,6 +4,7 @@ src/main/resources/application-dev.yml
 src/main/resources/application.yml
 logs/
 logs
+application.yml
 
 ### Maven template
 target/

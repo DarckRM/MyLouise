@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Utils.HttpProxy;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author DarckLH
@@ -33,6 +36,9 @@ public class YandeAPI {
     @Autowired
     FileControlApi fileControlApi;
 
+    @Autowired
+    R r;
+
     /**
      *  获取 Yandere 每日图片
      */
@@ -41,13 +47,24 @@ public class YandeAPI {
 
         //返回值
         JSONObject returnJson = new JSONObject();
+
         //获取请求元数据信息
+        String message_type = message.getString("message_type");
+        String number = "";
         String nickname = message.getJSONObject("sender").getString("nickname");
+        String self_id = message.getString("self_id");
+        //判断私聊或是群聊
+        String senderType = "";
+        if (message_type.equals("group")) {
+            number = message.getString("group_id");
+            senderType = "group_id";
+
+        } else if (message_type.equals("private")) {
+            number = message.getString("user_id");
+            senderType = "user_id";
+        }
 
         String uri = "https://yande.re/post/popular_by_" + type + ".json";
-
-//      String api_key = "8e67c397f5ffc2e6320694ed12ef696ef0833e0ca885b0ae886891e786ca8508";
-//      String user_id = "829309";
 
         // 使用代理请求 Yande
         RestTemplate restTemplate = new RestTemplate();
@@ -70,10 +87,24 @@ public class YandeAPI {
             replyImgList += "[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "Yande/" + fileName + "]\n";
             limit--;
         }
-
-        returnJson.put("reply", nickname+" 这是Gelbooru的Post页面\n" + replyImgList);
-        return returnJson;
-
+        if (senderType.equals("user_id")) {
+            returnJson.put("reply", nickname+" 这是Gelbooru的Post页面\n" + replyImgList);
+            return returnJson;
+        } else {
+            returnJson.put(senderType, number);
+            List<JSONObject> jsonObjectList = new ArrayList<>();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("type", "node");
+            JSONObject data = new JSONObject();
+            data.put("name", "Yande");
+            data.put("uin", self_id);
+            data.put("content", replyImgList);
+            jsonObject.put("data", data);
+            jsonObjectList.add(jsonObject);
+            returnJson.put("messages", jsonObjectList);
+            r.requestAPI("send_group_forward_msg", returnJson);
+            return null;
+        }
     }
 
 }
