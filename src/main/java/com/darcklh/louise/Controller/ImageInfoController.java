@@ -28,16 +28,11 @@ import java.util.List;
 public class ImageInfoController {
 
     @Autowired
-    private FileControlApi fileControlApi;
-
-    @Autowired
     private CBIRService cbirService;
 
     @Autowired
     private ProcessImageService processImageService;
 
-    @Autowired
-    private LouiseConfig louiseConfig;
 
 
     /**
@@ -100,7 +95,7 @@ public class ImageInfoController {
         result.setMsg("上传图片失败");
         result.setCode(0);
 
-        result.setCode(cbirService.startCompressAndCalc(louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION() + image_name));
+        result.setCode(cbirService.startCompressAndCalc(LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION + image_name));
         if (result.getCode() > 0) {
             result.setMsg("上传图片成功");
             result.setData(image_name);

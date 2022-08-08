@@ -1,7 +1,9 @@
 package com.darcklh.louise.Service.Impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Mapper.GroupDao;
 import com.darcklh.louise.Model.Louise.Group;
+import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.VO.GroupRole;
 import com.darcklh.louise.Service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class GroupImpl implements GroupService {
 
     @Autowired
     GroupDao groupDao;
+
+    @Autowired
+    R r;
 
     public List<GroupRole> findGroupRoleBy() {
         return groupDao.findBy();
@@ -43,11 +48,36 @@ public class GroupImpl implements GroupService {
     }
 
     public String add(Group group) {
+
         String reply = "新增群组失败了";
+        // 判断数据库中是否存在群组
+        if(groupDao.isGroupExist(group.getGroup_id()) > 0) {
+            reply = "群 " + group.getGroup_id() + " 已经注册过了哦";
+            return reply;
+        }
+
+        // 向Bot请求群聊数据
+        JSONObject param = new JSONObject();
+        param.put("group_id", group.getGroup_id());
+        // 禁用缓存
+        param.put("no_cache", "true");
+
+        JSONObject botReturn = r.requestAPI("get_group_info", param);
+
+        if(botReturn.getJSONObject("data") == null) {
+            reply = "群聊不存在";
+            return reply;
+        }
+        JSONObject returnGroup = botReturn.getJSONObject("data");
+
+        group.setGroup_name(returnGroup.getString("group_name"));
+        group.setMember_count(returnGroup.getString("member_count"));
+        group.setGroup_memo(returnGroup.getString("group_memo"));
+        group.setRole_id(1);
         group.setIs_enabled(1);
         group.setAvatar("http://p.qlogo.cn/gh/" + group.getGroup_id() +"/" + group.getGroup_id() + "/0");
         if (groupDao.insert(group) == 1) {
-            reply = "新增群组";
+            reply = "新增群组成功";
         }
         return reply;
     }

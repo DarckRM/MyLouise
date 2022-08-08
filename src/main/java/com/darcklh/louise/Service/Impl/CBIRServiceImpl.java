@@ -28,9 +28,6 @@ public class CBIRServiceImpl implements CBIRService {
     private static int THREAD_COUNT = 12;
 
     @Autowired
-    private LouiseConfig louiseConfig;
-
-    @Autowired
     private ProcessImageDao processImageDao;
 
     public int reCalculateImageLib() throws InterruptedException, IOException, NoSuchAlgorithmException {
@@ -52,7 +49,7 @@ public class CBIRServiceImpl implements CBIRService {
 
     public JSONObject startAllCBIR(boolean isFinding) throws InterruptedException, IOException, NoSuchAlgorithmException {
 
-        File file = new File(louiseConfig.getLOUISE_CACHE_LOCATION() + "/images_index/");
+        File file = new File(LouiseConfig.LOUISE_CACHE_LOCATION + "/images_index/");
 
         List<CalcImageTask> taskList = new ArrayList<>();
         initCalcImageTaskList(file, taskList);
@@ -67,7 +64,7 @@ public class CBIRServiceImpl implements CBIRService {
 
     public void startAllCompress() throws InterruptedException {
 
-        File file = new File(louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION());
+        File file = new File(LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION);
         List<CompressImageTask> taskList = new ArrayList<>();
         initCompressImageTask(file, taskList);
         log.info("共有: " + taskList.size() + " 个 CompressImage 任务");

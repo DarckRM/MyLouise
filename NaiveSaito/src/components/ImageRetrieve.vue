@@ -1,8 +1,7 @@
 <template>
-<n-card title="图像检索">
-  <n-grid cols="1 1000:3" :x-gap="12" :y-gap="8" item-responsive style="align-items: center">
-    <n-grid-item>
-      <n-card title="上传图片" style="height: 460px">
+  <n-grid cols="2 720:10" :x-gap="15" :y-gap="8" item-responsive style="align-items: center; margin: 80px 15px">
+    <n-grid-item :span="2">
+      <n-card title="上传图片">
         <n-upload action="http://127.0.0.1:8099/saito/upload/image" list-type="image" @finish="handleFinish">
           <n-upload-dragger>
             <div style="margin-bottom: 12px">
@@ -18,53 +17,115 @@
             </n-p>
           </n-upload-dragger>
         </n-upload>
-        <n-select :options="retrieveMethod">
-        </n-select>
-
-        <n-button type="primary" v-on:click="startCBIR">
-          开始检索
-        </n-button>
+        <div style="margin: 15px auto; pading: 0 auto; width: 160px">
+          <n-button style="width: 100%" type="primary" v-on:click="startCBIR">
+            开始检索
+          </n-button>
+        </div>
       </n-card>
     </n-grid-item>
-    <n-grid-item offset="1">
-      <n-card title="结果" style="height: 460px">
-          <n-image
-            width="300"
-            :src=bestResult
-          />
-      </n-card>
-    </n-grid-item>
-    <n-grid-item>
-      <n-card title="直方信息距离" style="height: 460px">
-        <n-grid cols="4" :x-gap="12" :y-gap="8">
-          <n-grid-item v-for="image in results_hi" :key="image.name">
-            <n-image width="100" :src="image.url"></n-image>
-          </n-grid-item>
-        </n-grid>
-      </n-card>
-    </n-grid-item>
-        <n-grid-item>
-      <n-card title="相关性偏差距离" style="height: 460px">
-        <n-grid cols="4" :x-gap="12" :y-gap="8">
-          <n-grid-item v-for="image in results_rd" :key="image.name">
-            <n-image width="100" :src="image.url"></n-image>
-          </n-grid-item>
-        </n-grid>
-      </n-card>
+    <n-grid-item :span="8">
+      <n-spin :show="loading">
+        <n-tabs>
+          <n-tab-pane name="RD" tab="直方相交">
+            <n-card title="直方图相交距离">
+              <n-data-table :columns="columns" :data="results_hi" :row-key="row => row.image_name" />
+            </n-card>
+          </n-tab-pane>
+          <n-tab-pane name="ED" tab="欧式距离">
+            <n-card title="欧式偏差距离">
+              <n-data-table :columns="columns" :data="results_rd" :row-key="row => row.image_name" />
+            </n-card>
+          </n-tab-pane>
+        </n-tabs>
+      </n-spin>
     </n-grid-item>
   </n-grid>
-</n-card>
-
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, h, ref, reactive } from 'vue'
 import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5"
+import ImageInfoCard from '../components/ImageInfoCard.vue'
+import { NImage, useDialog, useMessage } from 'naive-ui'
+
+const creatColumns = ({ popMessage }) => {
+
+  return [{
+    type: 'selection'
+  },
+  {
+    title: '图片',
+    render(row) {
+      return h(
+        NImage,
+        {
+          width: 200,
+          height: 120,
+          src:  'http://127.0.0.1:8099/saito/image/' + row.image_name,
+          'fallback-src': 'http://127.0.0.1:8099/saito/image/failed.jpg',
+          'object-fit': 'cover'
+        }
+      )
+    },
+    width: 250
+  },
+  {
+    title: '图片路径',
+    key: 'image_path',
+    ellipsis: true
+  },
+  {
+    title: '图片名称',
+    key: 'image_name',
+    ellipsis: true
+  }]
+}
 
 export default defineComponent({
   name: 'ImageRetrieve',
     components: {
-      ArchiveIcon
+      ArchiveIcon,
+      ImageInfoCard,
+      NImage
+  },
+  setup() {
+    const checkedRowKeysRef = ref([])
+    const dialog = useDialog()
+    const message = useMessage()
+    const paginationReactive = reactive({
+      page: 1,
+      pageSize: 5,
+      showSizePicker: true,
+      pageSizes: [5, 10, 15],
+      onChange: (page) => {
+        paginationReactive.page = page
+      },
+      onPageSizeChange: (pageSize) => {
+        paginationReactive.pageSize = pageSize
+        paginationReactive.page = 1
+      }
+    })
+    return {
+      dialog,
+      message,
+      showModal: ref(false),
+      pagination: paginationReactive,
+      columns: creatColumns({
+          popMessage (msg, type) {
+              if(type == 1) {
+                  message.success(msg)
+              } else {
+                  message.warning(msg)
+              }
+              
+          }
+      }),
+      checkedRowKeys: checkedRowKeysRef,
+      handleCheck(rowKeys) {
+        checkedRowKeysRef.value = rowKeys
+      }
+    }
   },
   data() {
     return {
@@ -78,14 +139,12 @@ export default defineComponent({
           value: 1
         }
       ],
-      results_mk: [
-      ],
-      results_hi: [
-      ],
-      results_rd: [
-      ],
+      results_mk: [],
+      results_hi: [],
+      results_rd: [],
       compareImage: '',
-      bestResult: ''
+      bestResult: '',
+      loading: false
     }
   },
   methods: {
@@ -103,34 +162,18 @@ export default defineComponent({
       this.compareImage = result.file_name
     },
     startCBIR() {
+      if (this.compareImage == '') {
+        this.message.error("请先上传图片")
+        return
+      }
+      this.loading = true
       this.$axios.post('image-info/start_cbir', 'cache/images/' + this.compareImage ).then(result => {
-        console.log(result)
-        let dataMk = result.data.data.result_mkList
+
         let dataHI = result.data.data.result_hiList
         let dataRD = result.data.data.result_rdList
-
-        this.bestResult = 'http://127.0.0.1:8099' + dataHI[0].image_path + dataHI[0].image_name
-
-        for(var result_image in dataMk) {
-          this.results_mk.push({
-            name: dataMk[result_image].image_name,
-            url: 'http://127.0.0.1:8099' + dataMk[result_image].image_path + dataMk[result_image].image_name
-          })
-        }
-
-        for(var result_image in dataHI) {
-          this.results_hi.push({
-            name: dataHI[result_image].image_name,
-            url: 'http://127.0.0.1:8099' + dataHI[result_image].image_path + dataHI[result_image].image_name
-          })
-        }
-
-        for(var result_image in dataRD) {
-          this.results_rd.push({
-            name: dataRD[result_image].image_name,
-            url: 'http://127.0.0.1:8099' + dataRD[result_image].image_path + dataRD[result_image].image_name
-          })
-        }
+        this.results_hi = dataHI
+        this.results_rd = dataRD
+        this.loading = false
       })
     }
   }

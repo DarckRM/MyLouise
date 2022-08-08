@@ -60,7 +60,8 @@ import {
         NRow,
         NCol,
         NTimeline,
-        NTimelineItem
+        NTimelineItem,
+        NSpin
 } from 'naive-ui'
 const naive = create({
     components: [
@@ -118,7 +119,8 @@ const naive = create({
         NRow,
         NCol,
         NTimeline,
-        NTimelineItem
+        NTimelineItem,
+        NSpin
     ]
 })
 const app = createApp(App)

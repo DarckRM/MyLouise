@@ -1,8 +1,10 @@
 # Created by .ignore support plugin (hsz.mobi)
 cache/
 src/main/resources/application-dev.yml
+src/main/resources/application.yml
 logs/
 logs
+application.yml
 
 ### Maven template
 target/

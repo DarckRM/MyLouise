@@ -35,9 +35,6 @@ public class BootApplication {
     SysConfigDao sysConfigDao;
 
     @Autowired
-    LouiseConfig louiseConfig;
-
-    @Autowired
     SaitoController saitoController;
 
     @Autowired
@@ -52,7 +49,7 @@ public class BootApplication {
         bootDate = new Date();// 获取当前时间
 
         //从数据库中更新配置
-        louiseConfig.refreshConfig(sysConfigDao.selectList(null));
+        LouiseConfig.refreshConfig(sysConfigDao.selectList(null));
 
 //        logger.info("<--加载MyLouise插件-->");
 //        List<PluginInfo> pluginInfos = pluginInfoDao.selectList(null);
@@ -72,8 +69,8 @@ public class BootApplication {
 //            logger.info("加载插件失败: " + e.getMessage());
 //        }
 
-        r.put("user_id", louiseConfig.getLOUISE_ADMIN_NUMBER());
-        r.put("message", louiseConfig.getLOUISE_WELCOME_SENTENCE());
+        r.put("user_id", LouiseConfig.LOUISE_ADMIN_NUMBER);
+        r.put("message", LouiseConfig.LOUISE_WELCOME_SENTENCE);
         r.sendMessage(r.getMessage());
 //        logger.info("插件加载完毕，共" + i + "个");
 

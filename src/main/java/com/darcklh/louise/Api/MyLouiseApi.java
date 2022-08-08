@@ -4,14 +4,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Model.Louise.Group;
 import com.darcklh.louise.Model.Louise.ProcessImage;
 import com.darcklh.louise.Model.Louise.Role;
 import com.darcklh.louise.Model.Louise.User;
+import com.darcklh.louise.Model.MessageInfo;
 import com.darcklh.louise.Model.Result;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.SpecificException;
 import com.darcklh.louise.Service.CBIRService;
+import com.darcklh.louise.Service.GroupService;
 import com.darcklh.louise.Service.RoleService;
 import com.darcklh.louise.Service.UserService;
 import com.darcklh.louise.Utils.UniqueGenerator;
@@ -55,7 +58,7 @@ public class MyLouiseApi implements ErrorController {
     private SearchPictureApi searchPictureApi;
 
     @Autowired
-    LouiseConfig louiseConfig;
+    private GroupService groupService;
 
     @Autowired
     private UserService userService;
@@ -84,7 +87,7 @@ public class MyLouiseApi implements ErrorController {
      */
     @RequestMapping("/louise/show")
     public String refreshConfig() {
-        return "API: " + louiseConfig.getBOT_LOUISE_CACHE_IMAGE();
+        return "API: " + LouiseConfig.BOT_LOUISE_CACHE_IMAGE;
     }
 
     /**
@@ -95,7 +98,7 @@ public class MyLouiseApi implements ErrorController {
     public JSONObject help() {
         JSONObject returnJson = new JSONObject();
         //TODO 暂时先请求网络图片 Linux和Windows对于本地路径的解析不同 很烦
-        returnJson.put("reply","[CQ:image,file="+louiseConfig.getLOUISE_HELP_PAGE()+"]");
+        returnJson.put("reply","[CQ:image,file="+LouiseConfig.LOUISE_HELP_PAGE+"]");
         return returnJson;
     }
 
@@ -108,7 +111,7 @@ public class MyLouiseApi implements ErrorController {
     public JSONObject banUser(@RequestBody JSONObject message) {
         JSONObject reply = new JSONObject();
         String admin = message.getString("user_id");
-        if (!admin.equals(louiseConfig.getLOUISE_ADMIN_NUMBER())) {
+        if (!admin.equals(LouiseConfig.LOUISE_ADMIN_NUMBER)) {
             reply.put("reply", "管理员限定");
             return reply;
         }
@@ -121,16 +124,16 @@ public class MyLouiseApi implements ErrorController {
     public JSONObject modifyConfig(@RequestBody JSONObject message, @PathVariable Integer type) {
         JSONObject reply = new JSONObject();
         String admin = message.getString("user_id");
-        if (!admin.equals(louiseConfig.getLOUISE_ADMIN_NUMBER())) {
+        if (!admin.equals(LouiseConfig.LOUISE_ADMIN_NUMBER)) {
             reply.put("reply", "管理员限定");
             return reply;
         }
         if (type == 0) {
-            louiseConfig.setBOT_LOUISE_CACHE_IMAGE("../../../../MyLouise/cache/images/");
+            LouiseConfig.BOT_LOUISE_CACHE_IMAGE = "../../../../MyLouise/cache/images/";
             logger.info("切换至 本地开发 配置");
             reply.put("reply", "切换到本地开发环境");
         } else {
-            louiseConfig.setBOT_LOUISE_CACHE_IMAGE("../../MyLouise/cache/images/");
+            LouiseConfig.BOT_LOUISE_CACHE_IMAGE = "../../MyLouise/cache/images/";
             logger.info("切换至 线上部署 配置");
             reply.put("reply", "切换到服务部署环境");
         }
@@ -144,16 +147,13 @@ public class MyLouiseApi implements ErrorController {
     @RequestMapping("louise/config")
     public JSONObject queryConfig() {
         JSONObject reply = new JSONObject();
-        reply.put("reply", louiseConfig.toString());
+        reply.put("reply", "开发中");
         return reply;
     }
 
     @RequestMapping("louise/test")
-    public String testRequestCenter(HttpServletRequest request, @RequestBody String message) throws NoSuchAlgorithmException {
-        JSONObject result = new JSONObject();
-        result.put("reply","现在测试中");
-        return result.toString() + louiseConfig.getLOUISE_ERROR_UNKNOWN_COMMAND();
-
+    public void testRequestCenter(@RequestBody MessageInfo messageInfo) {
+        log.info(messageInfo.toString());
     }
 
     @RequestMapping("louise/meta")
@@ -162,61 +162,79 @@ public class MyLouiseApi implements ErrorController {
     }
 
     /**
+     * 注册新群组
+     * @return
+     */
+    @RequestMapping("louise/group_join")
+    public JSONObject groupJoin(@RequestBody MessageInfo messageInfo) {
+
+        Long group_id = messageInfo.getGroup_id();
+        Group group = new Group();
+        group.setGroup_id(group_id.toString());
+        //快速返回
+        JSONObject returnJson = new JSONObject();
+        //注册用户
+        //判断如果是私聊禁止注册
+        if (group_id == -1) {
+            returnJson.put("reply","露易丝不支持私聊注册群组哦，\n请在群聊里使用吧");
+            return returnJson;
+        }
+        returnJson.put("reply", groupService.add(group));
+        return returnJson;
+    }
+
+    /**
      * 注册新用户
-     * @param jsonObject
+     * @param messageInfo
      * @return
      */
     @RequestMapping("louise/join")
-    public JSONObject join(@RequestBody JSONObject jsonObject) {
+    public JSONObject join(@RequestBody MessageInfo messageInfo) {
 
-        String user_id = jsonObject.getString("user_id");
-        String group_id = jsonObject.getString("group_id");
+        Long user_id = messageInfo.getUser_id();
+        Long group_id = messageInfo.getGroup_id();
 
         //快速返回
         JSONObject returnJson = new JSONObject();
-
         //注册用户
-        if (jsonObject.getString("raw_message").substring(1).split(" ")[0].equals("join")) {
-            //判断如果是私聊禁止注册
-            if (jsonObject.getString("group_id") == null) {
-                //TODO go-cqhttp只能根据qq号和群号获取某个用户的信息 但是这会导致数据库中使用双主键 比较麻烦 后期解决一下这个问题
-                returnJson.put("reply","露易丝不支持私聊注册哦，\n请在群聊里使用吧");
-                return returnJson;
-            }
-            return userService.joinLouise(user_id, group_id);
+        //判断如果是私聊禁止注册
+        if (group_id == -1) {
+            //TODO go-cqhttp只能根据qq号和群号获取某个用户的信息 但是这会导致数据库中使用双主键 比较麻烦 后期解决一下这个问题
+            returnJson.put("reply","露易丝不支持私聊注册哦，\n请在群聊里使用吧");
+            return returnJson;
         }
-        return null;
+        return userService.joinLouise(user_id.toString(), group_id.toString());
     }
 
     /**
      * 发送随机色图
-     * @param message
+     * @param messageInfo
      * @return JSONObject
      */
     @RequestMapping("louise/setu")
-    private JSONObject sendRandomSetu(@RequestBody JSONObject message) {
+    private JSONObject sendRandomSetu(@RequestBody MessageInfo messageInfo) {
 
         //获取请求元数据信息
-        String message_type = message.getString("message_type");
+        String message_type = messageInfo.getMessage_type();
         String number = "";
-        String nickname = message.getJSONObject("sender").getString("nickname");
+        String nickname = messageInfo.getSender().getNickname();
         //TODO 有待优化的变量
-        String user_id = message.getString("user_id");
+        String user_id = messageInfo.getUser_id().toString();
 
         //判断私聊或是群聊
         String senderType = "";
         if (message_type.equals("group")) {
-            number = message.getString("group_id");
+            number = messageInfo.getGroup_id().toString();
             senderType = "group_id";
 
         } else if (message_type.equals("private")) {
-            number = message.getString("user_id");
+            number = messageInfo.getUser_id().toString();
             senderType = "user_id";
         }
 
         //调用LoliconAPI随机或根据参数请求色图
         userService.updateCount(user_id,1);
-        return sendPictureApi.sendPicture(number, nickname, senderType, message);
+        return sendPictureApi.sendPicture(number, nickname, senderType, messageInfo);
     }
 
     /**
@@ -279,7 +297,7 @@ public class MyLouiseApi implements ErrorController {
         String nickname = message.getJSONObject("sender").getString("nickname");
 
         URL url = null;
-        String filePath = louiseConfig.getLOUISE_CACHE_IMAGE_LOCATION() + "/";
+        String filePath = LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION + "/";
         String fileName = "Image_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "_" + UniqueGenerator.generateShortUuid() + "." + "jpg";
         String imageName = filePath + fileName;
         try {
@@ -315,24 +333,16 @@ public class MyLouiseApi implements ErrorController {
             returnJson.put("reply", "检索图片失败了");
             return returnJson;
         }
-        StringBuilder rdList = new StringBuilder();
-        StringBuilder mkList = new StringBuilder();
-        JSONArray rdArray = returnJson.getJSONObject("result").getJSONArray("result_rdList");
-        JSONArray mkArray = returnJson.getJSONObject("result").getJSONArray("result_mkList");
+        StringBuilder hiList = new StringBuilder();
+        JSONArray hiArray = returnJson.getJSONObject("result").getJSONArray("result_hiList");
 
-        for (Object o : rdArray) {
+        for (Object o : hiArray) {
             JSONObject jsonObj = (JSONObject) o;
-            rdList.append("[CQ:image,file=http://127.0.0.1:8099/saito/image").append(jsonObj.getString("image_name")).append("]\n");
-        }
-
-        for (Object o : mkArray) {
-            JSONObject jsonObj = (JSONObject) o;
-            mkList.append("[CQ:image,file=http://127.0.0.1:8099/saito/image").append(jsonObj.getString("image_name")).append("]\n");
+            hiList.append("[CQ:image,file=http://127.0.0.1:8099/saito/image").append(jsonObj.getString("image_name")).append("]\n");
         }
 
         returnJson.put("reply", "搜索出来了，按准确度从高到低排列" +
-                "\n" + rdList +
-                "\n" + mkList);
+                "\n" + hiList);
 
         return returnJson;
     }
@@ -344,7 +354,7 @@ public class MyLouiseApi implements ErrorController {
         String nickname = message.getJSONObject("sender").getString("nickname");
 
         returnJson.put("reply", nickname + "，你要的图片" + pixiv_id + "找到了" +
-                "\n[CQ:image,file=" +louiseConfig.getPIXIV_PROXY_URL() + pixiv_id + ".jpg]" +
+                "\n[CQ:image,file=" +LouiseConfig.PIXIV_PROXY_URL + pixiv_id + ".jpg]" +
                 "\n如果未显示出图片请在pixiv_id后指定第几张作品");
 
         return returnJson;

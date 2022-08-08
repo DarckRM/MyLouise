@@ -33,7 +33,7 @@
           <n-button @click="signUp()" type="primary" style="margin: 20px 25px;">Confirm</n-button>
         </n-tab-pane>
         <n-tab-pane name="image-retrieve" tab="图像检索">
-
+          <ImageRetrieve></ImageRetrieve>
         </n-tab-pane>
       </n-tabs>
     </n-card>
@@ -42,11 +42,11 @@
 
 <style>
 #loginCard {
-  max-width: 300px;
+  width: 300px;
   margin: 50px auto;
 }
 #loginDiv {
-    margin-top: 60px;
+  margin: 100px auto
 }
 </style>
 
@@ -54,6 +54,7 @@
   import { defineComponent } from 'vue'
   import { useMessage } from 'naive-ui'
   import { router } from '../router'
+import ImageRetrieve from './ImageRetrieve.vue'
 
   export default defineComponent({
 
@@ -75,8 +76,9 @@
         }
     },
     components: {
-      useMessage,
-    },
+    useMessage,
+    ImageRetrieve
+},
     methods: {
       updateValue(value) {
         if(value == 'image-retrieve')

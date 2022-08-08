@@ -42,9 +42,6 @@ public class LouiseHandler implements HandlerInterceptor {
     Logger logger = LoggerFactory.getLogger(LouiseHandler.class);
 
     @Autowired
-    LouiseConfig louiseConfig;
-
-    @Autowired
     UserService userService;
 
     @Autowired
@@ -69,6 +66,10 @@ public class LouiseHandler implements HandlerInterceptor {
         if (command.contains("/louise/pid/"))
             command = "/louise/pid/{pid}";
 
+        //对command预处理
+        if (command.contains("/louise/yande/"))
+            command = "/louise/yande/{type}";
+
         response.setContentType("application/json; charset=utf-8");
 
         //获取相关信息
@@ -92,13 +93,18 @@ public class LouiseHandler implements HandlerInterceptor {
             return true;
         }
 
+        //放行group_join
+        if (command.equals("/louise/group_join")) {
+            return true;
+        }
+
         int isAvaliable = userService.isUserAvaliable(user_id);
 
         //判断用户是否存在并启用
         if (isAvaliable == 0) {
-            return returnFalseMessage(louiseConfig.getLOUISE_ERROR_UNKNOWN_USER(), "未登记的用户" + user_id, response);
+            return returnFalseMessage(LouiseConfig.LOUISE_ERROR_UNKNOWN_USER, "未登记的用户" + user_id, response);
         } else if (isAvaliable == -1) {
-            return returnFalseMessage(louiseConfig.getLOUISE_ERROR_BANNED_USER(), "未启用的用户" + user_id, response);
+            return returnFalseMessage(LouiseConfig.LOUISE_ERROR_BANNED_USER, "未启用的用户" + user_id, response);
         }
 
         //判断群是否启用

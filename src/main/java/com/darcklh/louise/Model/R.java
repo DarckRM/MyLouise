@@ -28,12 +28,6 @@ import java.net.*;
 @Slf4j
 public class R {
 
-    //自动注入信息载体
-    @Autowired
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    LouiseConfig louiseConfig;
-
     //发送报文的基础信息
     private String nickname;
     private String senderType;
@@ -67,7 +61,7 @@ public class R {
      * @param api
      * @return
      */
-    private JSONObject requestAPI(String api) {
+    public JSONObject requestAPI(String api) {
         if (!testConnWithBot())
             return null;
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -75,7 +69,7 @@ public class R {
         //开始请求
         log.info("请求接口: " + api);
         this.refresh();
-        return restTemplate.postForObject(louiseConfig.getBOT_BASE_URL() + api, cqhttp, JSONObject.class);
+        return restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + api, cqhttp, JSONObject.class);
     }
 
     /**
@@ -84,14 +78,14 @@ public class R {
      * @param sendJson
      * @return
      */
-    private JSONObject requestAPI(String api, JSONObject sendJson) {
+    public JSONObject requestAPI(String api, JSONObject sendJson) {
         if (!testConnWithBot())
             return null;
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> cqhttp = new HttpEntity<>(sendJson.toString(), headers);
         //开始请求
         log.info("请求接口: " + api);
-        JSONObject jsonObject = restTemplate.postForObject(louiseConfig.getBOT_BASE_URL() + api, cqhttp, JSONObject.class);
+        JSONObject jsonObject = restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + api, cqhttp, JSONObject.class);
         this.refresh();
         return jsonObject;
     }
