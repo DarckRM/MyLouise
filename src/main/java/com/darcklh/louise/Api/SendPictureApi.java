@@ -3,6 +3,7 @@ package com.darcklh.louise.Api;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Model.MessageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class SendPictureApi {
         return LouiseConfig.BOT_BASE_URL;
     }
 
-    public JSONObject sendPicture(String id, String nickname, String senderType, JSONObject message) {
+    public JSONObject sendPicture(String id, String nickname, String senderType, MessageInfo messageInfo) {
 
         logger.info("进入发图流程, 发起用户为:"+nickname+" QQ:"+id);
 
@@ -36,7 +37,7 @@ public class SendPictureApi {
         //构造请求LoliApi V2的请求体
         HttpHeaders loli = new HttpHeaders();
         loli.setContentType(MediaType.APPLICATION_JSON);
-        JSONObject requestLoli = generateRequestBody(message.getString("raw_message").substring(5), "tag");
+        JSONObject requestLoli = generateRequestBody(messageInfo.getRaw_message().substring(5), "tag");
         requestLoli.put("size","regular");
 
         //TODO 请求第三方API的状态码判断

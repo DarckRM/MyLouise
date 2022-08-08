@@ -31,7 +31,9 @@ public class HttpProxy {
         factory.setConnectTimeout(30 * 1000);
         // 代理的url网址或ip, port端口
         InetSocketAddress address = new InetSocketAddress(LouiseConfig.LOUISE_PROXY, LouiseConfig.LOUISE_PROXY_PORT);
-        log.info("代理地址: " + LouiseConfig.LOUISE_PROXY + LouiseConfig.LOUISE_PROXY_PORT);
+
+        log.info("代理请求: " + LouiseConfig.LOUISE_PROXY + ":" + LouiseConfig.LOUISE_PROXY_PORT);
+
         Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
         factory.setProxy(proxy);
         return factory;
