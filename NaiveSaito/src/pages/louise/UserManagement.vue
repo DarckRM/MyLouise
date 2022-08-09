@@ -21,7 +21,14 @@
     <n-button ghost type="primary" size="large" style="margin: 0 10px 10px 0; width: 80px" @click="showModal = true">新增</n-button>
     <n-button type="error" size="large" style="margin: 0 10px 10px 0; width: 80px">删除</n-button>
   </div>
-  <n-data-table :columns="columns" :data="dataList" :pagination="pagination" :row-key="row => row.user_id" @update:checked-row-keys="handleCheck" />
+  <n-data-table
+    :columns="columns"
+    :data="dataList"
+    :pagination="pagination"
+    :row-key="row => row.user_id"
+    @update:checked-row-keys="handleCheck"
+    :scroll-x="1080" 
+  />
 </n-card>
 <n-modal v-model:show="showModal">
     <n-card style="width: 1100px;" title="新增用户" :bordered="false" size="huge">
@@ -57,18 +64,21 @@ const creatColumns = ({ popMessage }) => {
           type: 'edit'
         }
       )
-    }
+    },
+    fixed: 'left'
   },
   {
     title: '用户QQ',
     key: 'user_id',
-    width: 200,
+    width: 120,
+    fixed: 'left',
     ellipsis: true
   },
   {
     title: '昵称',
     key: 'nickname',
-    width: 300,
+    width: 200,
+    fixed: 'left',
     ellipsis: true
   },
   {
