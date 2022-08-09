@@ -348,14 +348,23 @@ public class MyLouiseApi implements ErrorController {
     }
 
     @RequestMapping("louise/pid/{pixiv_id}")
-    private JSONObject findPixivId(@PathVariable String pixiv_id, @RequestBody JSONObject message) {
+    private JSONObject findPixivId(@PathVariable String pixiv_id, @RequestBody MessageInfo messageInfo) {
         //返回值
         JSONObject returnJson = new JSONObject();
-        String nickname = message.getJSONObject("sender").getString("nickname");
+        String nickname = messageInfo.getSender().getNickname();
 
-        returnJson.put("reply", nickname + "，你要的图片" + pixiv_id + "找到了" +
+        String message = nickname + "，你要的图片" + pixiv_id + "找到了" +
                 "\n[CQ:image,file=" +LouiseConfig.PIXIV_PROXY_URL + pixiv_id + ".jpg]" +
-                "\n如果未显示出图片请在pixiv_id后指定第几张作品");
+                "\n如果未显示出图片请在pixiv_id后指定第几张作品";
+
+        if (messageInfo.getGroup_id() == -1) {
+            returnJson.put("user_id", messageInfo.getUser_id());
+            returnJson.put("message", message);
+            r.sendMessage(returnJson);
+        } else {
+            returnJson.put("group_id", messageInfo.getGroup_id());
+            r.sendGroupForwardMessage(message, "Yande", messageInfo.getSelf_id(), returnJson);
+        }
 
         return returnJson;
     }

@@ -2,6 +2,7 @@ package com.darcklh.louise.Model;
 
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Utils.isEmpty;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -19,6 +20,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 和Cqhttp通信的实体
@@ -83,11 +87,23 @@ public class R {
             return null;
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> cqhttp = new HttpEntity<>(sendJson.toString(), headers);
-        //开始请求
+        // 开始请求
         log.info("请求接口: " + api);
-        JSONObject jsonObject = restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + api, cqhttp, JSONObject.class);
+        JSONObject response = restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + api, cqhttp, JSONObject.class);
+
+        // 校验请求结果
+        if(!verifyRequest(response)) {
+            String message = "Louise 无法发送消息，可能是被干扰了，请尝试私聊😢😢\n";
+            message += "错误解释: " + response.getString("wording") + "\n";
+            message += "错误消息: " + response.getString("msg") + "\n";
+            sendJson.put("message", message);
+            cqhttp = new HttpEntity<>(sendJson.toString(), headers);
+
+            log.info("发送错误原因:" + response.getString("wording") + " : " + response.getString("msg"));
+            restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + "send_msg", cqhttp, JSONObject.class);
+        }
         this.refresh();
-        return jsonObject;
+        return response;
     }
 
     /**
@@ -103,6 +119,34 @@ public class R {
     }
 
     /**
+     * 根据参数发送转发群组信息 主要是用于处理风控问题
+     * @param content
+     * @param senderName
+     * @param selfId
+     * @param sendJson
+     * @return
+     */
+    public JSONObject sendGroupForwardMessage(String content, String senderName, Long selfId, JSONObject sendJson) {
+
+        List<JSONObject> jsonObjectList = new ArrayList<>();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", "node");
+
+        JSONObject data = new JSONObject();
+        data.put("name", senderName);
+        data.put("uin", selfId);
+        data.put("content", content);
+
+        jsonObject.put("data", data);
+        jsonObjectList.add(jsonObject);
+
+        sendJson.put("messages", jsonObjectList);
+
+        return this.requestAPI("send_group_forward_msg", sendJson);
+    }
+
+    /**
      * 发送群公告
      * @param group_id 群号
      * @param content 消息
@@ -115,15 +159,6 @@ public class R {
         return this.requestAPI("/_send_group_notice", this.getMessage());
     }
 
-    /**
-     * 快速操作
-     * @param fastJson
-     * @return
-     */
-    public JSONObject fastResponse(JSONObject fastJson) {
-        log.info("快速操作: " + fastJson);
-        return fastJson;
-    }
 
     /**
      * 向R中的message对象添加信息
@@ -139,6 +174,16 @@ public class R {
      */
     public void refresh() {
         this.message = new JSONObject();
+    }
+
+    /**
+     * 校验请求的结果
+     * @param response
+     */
+    private boolean verifyRequest(JSONObject response) {
+        if (response == null)
+            return false;
+        return response.getString("status").equals("ok");
     }
 
 }

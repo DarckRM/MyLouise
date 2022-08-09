@@ -155,11 +155,14 @@ public class FileControlApi {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        //定义请求头的接收类型
+        // 定义请求头的接收类型
         RequestCallback requestCallback = request -> request.getHeaders()
                 .setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
-        //对响应进行流式处理而不是将其全部加载到内存中
-        restTemplate.setRequestFactory(new HttpProxy().getFactory());
+        // 对响应进行流式处理而不是将其全部加载到内存中
+        // 借助代理请求
+        if (LouiseConfig.LOUISE_PROXY_PORT > 0)
+            restTemplate.setRequestFactory(new HttpProxy().getFactory());
+
         restTemplate.execute(urlList, HttpMethod.GET, requestCallback, clientHttpResponse -> {
             Files.copy(clientHttpResponse.getBody(), Paths.get(targetPath));
             return null;

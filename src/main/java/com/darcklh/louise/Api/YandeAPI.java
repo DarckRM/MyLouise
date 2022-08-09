@@ -59,7 +59,9 @@ public class YandeAPI {
         String uri = "https://yande.re/tag.json?name=" + tag + "&limit=" + 10;
         // 使用代理请求 Yande
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setRequestFactory(new HttpProxy().getFactory());
+        // 借助代理请求
+        if (LouiseConfig.LOUISE_PROXY_PORT > 0)
+            restTemplate.setRequestFactory(new HttpProxy().getFactory());
 
         String result = restTemplate.getForObject(uri, String.class);
         log.info("请求 Yande: " + uri);
@@ -88,28 +90,16 @@ public class YandeAPI {
             }
             tagList +=  name + " 类型:" + type + " 有" + count + "张\n";
         }
-        returnJson.put("reply", tagList);
-//        if (messageInfo.getGroup_id() == -1) {
-//            returnJson.put("user_id", messageInfo.getUser_id());
-//            returnJson.put("message", tagList);
-//            r.sendMessage(returnJson);
-//        } else {
-//            returnJson.put("group_id", messageInfo.getGroup_id());
-//
-//            List<JSONObject> jsonObjectList = new ArrayList<>();
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("type", "node");
-//
-//            JSONObject data = new JSONObject();
-//            data.put("name", "Yande");
-//            data.put("uin", messageInfo.getSelf_id());
-//            data.put("content", tagList);
-//            jsonObject.put("data", data);
-//            jsonObjectList.add(jsonObject);
-//
-//            returnJson.put("messages", jsonObjectList);
-//            r.requestAPI("send_group_forward_msg", returnJson);
-//        }
+        returnJson.put("message", tagList);
+
+        if (messageInfo.getGroup_id() == -1) {
+            returnJson.put("user_id", messageInfo.getUser_id());
+            returnJson.put("message", tagList);
+            r.sendMessage(returnJson);
+        } else {
+            returnJson.put("group_id", messageInfo.getGroup_id());
+            r.sendGroupForwardMessage(tagList, "Yande", messageInfo.getSelf_id(), returnJson);
+        }
 
         return returnJson;
     }
@@ -155,7 +145,9 @@ public class YandeAPI {
         new Thread(() -> {
             // 使用代理请求 Yande
             RestTemplate restTemplate = new RestTemplate();
-            restTemplate.setRequestFactory(new HttpProxy().getFactory());
+            // 借助代理请求
+            if (LouiseConfig.LOUISE_PROXY_PORT > 0)
+                restTemplate.setRequestFactory(new HttpProxy().getFactory());
 
             String result = restTemplate.getForObject(uri + "?limit=" + LIMIT, String.class);
             log.info("请求 Yande: " + uri + "?limit=" + LIMIT);
@@ -256,7 +248,9 @@ public class YandeAPI {
             log.info("请求地址: " + uri);
             // 使用代理请求 Yande
             RestTemplate restTemplate = new RestTemplate();
-            restTemplate.setRequestFactory(new HttpProxy().getFactory());
+            // 借助代理请求
+            if (LouiseConfig.LOUISE_PROXY_PORT > 0)
+                restTemplate.setRequestFactory(new HttpProxy().getFactory());
 
             String result = restTemplate.getForObject(uri, String.class);
             JSONArray resultJsonArray = JSON.parseArray(result);
@@ -300,19 +294,7 @@ public class YandeAPI {
             sendJson.put("message", messageInfo.getSender().getNickname() + " 这是Gelbooru的Post页面\n" + replyImgList);
             r.sendMessage(sendJson);
         } else {
-
-            List<JSONObject> jsonObjectList = new ArrayList<>();
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("type", "node");
-            JSONObject data = new JSONObject();
-            data.put("name", "Yande");
-            data.put("uin", messageInfo.getSelf_id());
-            data.put("content", replyImgList);
-            jsonObject.put("data", data);
-            jsonObjectList.add(jsonObject);
-
-            sendJson.put("messages", jsonObjectList);
-            r.requestAPI("send_group_forward_msg", sendJson);
+            r.sendGroupForwardMessage(replyImgList, "Yande", messageInfo.getSelf_id(), sendJson);
         }
 
     }

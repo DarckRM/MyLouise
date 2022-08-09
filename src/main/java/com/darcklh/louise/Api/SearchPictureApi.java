@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.R;
+import com.darcklh.louise.Utils.HttpProxy;
 import com.darcklh.louise.Utils.UniqueGenerator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -94,6 +95,11 @@ public class SearchPictureApi{
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
             RestTemplate restTemplate = new RestTemplate();
+
+            // 借助代理请求
+            if (LouiseConfig.LOUISE_PROXY_PORT > 0)
+                restTemplate.setRequestFactory(new HttpProxy().getFactory());
+
             ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, request, String.class);
 
             String colorSearchUrl = response.getBody().substring(35,100);
@@ -158,10 +164,14 @@ public class SearchPictureApi{
         try {
             String url = uploadImgUrl;
 
-            //构造Rest请求模板
+            // 构造Rest请求模板
             RestTemplate restTemplate = new RestTemplate();
 
-            //构造请求SourceNAO的请求体
+            // 借助代理请求
+            if (LouiseConfig.LOUISE_PROXY_PORT > 0)
+                restTemplate.setRequestFactory(new HttpProxy().getFactory());
+
+            // 构造请求SourceNAO的请求体
             Map<String, String> map = new HashMap<>();
             map.put("url", url);
             map.put("api_key", LouiseConfig.SOURCENAO_API_KEY);
@@ -172,7 +182,7 @@ public class SearchPictureApi{
             JSONObject result = JSON.parseObject(restTemplate.getForObject(LouiseConfig.SOURCENAO_URL + "?url={url}&db={db}&api_key={api_key}&output_type={output_type}&numres={numres}", String.class, map));
             logger.debug("查询到的结果: "+result);
 
-            //判断结果
+            // 判断结果
             int status = result.getJSONObject("header").getInteger("status");
             if (status != 0) {
                 if (status > 0) {
@@ -187,7 +197,7 @@ public class SearchPictureApi{
             JSONObject sourceNAO = result.getJSONArray("results").getJSONObject(0);
             logger.info("最匹配的结果: "+sourceNAO.toString());
 
-            //格式化结果
+            // 格式化结果
             JSONObject sourceNaoData = sourceNAO.getJSONObject("data");
             sourceNaoData.put("thumbnail", "thumbnail");
             JSONObject sourceNaoHeader = sourceNAO.getJSONObject("header");
@@ -195,7 +205,7 @@ public class SearchPictureApi{
             Integer indexId = sourceNAO.getJSONObject("header").getInteger("index_id");
             String index_name = sourceNAO.getJSONObject("header").getString("index_name");
             sourceNaoHeader.put("invoker", "NAO");
-            //相似度低于70%的结果以缩略图显示 排除Twitter来源
+            // 相似度低于70%的结果以缩略图显示 排除Twitter来源
             if (Float.parseFloat(similarity) < 70.0 && indexId != 41) {
                 logger.info("结果可能性低");
                 sendJson.put("message", "找到的结果相似度为"+similarity+"显示缩略图" +
@@ -211,7 +221,7 @@ public class SearchPictureApi{
                 //来自Pixiv
                 case 5: sendJson = handleFromPixiv(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 //TODO 暂时禁用推特来源 未解决图片缓存路径问题
-                case 41: sendJson = handleFromTwitter(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
+                case 4: sendJson = handleFromTwitter(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 case 9:
                 case 12: sendJson = handleFromGelbooru(nickname, similarity, r.getMessage(), sourceNaoData, sourceNaoHeader); break;
                 default: {
@@ -303,7 +313,7 @@ public class SearchPictureApi{
             String images = "";
             for (int i = start; i <= end; i++) {
                 //下载图片到本地
-                fileControlApi.downloadPictureURL(LouiseConfig.PIXIV_PROXY_URL + pixiv_id + "-" + i + ".jpg", pixiv_id + "-" + i, "pixiv");
+                fileControlApi.downloadPicture_RestTemplate(LouiseConfig.PIXIV_PROXY_URL + pixiv_id + "-" + i + ".jpg", pixiv_id + "-" + i + ".jpg", "pixiv");
                 images += "[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "pixiv/" + pixiv_id + "-" + i + ".jpg]";
             }
             reply.put("message",
@@ -321,7 +331,7 @@ public class SearchPictureApi{
 
         } catch (Exception e) {
             logger.info(e.getLocalizedMessage());
-            fileControlApi.downloadPictureURL(LouiseConfig.PIXIV_PROXY_URL + pixiv_id + ".jpg", pixiv_id, "pixiv");
+            fileControlApi.downloadPicture_RestTemplate(LouiseConfig.PIXIV_PROXY_URL + pixiv_id + ".jpg", pixiv_id + ".jpg", "pixiv");
             reply.put("message",
                     nickname+"，查询出来咯"+
                             "\n来源Pixiv"+
@@ -356,7 +366,7 @@ public class SearchPictureApi{
         String imageUrlPrefix = "https://pbs.twimg.com/media/";
         String finalUrl = imageUrlPrefix + imageUrl + "?format=" + imageUrlEndfix + "&name=large";
         //TODO 暂时无法下载Twitter的图片
-        //fileControlApi.downloadPicture(finalUrl, imageUrl, "Twiiter");
+        fileControlApi.downloadPicture_RestTemplate(finalUrl, imageUrl, "Twiiter");
 
         reply.put("message",
                 nickname+"，查询出来咯"+
@@ -398,8 +408,8 @@ public class SearchPictureApi{
         String finalUrl = "https://img3.gelbooru.com//images/" + imageFinalUrlPrefix + imageUrl + imageUrlEndfix;
         String exampleUrl = "https://img3.gelbooru.com//samples/" + imageExampleUrlPrefix + imageUrl + imageUrlEndfix;
 
-        boolean isImage = fileControlApi.downloadPictureURL(finalUrl, "image_" + imageUrl, "Gelbooru");
-        boolean isSample = fileControlApi.downloadPictureURL(exampleUrl, "sample_" + imageUrl, "Gelbooru");
+        boolean isImage = fileControlApi.downloadPicture_RestTemplate(finalUrl, "image_" + imageUrl, "Gelbooru");
+        boolean isSample = fileControlApi.downloadPicture_RestTemplate(exampleUrl, "sample_" + imageUrl, "Gelbooru");
 
         String message = nickname+"，查询出来咯"+
                 "\n来源Gelbooru"+
