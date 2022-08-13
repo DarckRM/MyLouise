@@ -61,7 +61,7 @@ public class GroupImpl implements GroupService {
         param.put("group_id", group.getGroup_id());
         // 禁用缓存
         param.put("no_cache", "true");
-
+        // TODO 还未解决参数问题
         JSONObject botReturn = r.requestAPI("get_group_info", param);
 
         if(botReturn.getJSONObject("data") == null) {

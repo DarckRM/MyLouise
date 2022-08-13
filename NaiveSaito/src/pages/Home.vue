@@ -3,19 +3,16 @@
     <n-layout postion="absolute" bordered>
       <n-layout-header bordered style="padding: 0 30px">
         <Top></Top>
+        <div v-if="!showSideBar">
+          <Menu mode="horizontal"></Menu>
+        </div>
       </n-layout-header>
       <n-layout :has-sider="showSideBar">
-        <n-layout-sider
-          v-if="showSideBar"
-          content-style="padding: 16px;"
-          collapse-mode="width"
-          :collapsed-width="80"
-          :width="280"
-          show-trigger="bar">
+        <n-layout-sider v-if="showSideBar" content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80"
+          :width="280" show-trigger="bar">
           <Menu></Menu>
         </n-layout-sider>
-        <n-layout content-style="margin-top: 30px; height: 85vh"
-          :native-scrollbar="false">
+        <n-layout content-style="margin-top: 30px; height: 85vh" :native-scrollbar="false">
           <router-view>
           </router-view>
           <n-layout-footer bordered style="padding: 34px 54px">
@@ -159,7 +156,7 @@ export default defineComponent({
     window.onresize = () => {
       return (() => {
         window.fullHeight = document.documentElement.clientHeight;
-          window.fullWidth = document.documentElement.clientWidth;
+        window.fullWidth = document.documentElement.clientWidth;
         that.windowHeight = window.fullHeight;  // 高
         that.windowWidth = window.fullWidth; // 宽
       })()
@@ -172,7 +169,7 @@ export default defineComponent({
   },
   // <!--在watch中监听实时宽高-->
   watch: {
-    windowWidth (val) {
+    windowWidth(val) {
 
       if (val <= 960) {
         this.showSideBar = false

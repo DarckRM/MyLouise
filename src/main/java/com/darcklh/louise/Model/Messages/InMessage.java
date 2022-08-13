@@ -1,7 +1,6 @@
-package com.darcklh.louise.Model;
+package com.darcklh.louise.Model.Messages;
 
-import com.alibaba.fastjson.JSONObject;
-import com.darcklh.louise.Model.VO.Sender;
+import com.darcklh.louise.Model.Sender;
 import lombok.Data;
 
 /**
@@ -10,7 +9,7 @@ import lombok.Data;
  * @Description 包含 go-cqhttp 上报的消息体
  */
 @Data
-public class MessageInfo {
+public class InMessage {
 
     // 事件发生的时间戳
     private Integer time;
@@ -27,7 +26,7 @@ public class MessageInfo {
     // 发送者 QQ 号
     private Long user_id;
     // 发送群 QQ 号
-    private Long group_id = Long.parseLong("-1");
+    private Long group_id = (long)-1;
     // 消息内容
     private String message;
     // 原始消息内容

@@ -1,28 +1,21 @@
 package com.darcklh.louise.Model;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
-import com.darcklh.louise.Utils.isEmpty;
-import lombok.AccessLevel;
+import com.darcklh.louise.Model.Messages.OutMessage;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 和Cqhttp通信的实体
@@ -65,7 +58,7 @@ public class R {
      * @param api
      * @return
      */
-    public JSONObject requestAPI(String api) {
+    public JSONObject requestAPI(String api, JSONObject jsonObject) {
         if (!testConnWithBot())
             return null;
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -79,14 +72,14 @@ public class R {
     /**
      * 带参数请求cqhttp接口
      * @param api
-     * @param sendJson
+     * @param outMessage
      * @return
      */
-    public JSONObject requestAPI(String api, JSONObject sendJson) {
+    public JSONObject requestAPI(String api, OutMessage outMessage) {
         if (!testConnWithBot())
             return null;
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> cqhttp = new HttpEntity<>(sendJson.toString(), headers);
+        HttpEntity<String> cqhttp = new HttpEntity<>(JSONObject.toJSONString(outMessage), headers);
         // 开始请求
         log.info("请求接口: " + api);
         JSONObject response = restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + api, cqhttp, JSONObject.class);
@@ -96,8 +89,8 @@ public class R {
             String message = "Louise 无法发送消息，可能是被干扰了，请尝试私聊😢😢\n";
             message += "错误解释: " + response.getString("wording") + "\n";
             message += "错误消息: " + response.getString("msg") + "\n";
-            sendJson.put("message", message);
-            cqhttp = new HttpEntity<>(sendJson.toString(), headers);
+            outMessage.setMessage(message);
+            cqhttp = new HttpEntity<>(JSONObject.toJSONString(outMessage), headers);
 
             log.info("发送错误原因:" + response.getString("wording") + " : " + response.getString("msg"));
             restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + "send_msg", cqhttp, JSONObject.class);
@@ -106,44 +99,43 @@ public class R {
         return response;
     }
 
-    /**
-     * 根据参数向cqhttp发送消息
-     * @param sendJson JSONObject
-     * @return response String
-     */
-    public JSONObject sendMessage(JSONObject sendJson) {
+    public JSONObject sendTestMsg(OutMessage outMessage) {
+        if (!testConnWithBot())
+            return null;
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<OutMessage> cqhttp = new HttpEntity<>(outMessage, headers);
+        // 开始请求
+        JSONObject response = restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + "send_msg", cqhttp, JSONObject.class);
 
-        //让Bot发送信息
-        log.info("发送报文: " + sendJson);
-        return this.requestAPI("send_msg", sendJson);
+        return response;
+    }
+
+    public JSONObject sendTestGroupForwardMessage(OutMessage outMessage) {
+
+        if (!testConnWithBot())
+            return null;
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // TODO go-cqhttp 解析有问题 无法读取到内容 暂时转一次 Json
+        HttpEntity<String> cqhttp = new HttpEntity<>(JSONObject.toJSONString(outMessage), headers);
+        // 开始请求
+        JSONObject response = restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + "send_group_forward_msg", cqhttp, JSONObject.class);
+
+        return response;
     }
 
     /**
-     * 根据参数发送转发群组信息 主要是用于处理风控问题
-     * @param content
-     * @param senderName
-     * @param selfId
-     * @param sendJson
-     * @return
+     * 根据参数向cqhttp发送消息
+     * @param outMessage OutMessage
+     * @return response String
      */
-    public JSONObject sendGroupForwardMessage(String content, String senderName, Long selfId, JSONObject sendJson) {
+    public JSONObject sendMessage(OutMessage outMessage) {
 
-        List<JSONObject> jsonObjectList = new ArrayList<>();
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("type", "node");
-
-        JSONObject data = new JSONObject();
-        data.put("name", senderName);
-        data.put("uin", selfId);
-        data.put("content", content);
-
-        jsonObject.put("data", data);
-        jsonObjectList.add(jsonObject);
-
-        sendJson.put("messages", jsonObjectList);
-
-        return this.requestAPI("send_group_forward_msg", sendJson);
+        if (!testConnWithBot())
+            return null;
+        if (outMessage.getMessages().size() != 0)
+            return this.requestAPI("send_group_forward_msg", outMessage);
+        return this.requestAPI("send_msg", outMessage);
     }
 
     /**
@@ -152,12 +144,12 @@ public class R {
      * @param content 消息
      * @return
      */
-    public JSONObject sendGroupNotice(String group_id, String content) {
-
-        this.put("group_id", group_id);
-        this.put("content", content);
-        return this.requestAPI("/_send_group_notice", this.getMessage());
-    }
+//    public JSONObject sendGroupNotice(String group_id, String content) {
+//
+//        this.put("group_id", group_id);
+//        this.put("content", content);
+//        return this.requestAPI("/_send_group_notice", this.getMessage());
+//    }
 
 
     /**

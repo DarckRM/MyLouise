@@ -96,7 +96,6 @@ public class FileControlApi {
     public JSONObject imagesDownLoad(HttpServletRequest request, HttpServletResponse response){
         String url = request.getRequestURI();
         JSONObject jsonObject = new JSONObject();
-        Result<String> result = new Result<>();
         String fileName = url.replace("/saito/image/","");
 
         File file = new File(LouiseConfig.LOUISE_CACHE_LOCATION + "/images/" + fileName);
@@ -140,7 +139,7 @@ public class FileControlApi {
         String filePath = LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION + fileOrigin + "/";
         File folder = new File(filePath);
         // 文件保存的本地路径
-        String targetPath = LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION + "/" + fileOrigin + "/" + fileName;
+        String targetPath = LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION + fileOrigin + "/" + fileName;
 
         if (!folder.exists() && !folder.isDirectory()) {
             log.info("创建了图片缓存文件夹" + fileOrigin);
@@ -161,7 +160,7 @@ public class FileControlApi {
         // 对响应进行流式处理而不是将其全部加载到内存中
         // 借助代理请求
         if (LouiseConfig.LOUISE_PROXY_PORT > 0)
-            restTemplate.setRequestFactory(new HttpProxy().getFactory());
+            restTemplate.setRequestFactory(new HttpProxy().getFactory("下载图片"));
 
         restTemplate.execute(urlList, HttpMethod.GET, requestCallback, clientHttpResponse -> {
             Files.copy(clientHttpResponse.getBody(), Paths.get(targetPath));

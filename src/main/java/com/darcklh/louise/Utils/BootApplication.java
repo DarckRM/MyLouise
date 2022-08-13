@@ -4,6 +4,7 @@ import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Controller.SaitoController;
 import com.darcklh.louise.Mapper.PluginInfoDao;
 import com.darcklh.louise.Mapper.SysConfigDao;
+import com.darcklh.louise.Model.Messages.OutMessage;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.Saito.SysConfig;
@@ -68,10 +69,10 @@ public class BootApplication {
 //        } catch (Exception e) {
 //            logger.info("加载插件失败: " + e.getMessage());
 //        }
-
-        r.put("user_id", LouiseConfig.LOUISE_ADMIN_NUMBER);
-        r.put("message", LouiseConfig.LOUISE_WELCOME_SENTENCE);
-        r.sendMessage(r.getMessage());
+        OutMessage outMessage = new OutMessage();
+        outMessage.setUser_id(Long.valueOf(LouiseConfig.LOUISE_ADMIN_NUMBER));
+        outMessage.setMessage(LouiseConfig.LOUISE_WELCOME_SENTENCE);
+        r.sendMessage(outMessage);
 //        logger.info("插件加载完毕，共" + i + "个");
 
     }

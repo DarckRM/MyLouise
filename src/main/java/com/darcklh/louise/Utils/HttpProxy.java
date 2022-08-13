@@ -23,7 +23,7 @@ public class HttpProxy {
      * 构建请求代理
      * @return
      */
-    public SimpleClientHttpRequestFactory getFactory() {
+    public SimpleClientHttpRequestFactory getFactory(String logText) {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         //单位为ms
         factory.setReadTimeout(10 * 1000);
@@ -31,9 +31,7 @@ public class HttpProxy {
         factory.setConnectTimeout(30 * 1000);
         // 代理的url网址或ip, port端口
         InetSocketAddress address = new InetSocketAddress(LouiseConfig.LOUISE_PROXY, LouiseConfig.LOUISE_PROXY_PORT);
-
-        log.info("代理请求: " + LouiseConfig.LOUISE_PROXY + ":" + LouiseConfig.LOUISE_PROXY_PORT);
-
+        log.info("代理请求: " + LouiseConfig.LOUISE_PROXY + ":" + LouiseConfig.LOUISE_PROXY_PORT  + " "+ logText);
         Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
         factory.setProxy(proxy);
         return factory;

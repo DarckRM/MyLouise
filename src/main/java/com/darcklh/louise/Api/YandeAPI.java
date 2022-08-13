@@ -4,24 +4,20 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
-import com.darcklh.louise.Model.MessageInfo;
+import com.darcklh.louise.Model.Messages.InMessage;
+import com.darcklh.louise.Model.Messages.Node;
+import com.darcklh.louise.Model.Messages.OutMessage;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Utils.HttpProxy;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author DarckLH
@@ -31,11 +27,8 @@ import java.util.List;
 @Slf4j
 @RestController
 public class YandeAPI {
-
-    Logger logger = LoggerFactory.getLogger(YandeAPI.class);
-
     // 每页最大数
-    private static int LIMIT = 15;
+    private static int LIMIT = 10;
 
     @Autowired
     FileControlApi fileControlApi;
@@ -45,27 +38,27 @@ public class YandeAPI {
 
     /**
      * 根据 Tag 返回可能的 Tags 列表
-     * @param messageInfo
+     * @param inMessage
      * @param tag
      * @return
      */
     @RequestMapping("louise/yande/tags/{tag}")
-    public JSONObject YandeTags(@RequestBody MessageInfo messageInfo, @PathVariable String tag) {
+    public JSONObject YandeTags(@RequestBody InMessage inMessage, @PathVariable String tag) {
 
         // 返回值
         JSONObject returnJson = new JSONObject();
 
         // TODO: 总记录条数太多 会引起 QQ 风控
-        String uri = "https://yande.re/tag.json?name=" + tag + "&limit=" + 10;
+        String uri = "https://yande.re/tag.json?name=" + tag + "&limit=" + 4;
         // 使用代理请求 Yande
         RestTemplate restTemplate = new RestTemplate();
         // 借助代理请求
         if (LouiseConfig.LOUISE_PROXY_PORT > 0)
-            restTemplate.setRequestFactory(new HttpProxy().getFactory());
+            restTemplate.setRequestFactory(new HttpProxy().getFactory("Yande API"));
 
         String result = restTemplate.getForObject(uri, String.class);
         log.info("请求 Yande: " + uri);
-        String tagList = messageInfo.getSender().getNickname() + ", 你是否在找?\n";
+        StringBuilder tagList = new StringBuilder(inMessage.getSender().getNickname() + ", 你是否在找?\n");
         JSONArray resultJsonArray = JSON.parseArray(result);
 
         assert resultJsonArray != null;
@@ -88,27 +81,21 @@ public class YandeAPI {
                 case 3: type = "版权"; break;
                 case 4: type = "角色"; break;
             }
-            tagList +=  name + " 类型:" + type + " 有" + count + "张\n";
-        }
-        returnJson.put("message", tagList);
-
-        if (messageInfo.getGroup_id() == -1) {
-            returnJson.put("user_id", messageInfo.getUser_id());
-            returnJson.put("message", tagList);
-            r.sendMessage(returnJson);
-        } else {
-            returnJson.put("group_id", messageInfo.getGroup_id());
-            r.sendGroupForwardMessage(tagList, "Yande", messageInfo.getSelf_id(), returnJson);
+            tagList.append(name).append(" 类型:").append(type).append(" 有").append(count).append("张\n");
         }
 
-        return returnJson;
+        OutMessage outMessage = new OutMessage(inMessage);
+        outMessage.getMessages().add(new Node(tagList.toString(), inMessage.getSelf_id()));
+        r.sendMessage(outMessage);
+
+        return null;
     }
 
     /**
      *  获取 Yandere 每日图片
      */
     @RequestMapping("louise/yande/{type}")
-    public JSONObject YandePic(@RequestBody MessageInfo messageInfo, @PathVariable String type) {
+    public JSONObject YandePic(@RequestBody InMessage inMessage, @PathVariable String type) {
 
         // 返回值
         JSONObject sendJson = new JSONObject();
@@ -119,35 +106,19 @@ public class YandeAPI {
             return sendJson;
         }
 
-        // 获取请求元数据信息
-        String number = "";
-        // 判断私聊或是群聊
-        String senderType = "";
-        if (messageInfo.getMessage_type().equals("group")) {
-            number = messageInfo.getGroup_id().toString();
-            senderType = "group_id";
-
-        } else if (messageInfo.getMessage_type().equals("private")) {
-            number = messageInfo.getUser_id().toString();
-            senderType = "user_id";
-        }
-
         // 构造消息请求体
-        sendJson.put(senderType, number);
-        sendJson.put("message", messageInfo.getSender().getNickname() + ", 开始请求 Yande 的 Every " + type + " 精选图片");
-        r.sendMessage(sendJson);
+        OutMessage outMessage = new OutMessage(inMessage);
+        outMessage.setMessage(inMessage.getSender().getNickname() + ", 开始请求 Yande 的 Every " + type + " 精选图片");
+        r.sendMessage(outMessage);
 
         String uri = "https://yande.re/post/popular_by_" + type + ".json";
-
-        // 处理线程安全问题
-        String finalSenderType = senderType;
 
         new Thread(() -> {
             // 使用代理请求 Yande
             RestTemplate restTemplate = new RestTemplate();
             // 借助代理请求
             if (LouiseConfig.LOUISE_PROXY_PORT > 0)
-                restTemplate.setRequestFactory(new HttpProxy().getFactory());
+                restTemplate.setRequestFactory(new HttpProxy().getFactory("Yande API"));
 
             String result = restTemplate.getForObject(uri + "?limit=" + LIMIT, String.class);
             log.info("请求 Yande: " + uri + "?limit=" + LIMIT);
@@ -155,42 +126,29 @@ public class YandeAPI {
 
             assert resultJsonArray != null;
             if(resultJsonArray.size() == 0) {
-                sendJson.put("message", "没有找到你想要的结果呢");
-                r.sendMessage(sendJson);
+                outMessage.setMessage("没有找到你想要的结果呢");
+                r.sendMessage(outMessage);
                 return;
             }
-            sendYandeResult(finalSenderType, messageInfo, resultJsonArray, sendJson, LIMIT);
+            sendYandeResult(inMessage, resultJsonArray, LIMIT);
 
         }).start();
         return null;
     }
 
     @RequestMapping("louise/yande")
-    public JSONObject YandeSearch(@RequestBody MessageInfo messageInfo) {
+    public JSONObject YandeSearch(@RequestBody InMessage inMessage) {
 
         JSONObject sendJson = new JSONObject();
 
-        // 获取请求元数据信息
-        String number = "";
-        // 判断私聊或是群聊
-        String senderType = "";
-        if (messageInfo.getMessage_type().equals("group")) {
-            number = messageInfo.getGroup_id().toString();
-            senderType = "group_id";
-
-        } else if (messageInfo.getMessage_type().equals("private")) {
-            number = messageInfo.getUser_id().toString();
-            senderType = "user_id";
-        }
-
         // 判断是否携带 Tags 参数
-        if (messageInfo.getMessage().length() < 7) {
+        if (inMessage.getMessage().length() < 7) {
             sendJson.put("reply", "请至少携带一个 Tag 参数，像这样 !yande 参数1 参数2 | 页数 条数\n页数和条数可以不用指定");
             return sendJson;
         }
 
         // 处理命令前缀
-        String message = messageInfo.getMessage().substring(7);
+        String message = inMessage.getMessage().substring(7);
         String[] tags;
         String[] pageNation = new String[2];
 
@@ -230,12 +188,11 @@ public class YandeAPI {
         }
 
         // 构造消息请求体
-        sendJson.put(senderType, number);
-        sendJson.put("message", messageInfo.getSender().getNickname() + ", 开始检索 Yande 图片咯");
-        r.sendMessage(sendJson);
+        OutMessage outMessage = new OutMessage(inMessage);
+        outMessage.setMessage(inMessage.getSender().getNickname() + ", 开始检索 Yande 图片咯");
+        r.sendMessage(outMessage);
 
         // 处理线程安全问题
-        String finalSenderType = senderType;
         String[] finalPageNation = pageNation;
 
         new Thread(() -> {
@@ -250,18 +207,18 @@ public class YandeAPI {
             RestTemplate restTemplate = new RestTemplate();
             // 借助代理请求
             if (LouiseConfig.LOUISE_PROXY_PORT > 0)
-                restTemplate.setRequestFactory(new HttpProxy().getFactory());
+                restTemplate.setRequestFactory(new HttpProxy().getFactory("Yande API"));
 
             String result = restTemplate.getForObject(uri, String.class);
             JSONArray resultJsonArray = JSON.parseArray(result);
 
             assert resultJsonArray != null;
             if(resultJsonArray.size() == 0) {
-                sendJson.put("message", "没有找到你想要的结果呢");
-                r.sendMessage(sendJson);
+                outMessage.setMessage("没有找到你想要的结果呢");
+                r.sendMessage(outMessage);
                 return;
             }
-            sendYandeResult(finalSenderType, messageInfo, resultJsonArray, sendJson, Integer.parseInt(finalPageNation[1]));
+            sendYandeResult(inMessage, resultJsonArray, Integer.parseInt(finalPageNation[1]));
 
         }).start();
 
@@ -270,15 +227,13 @@ public class YandeAPI {
 
     /**
      *
-     * @param finalSenderType
-     * @param messageInfo
+     * @param inMessage
      * @param resultJsonArray
-     * @param sendJson
      * @param limit 如果是精选图集则只展示 15 张
      */
-    private void sendYandeResult(String finalSenderType, MessageInfo messageInfo, JSONArray resultJsonArray, JSONObject sendJson, Integer limit) {
+    private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit) {
 
-        String replyImgList = messageInfo.getSender().getNickname() +  ", 你的请求结果出来了，你输入的参数是: " + messageInfo.getMessage().substring(7) + "\n";
+        String replyImgList = inMessage.getSender().getNickname() +  ", 你的请求结果出来了，你输入的参数是: " + inMessage.getMessage().substring(7) + "\n";
         for ( Object object: resultJsonArray) {
             if (limit == 0)
                 break;
@@ -289,13 +244,13 @@ public class YandeAPI {
             replyImgList += "[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "Yande/" + fileName + "]\n";
             limit--;
         }
-
-        if (finalSenderType.equals("user_id")) {
-            sendJson.put("message", messageInfo.getSender().getNickname() + " 这是Gelbooru的Post页面\n" + replyImgList);
-            r.sendMessage(sendJson);
-        } else {
-            r.sendGroupForwardMessage(replyImgList, "Yande", messageInfo.getSelf_id(), sendJson);
-        }
-
+        String msg = inMessage.getSender().getNickname() + " 这是Gelbooru的Post页面\n" + replyImgList;
+        OutMessage outMessage = new OutMessage(inMessage);
+        if (outMessage.getGroup_id() < 0)
+            outMessage.setMessage(msg);
+        else
+            outMessage.getMessages().add(new Node(msg, inMessage.getSelf_id()));
+        log.info(JSONObject.toJSONString(outMessage));
+        r.sendMessage(outMessage);
     }
 }
