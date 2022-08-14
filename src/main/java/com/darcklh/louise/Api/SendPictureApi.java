@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.Messages.InMessage;
+import com.darcklh.louise.Utils.HttpProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -30,6 +31,10 @@ public class SendPictureApi {
 
         //构造Rest请求模板
         RestTemplate restTemplate = new RestTemplate();
+
+        // 借助代理请求
+        if (LouiseConfig.LOUISE_PROXY_PORT > 0)
+            restTemplate.setRequestFactory(new HttpProxy().getFactory("Lolicon API 请求"));
 
         JSONObject jsonObject = new JSONObject();
 

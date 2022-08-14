@@ -1,12 +1,20 @@
 package com.darcklh.louise.Service.Impl;
 
 import com.darcklh.louise.Mapper.FeatureInfoDao;
+import com.darcklh.louise.Mapper.FeatureStaticDao;
+import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Model.Saito.FeatureInfo;
+import com.darcklh.louise.Model.Saito.FeatureStatic;
 import com.darcklh.louise.Model.VO.FeatureInfoMin;
 import com.darcklh.louise.Service.FeatureInfoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,10 +23,14 @@ import java.util.List;
  * @Description
  */
 @Service
+@Slf4j
 public class FeatureInfoImpl implements FeatureInfoService {
 
     @Autowired
     FeatureInfoDao featureInfoDao;
+
+    @Autowired
+    FeatureStaticDao featureStaticDao;
 
     @Override
     public List<FeatureInfo> findBy() {
@@ -67,7 +79,30 @@ public class FeatureInfoImpl implements FeatureInfoService {
     }
 
     @Override
+    public FeatureInfo findWithFeatureCmd(String feature_cmd) {
+        FeatureInfo featureInfo = featureInfoDao.findWithFeatureCmd(feature_cmd);
+        if (featureInfo == null)
+            throw new ReplyException("未知的命令");
+        return featureInfo;
+    }
+
+    @Override
     public List<FeatureInfoMin> findWithRoleId(Integer role_id) {
         return featureInfoDao.findWithRoleId(role_id);
+    }
+
+    @Override
+    public void addCount(Integer feature_id, String group_id, String user_id) {
+
+        FeatureStatic featureStatic = new FeatureStatic();
+        Timestamp now = new Timestamp(new Date().getTime());
+
+        featureStatic.setInvoke_time(now);
+        featureStatic.setFeature_id(feature_id);
+        featureStatic.setUser_id(user_id);
+        featureStatic.setGroup_id(group_id);
+
+        featureStaticDao.insert(featureStatic);
+        featureInfoDao.addCount(feature_id);
     }
 }

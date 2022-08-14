@@ -2,11 +2,13 @@
   <div id="homeDiv" style="position: relative">
     <n-layout postion="absolute" bordered>
       <n-layout-header bordered style="padding: 0 30px">
-        <Top></Top>
+        <Top :style="{ width:'200px', margin: iconStyle}"></Top>
+      </n-layout-header>
+      <n-layout-content :native-scrollbar="false">
         <div v-if="!showSideBar">
           <Menu mode="horizontal"></Menu>
         </div>
-      </n-layout-header>
+      </n-layout-content>
       <n-layout :has-sider="showSideBar">
         <n-layout-sider v-if="showSideBar" content-style="padding: 16px;" collapse-mode="width" :collapsed-width="80"
           :width="280" show-trigger="bar">
@@ -60,7 +62,7 @@
                   </template>
                   bilibili
                 </n-button><br />
-                <n-button style="margin: 15px 30px 0 0" text>
+                <n-button style="margin: 0.9375rem 1.875rem 0 0" text>
                   <template #icon>
                     <n-icon>
                       <logo-discord />
@@ -147,36 +149,51 @@ export default defineComponent({
       windowWidth: document.documentElement.clientWidth,  //实时屏幕宽度
       windowHeight: document.documentElement.clientHeight,   //实时屏幕高度
       showSideBar: true,
-      showColumn: 4
+      showColumn: 4,
+      iconStyle: ''
     }
   },
   mounted() {
+    // 判断当前设备屏幕大小
+    var curWidth = document.documentElement.clientWidth
+      if (curWidth <= 768) {
+        this.switchSmallDisplay()
+      } else {
+        this.switchWideDisplay()
+      }
     var that = this;
     // <!--把window.onresize事件挂在到mounted函数上-->
     window.onresize = () => {
       return (() => {
-        window.fullHeight = document.documentElement.clientHeight;
-        window.fullWidth = document.documentElement.clientWidth;
-        that.windowHeight = window.fullHeight;  // 高
-        that.windowWidth = window.fullWidth; // 宽
+        window.fullHeight = document.documentElement.clientHeight
+        window.fullWidth = document.documentElement.clientWidth
+        that.windowHeight = window.fullHeight // 高
+        that.windowWidth = window.fullWidth // 宽
       })()
     }
   },
   methods: {
     openTab(url) {
       window.open(url, '_blank')
+    },
+    switchWideDisplay() {
+      this.showSideBar = true
+      this.showColumn = 4
+      this.iconStyle = '15px 0 15px 30px'
+    },
+    switchSmallDisplay() {
+      this.showSideBar = false
+      this.showColumn = 2
+      this.iconStyle = '15px 0'
     }
   },
   // <!--在watch中监听实时宽高-->
   watch: {
     windowWidth(val) {
-
-      if (val <= 960) {
-        this.showSideBar = false
-        this.showColumn = 2
+      if (val <= 768) {
+        this.switchSmallDisplay()
       } else {
-        this.showSideBar = true
-        this.showColumn = 4
+        this.switchWideDisplay()
       }
     }
   },

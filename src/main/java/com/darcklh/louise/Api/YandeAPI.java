@@ -8,6 +8,7 @@ import com.darcklh.louise.Model.Messages.InMessage;
 import com.darcklh.louise.Model.Messages.Node;
 import com.darcklh.louise.Model.Messages.OutMessage;
 import com.darcklh.louise.Model.R;
+import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Utils.HttpProxy;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -39,11 +40,18 @@ public class YandeAPI {
     /**
      * 根据 Tag 返回可能的 Tags 列表
      * @param inMessage
-     * @param tag
      * @return
      */
-    @RequestMapping("louise/yande/tags/{tag}")
-    public JSONObject YandeTags(@RequestBody InMessage inMessage, @PathVariable String tag) {
+    @RequestMapping("louise/yande/tags")
+    public JSONObject YandeTags(@RequestBody InMessage inMessage) {
+
+        // 处理命令前缀
+        String[] msg;
+        msg = inMessage.getMessage().split(" ");
+        if (msg.length <= 1)
+            throw new ReplyException("参数错误，请按如下格式尝试 !yande/tags [参数]");
+
+        String tag = msg[1];
 
         // 返回值
         JSONObject returnJson = new JSONObject();
@@ -85,7 +93,10 @@ public class YandeAPI {
         }
 
         OutMessage outMessage = new OutMessage(inMessage);
-        outMessage.getMessages().add(new Node(tagList.toString(), inMessage.getSelf_id()));
+        if (outMessage.getGroup_id() < 0)
+            outMessage.setMessage(tagList.toString());
+        else
+            outMessage.getMessages().add(new Node(tagList.toString(), inMessage.getSelf_id()));
         r.sendMessage(outMessage);
 
         return null;

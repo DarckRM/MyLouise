@@ -30,6 +30,7 @@
 
 <script>
 import { defineComponent, h } from 'vue'
+import { useMessage } from 'naive-ui'
 import {
   CaretForward as CaretForwardIcon,
   TerminalOutline as Ternimal,
@@ -39,6 +40,10 @@ import NTag from 'naive-ui'
 
 export default defineComponent({
     setup() {
+      const message = useMessage()
+      return {
+        message
+      }
     },
     components: {
         CaretForwardIcon,
@@ -72,12 +77,19 @@ export default defineComponent({
                 info: '',
                 featureInfoList: []
             }
+
             formData.role_name = this.model.role_name
             formData.info = this.model.info
             formData.featureInfoList = this.renderFeature
-            console.log(formData)
-            this.$axios.post('role/' + this.type, formData).then(result => {
-                let msg = result.data.msg
+
+            this.$axios.post('role/' + this.type + '?type=1', formData).then(result => {
+                let data = result.data
+                if(data.code == 200) {
+                  this.message.success(data.msg)
+                } else {
+                  this.message.destroyAll()
+                  this.message.warning(data.msg)
+                }
             })
         }
     }

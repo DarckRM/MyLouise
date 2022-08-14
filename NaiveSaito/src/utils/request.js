@@ -1,7 +1,7 @@
 import axios from "axios";
 import router from "../router";
 // axios.defaults.baseURL = "http://127.0.0.1:8099/saito/"; //此路径为配置代理服务器时的代理路径
-axios.defaults.baseURL = "http://121.4.179.240:8099/saito/"; //此路径为配置代理服务器时的代理路径
+axios.defaults.baseURL = import.meta.env.VITE_REQUEST_URL; //此路径为配置代理服务器时的代理路径
 
 axios.interceptors.request.use(config => {
   // 在发送请求之前做些什么

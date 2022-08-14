@@ -2,8 +2,8 @@
   "name": "naivesaito",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --mode dev",
+    "build": "vite build --mode prod",
     "serve": "vite preview"
   },
   "dependencies": {

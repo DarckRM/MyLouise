@@ -4,6 +4,8 @@
 <script>
 import { defineComponent } from 'vue'
 
+const websocket_url = import.meta.env.VITE_WEBSOCKET_URL
+
 export default defineComponent({
     props: {
         client_name: '',
@@ -27,10 +29,9 @@ export default defineComponent({
         // 定义ws对象
         webSocket: null,
         // ws请求链接（类似于ws后台地址）
-        // ws: 'ws://127.0.0.1:8099/saito_ws/' + this.client_name,
         ws: 'ws://121.4.179.240:8099/saito_ws/' + this.client_name,
         // ws定时器
-          wsTimer: null,
+        wsTimer: null,
       }
     },    
     async mounted() {

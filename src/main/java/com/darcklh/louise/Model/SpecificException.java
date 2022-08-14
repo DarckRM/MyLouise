@@ -1,6 +1,7 @@
 package com.darcklh.louise.Model;
 
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Model.Messages.InMessage;
 import lombok.Data;
 
 import java.io.IOException;
@@ -47,19 +48,31 @@ public class SpecificException extends RuntimeException {
 
     }
 
-    /**
-     *
-     * @param innerCode
-     * @param errorMsg
-     * @param jsonObject
-     * @param originErrorMessage
-     */
-    public SpecificException(String innerCode, String errorMsg, JSONObject jsonObject, String originErrorMessage) {
+    public SpecificException(String innerCode, String errorMsg, JSONObject reply, String originErrorMessage) {
         super(errorMsg);
         this.innerCode = "SRT" + innerCode;
         this.errorMsg = "RuntimeException: "+errorMsg;
         this.originErrorMessage = "OriginErrorMsg: " + originErrorMessage;
-        this.jsonObject = jsonObject;
+        this.jsonObject = reply;
+    }
+
+    /**
+     * 带返回体的异常
+     * @param innerCode
+     * @param errorMsg
+     * @param reply
+     * @param originErrorMessage
+     */
+    public SpecificException(String innerCode, String errorMsg, String reply, String originErrorMessage) {
+        super(errorMsg);
+        this.innerCode = "SRT" + innerCode;
+        this.errorMsg = "RuntimeException: "+errorMsg;
+        this.originErrorMessage = "OriginErrorMsg: " + originErrorMessage;
+        this.jsonObject = (JSONObject) new JSONObject().put("reply", reply);
+    }
+
+    public SpecificException(String innerCode, String errorMsg, InMessage inMessage, String originErrorMessage) {
+
     }
 
 }

@@ -24,6 +24,7 @@ public class FeatureInfo {
     private String info;
     private Integer is_original;
     private Integer is_enabled;
+    private Integer count;
     private String avatar;
 
 }

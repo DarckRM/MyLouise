@@ -60,20 +60,19 @@ import ImageRetrieve from './ImageRetrieve.vue'
 
     name: 'LoginPage',
     setup() {
-        const message = useMessage()
-        return {
-            message
-        }
+      const message = useMessage()
+      return {
+          message
+      }
     },
     data() {
-        return {
-            loginPageTitle: "TECH OTAKU SAVE THE WORLD",
-            loginForm: {
-                username: "",
-                password: ""
-            }
-            
+      return {
+        loginPageTitle: "TECH OTAKU SAVE THE WORLD",
+        loginForm: {
+            username: "",
+            password: ""
         }
+      }
     },
     components: {
     useMessage,

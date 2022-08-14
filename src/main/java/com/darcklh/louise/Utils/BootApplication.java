@@ -25,7 +25,6 @@ import java.util.concurrent.Executors;
 @Component
 public class BootApplication {
 
-    Logger logger = LoggerFactory.getLogger(BootApplication.class);
     @Autowired
     PluginManager pluginManager;
 

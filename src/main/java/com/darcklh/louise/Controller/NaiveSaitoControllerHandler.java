@@ -1,8 +1,11 @@
 package com.darcklh.louise.Controller;
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Model.R;
+import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Model.Result;
 import com.darcklh.louise.Model.SpecificException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +22,9 @@ import java.sql.SQLIntegrityConstraintViolationException;
 @Slf4j
 @ControllerAdvice(annotations = RestController.class)
 public class NaiveSaitoControllerHandler {
+
+    @Autowired
+    R r;
 
     @ExceptionHandler(value = SpecificException.class)
     @ResponseBody
@@ -63,14 +69,13 @@ public class NaiveSaitoControllerHandler {
         return jsonObject;
     }
 
-    public JSONObject handleIOException(IOException e) throws UnsupportedEncodingException {
-
-        JSONObject jsonObject = new JSONObject();
-        Result result = new Result();
-        setData(result, "文件读写异常！", 503, e);
-        jsonObject.put("result", result);
-        return jsonObject;
-
+    @ExceptionHandler(value = ReplyException.class)
+    @ResponseBody
+    public JSONObject handleReplyException(ReplyException e) throws UnsupportedEncodingException {
+        if (e.getType() == 0)
+            return e.getReply();
+        r.sendMessage(e.getOutMessage());
+        return null;
     }
 
     void setData(Result result,String errorMsg, Integer innerCode, Exception e) throws UnsupportedEncodingException {
