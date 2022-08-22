@@ -65,7 +65,7 @@ public class SaitoController {
     public void PluginInit(Integer number) {
         try {
             for (int i = 0; i < number; i++) {
-                pluginServices.add(pluginManager.getInstance(pluginManager.pluginInfos.get(i).getClass_name()));
+                pluginServices.add(pluginManager.getInstance(PluginManager.pluginInfos.get(i).getClass_name()));
                 pluginServices.get(i).service();
             }
         } catch (Exception e) {

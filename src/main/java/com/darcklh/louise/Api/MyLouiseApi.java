@@ -10,10 +10,8 @@ import com.darcklh.louise.Model.Messages.InMessage;
 import com.darcklh.louise.Model.Messages.OutMessage;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
-import com.darcklh.louise.Service.CBIRService;
-import com.darcklh.louise.Service.GroupService;
-import com.darcklh.louise.Service.RoleService;
-import com.darcklh.louise.Service.UserService;
+import com.darcklh.louise.Service.*;
+import com.darcklh.louise.Utils.PluginManager;
 import com.darcklh.louise.Utils.UniqueGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -38,16 +36,10 @@ public class MyLouiseApi implements ErrorController {
     Logger logger = LoggerFactory.getLogger(MyLouiseApi.class);
 
     @Autowired
-    List<PluginInfo> pluginInfoList;
-
-    @Autowired
     private SendPictureApi sendPictureApi;
 
     @Autowired
     private R r;
-
-    @Autowired
-    private SearchPictureApi searchPictureApi;
 
     @Autowired
     private GroupService groupService;
@@ -64,13 +56,13 @@ public class MyLouiseApi implements ErrorController {
     /**
      * 插件调用中心
      * @param plugin
-     * @param message
      * @return
      */
     @RequestMapping("/louise/p/{plugin}")
-    public JSONObject pluginsCenter(@PathVariable String plugin, @RequestBody JSONObject message) {
+    public JSONObject pluginsCenter(@PathVariable String plugin) {
         logger.info("rua");
-
+        PluginInfo pluginInfo = PluginManager.pluginInfos.get(1);
+        pluginInfo.getPluginServices().service(null);
         return null;
     }
 

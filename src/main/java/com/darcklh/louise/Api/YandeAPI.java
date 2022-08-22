@@ -57,7 +57,7 @@ public class YandeAPI {
         JSONObject returnJson = new JSONObject();
 
         // TODO: 总记录条数太多 会引起 QQ 风控
-        String uri = "https://yande.re/tag.json?name=" + tag + "&limit=" + 4;
+        String uri = "https://yande.re/tag.json?name=" + tag + "&limit=" + 20;
         // 使用代理请求 Yande
         RestTemplate restTemplate = new RestTemplate();
         // 借助代理请求
@@ -89,7 +89,7 @@ public class YandeAPI {
                 case 3: type = "版权"; break;
                 case 4: type = "角色"; break;
             }
-            tagList.append(name).append(" 类型:").append(type).append(" 有").append(count).append("张\n");
+            tagList.append(name).append(" 类型: ").append(type).append(" 有 ").append(count).append(" 张 \r\n");
         }
 
         OutMessage outMessage = new OutMessage(inMessage);

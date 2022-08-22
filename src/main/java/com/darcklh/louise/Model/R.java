@@ -110,20 +110,6 @@ public class R {
         return response;
     }
 
-    public JSONObject sendTestGroupForwardMessage(OutMessage outMessage) {
-
-        if (!testConnWithBot())
-            return null;
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        // TODO go-cqhttp 解析有问题 无法读取到内容 暂时转一次 Json
-        HttpEntity<String> cqhttp = new HttpEntity<>(JSONObject.toJSONString(outMessage), headers);
-        // 开始请求
-        JSONObject response = restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + "send_group_forward_msg", cqhttp, JSONObject.class);
-
-        return response;
-    }
-
     /**
      * 根据参数向cqhttp发送消息
      * @param outMessage OutMessage

@@ -9,6 +9,7 @@ import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.Saito.SysConfig;
 import com.darcklh.louise.Service.WebSocketService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
+@Slf4j
 public class BootApplication {
 
     @Autowired
@@ -51,23 +53,23 @@ public class BootApplication {
         //从数据库中更新配置
         LouiseConfig.refreshConfig(sysConfigDao.selectList(null));
 
-//        logger.info("<--加载MyLouise插件-->");
-//        List<PluginInfo> pluginInfos = pluginInfoDao.selectList(null);
-//        if (pluginInfos == null) {
-//            logger.info("MyLouise未安装插件");
-//            return;
-//        }
-//        int i = 0;
-//        try {
-//            pluginManager.loadPlugins(pluginInfos);
-//            for (PluginInfo pluginInfo : pluginInfos) {
-//                logger.info("加载插件 <--" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"-- >");
-//                i++;
-//            }
-//            saitoController.PluginInit(i);
-//        } catch (Exception e) {
-//            logger.info("加载插件失败: " + e.getMessage());
-//        }
+        log.info("<--加载MyLouise插件-->");
+        List<PluginInfo> pluginInfos = pluginInfoDao.selectList(null);
+        if (pluginInfos == null) {
+            log.info("MyLouise未安装插件");
+            return;
+        }
+        int i = 0;
+        try {
+            pluginManager.loadPlugins(pluginInfos);
+            for (PluginInfo pluginInfo : pluginInfos) {
+                log.info("加载插件 <--" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"-- >");
+                i++;
+            }
+            saitoController.PluginInit(i);
+        } catch (Exception e) {
+            log.info("加载插件失败: " + e.getMessage());
+        }
         OutMessage outMessage = new OutMessage();
         outMessage.setUser_id(Long.valueOf(LouiseConfig.LOUISE_ADMIN_NUMBER));
         outMessage.setMessage(LouiseConfig.LOUISE_WELCOME_SENTENCE);

@@ -19,13 +19,16 @@ public class PluginManager {
 
     Logger logger = LoggerFactory.getLogger(PluginManager.class);
 
-    public List<PluginInfo> pluginInfos;
+    public static List<PluginInfo> pluginInfos;
 
     private URLClassLoader urlClassLoader;
 
-    public void loadPlugins(List<PluginInfo> pluginInfos) throws MalformedURLException {
-        this.pluginInfos = pluginInfos;
+    public void loadPlugins(List<PluginInfo> pluginInfos) throws MalformedURLException, IllegalAccessException, InstantiationException {
         init(pluginInfos);
+        for(PluginInfo pluginInfo: pluginInfos) {
+            pluginInfo.setPluginServices(getInstance(pluginInfo.getClass_name()));
+        }
+        PluginManager.pluginInfos = pluginInfos;
     }
 
     private void init(List<PluginInfo> pluginInfos) throws MalformedURLException {
