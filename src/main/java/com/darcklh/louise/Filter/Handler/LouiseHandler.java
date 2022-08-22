@@ -87,7 +87,7 @@ public class LouiseHandler implements HandlerInterceptor {
         // 获取请求的功能对象
         FeatureInfo featureInfo = featureInfoService.findWithFeatureCmd(command);
         // 放行不需要鉴权的命令
-        if (featureInfo.getType() == 0) {
+        if (featureInfo.getIs_auth() == 0) {
             return true;
         }
 
