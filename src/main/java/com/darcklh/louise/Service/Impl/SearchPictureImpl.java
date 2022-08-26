@@ -1,6 +1,7 @@
 package com.darcklh.louise.Service.Impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Api.FileControlApi;
 import com.darcklh.louise.Config.LouiseConfig;
@@ -8,6 +9,7 @@ import com.darcklh.louise.Model.Messages.InMessage;
 import com.darcklh.louise.Model.Messages.OutMessage;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.Messages.Messages;
+import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Service.SearchPictureService;
 import com.darcklh.louise.Utils.HttpProxy;
 import lombok.extern.slf4j.Slf4j;
@@ -69,13 +71,13 @@ public class SearchPictureImpl implements SearchPictureService {
             map.put("api_key", LouiseConfig.SOURCENAO_API_KEY);
             map.put("db", "999");
             map.put("output_type", "2");
-            map.put("numres", "1");
+            map.put("numres", "3");
 
-            JSONObject result = JSON.parseObject(restTemplate.getForObject(LouiseConfig.SOURCENAO_URL + "?url={url}&db={db}&api_key={api_key}&output_type={output_type}&numres={numres}", String.class, map));
-            log.debug("查询到的结果: "+result);
+            JSONObject sauceNAO = JSON.parseObject(restTemplate.getForObject(LouiseConfig.SOURCENAO_URL + "?url={url}&db={db}&api_key={api_key}&output_type={output_type}&numres={numres}", String.class, map));
+            log.debug("查询到的结果: " + sauceNAO);
 
-            // 判断结果
-            int status = result.getJSONObject("header").getInteger("status");
+            // 判断结果 Header
+            int status = sauceNAO.getJSONObject("header").getInteger("status");
             if (status != 0) {
                 if (status > 0) {
                     outMessage.setMessage(LouiseConfig.LOUISE_ERROR_THIRD_API_REQUEST_FAILED);
@@ -86,42 +88,82 @@ public class SearchPictureImpl implements SearchPictureService {
                 return;
             }
 
-            JSONObject sourceNAO = result.getJSONArray("results").getJSONObject(0);
-            log.info("最匹配的结果: "+sourceNAO.toString());
+            JSONArray results = sauceNAO.getJSONArray("results");
+            JSONObject header = new JSONObject();
+            JSONObject data = new JSONObject();
+            Integer indexId = -9;
+            String similarity = "";
+            String index_name = "";
+            boolean flag = false;
+
+            for (Object object : results) {
+
+                if (flag)
+                    break;
+
+                // 获取单个结果的信息
+                JSONObject result = (JSONObject) object;
+                header = result.getJSONObject("header");
+                data = result.getJSONObject("data");
+
+                indexId = header.getInteger("index_id");
+                similarity = header.getString("similarity");
+                index_name = header.getString("index_name");
+
+                // 跳过无法处理的来源
+                switch (header.getInteger("index_id")) {
+                    case 5:
+                    case 4:
+                    case 12:
+                    case 9:
+                    case 25: flag = true; break;
+                    default: {
+                        outMessage.setMessage("暂不支持返回该来源的具体信息" +
+                                "来源信息: " + index_name +
+                                "相似度: " + similarity +
+                                "[CQ:image,file=" + header.getString("thumbnail") + "]");
+                        log.info("请求Bot的响应结果: " + r.sendMessage(outMessage));
+                    }
+                }
+            }
 
             // 格式化结果
-            JSONObject sourceNaoData = sourceNAO.getJSONObject("data");
-            sourceNaoData.put("thumbnail", "thumbnail");
-            JSONObject sourceNaoHeader = sourceNAO.getJSONObject("header");
-            String similarity = sourceNAO.getJSONObject("header").getString("similarity");
-            Integer indexId = sourceNAO.getJSONObject("header").getInteger("index_id");
-            String index_name = sourceNAO.getJSONObject("header").getString("index_name");
-            sourceNaoHeader.put("invoker", "NAO");
+            log.info("最合理结果: " + data.toString());
+            header.put("invoker", "NAO");
+
             // 相似度低于70%的结果以缩略图显示 排除Twitter来源
             if (Float.parseFloat(similarity) < 70.0 && indexId != 41) {
                 log.info("结果可能性低");
-                outMessage.setMessage("找到的结果相似度为"+similarity+"显示缩略图" +
-                        "\n此为不大可能的结果: \n"+
-                        sourceNaoData.getJSONArray("ext_urls").toString()+
-                        "\n[CQ:image,file="+sourceNaoHeader.getString("thumbnail")+"]");
+                outMessage.setMessage("找到的结果相似度为" + similarity +
+                        "\n此为不大可能的结果: \n" +
+                        data.getJSONArray("ext_urls").toString() +
+                        "\n[CQ:image,file=" + header.getString("thumbnail") + "]");
                 log.info("请求Bot的响应结果: " + r.sendMessage(outMessage));
                 return;
             }
-            //判断结果来源 如twitter之流来源很难获取图片 会补充URL以供查看
+            //判断结果来源以及是否可以处理 如twitter之流来源很难获取图片 会补充URL以供查看
             switch (indexId) {
                 //来自Pixiv
-                case 5: handleFromPixiv(outMessage, similarity, sourceNaoData, sourceNaoHeader); break;
+                case 5:
+                    handleFromPixiv(outMessage, similarity, data, header);
+                    break;
                 //TODO 暂时禁用推特来源 未解决图片缓存路径问题
-                case 4: handleFromTwitter(outMessage, similarity, sourceNaoData, sourceNaoHeader); break;
+                case 4:
+                    handleFromTwitter(outMessage, similarity, data, header);
+                    break;
+                case 12:
+                    handleFromYande(outMessage, similarity, data, header);
+                    break;
                 case 9:
-                case 12: handleFromGelbooru(outMessage, similarity, sourceNaoData, sourceNaoHeader); break;
+                case 25:
+                    handleFromGelbooru(outMessage, similarity, data, header);
+                    break;
                 default: {
                     outMessage.setMessage("暂不支持返回该来源的具体信息" +
                             "来源信息: " + index_name +
                             "相似度: " + similarity +
-                            "[CQ:image,file=" + sourceNaoHeader.getString("thumbnail") + "]");
+                            "[CQ:image,file=" + header.getString("thumbnail") + "]");
                     log.info("请求Bot的响应结果: " + r.sendMessage(outMessage));
-                    return;
                 }
             }
             log.info("请求Bot的响应结果: " + r.sendMessage(outMessage));
@@ -368,34 +410,84 @@ public class SearchPictureImpl implements SearchPictureService {
 
         log.info("处理Gelbooru来源");
         String sourceNaoArray = sourceNaoData.getJSONArray("ext_urls").toString();
-        String thumbnail = sourceNaoHeader.getString("thumbnail");
         String characters = sourceNaoData.getString("characters");
         String creator = sourceNaoData.getString("creator");
-        String index_name = sourceNaoHeader.getString("index_name");
+        String gelbooru_id = sourceNaoData.getString("gelbooru_id");
 
-        String imageUrl;
-        imageUrl = index_name.substring(index_name.indexOf(" - ")+3, index_name.length()-4);
-        String imageUrlEndfix = index_name.substring(index_name.length()-4);
-        imageUrl = imageUrl.substring(0, imageUrl.indexOf("_"));
-        String imageFinalUrlPrefix = imageUrl.substring(0,2) + "/" + imageUrl.substring(2,4) + "/";
-        String imageExampleUrlPrefix = imageUrl.substring(0,2) + "/" + imageUrl.substring(2,4) + "/sample_";
-        String finalUrl = "https://img3.gelbooru.com//images/" + imageFinalUrlPrefix + imageUrl + imageUrlEndfix;
-        String exampleUrl = "https://img3.gelbooru.com//samples/" + imageExampleUrlPrefix + imageUrl + imageUrlEndfix;
+        String uri = "https://gelbooru.com/index.php?page=dapi&s=post&q=index&json=1&id=" + gelbooru_id;
+        JSONObject imgJsonObj = requestBooru(uri, "GelBooru API", outMessage).getJSONArray("post").getJSONObject(0);
 
-        boolean isImage = fileControlApi.downloadPicture_RestTemplate(finalUrl, "image_" + imageUrl + imageUrlEndfix, "Gelbooru");
-        boolean isSample = fileControlApi.downloadPicture_RestTemplate(exampleUrl, "sample_" + imageUrl + imageUrlEndfix, "Gelbooru");
+        String jpegUrl = imgJsonObj.getString("file_url");
+        String fileName = "image_" + imgJsonObj.getString("image");
+        String tags = imgJsonObj.getString("tags");
+        fileControlApi.downloadPicture_RestTemplate(jpegUrl, fileName, "Gelbooru");
 
         String message = outMessage.getSender().getNickname() + "，查询出来咯"+
             "\n来源Gelbooru" +
             "\n角色:" + characters +
             "\n作者:" + creator +
+            "\n标签:" + tags +
             "\n相似度:" + similarity +
             "\n可能的图片地址:" + sourceNaoArray +
-            "\n[CQ:image,file=" + thumbnail + "]" +
-            "\n[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + (isImage ? "Gelbooru/image_" : "Gelbooru/sample_") + imageUrl + ".jpg]" +
-            "\n信息来自Yande.re，结果可能不准确，请通过上面的链接访问";
+            "\n[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "Gelbooru/" + fileName + "]" +
+            "\n信息来自Gelbooru，结果可能不准确，请通过上面的链接访问";
         outMessage.setMessage(message);
         return outMessage;
+    }
+
+    private OutMessage handleFromYande(OutMessage outMessage, String similarity, JSONObject sourceNaoData, JSONObject sourceNaoHeader) {
+        log.info("处理Yande来源");
+        String sourceNaoArray = sourceNaoData.getJSONArray("ext_urls").toString();
+        String post_id = sourceNaoData.getString("yandere_id");
+        String characters = sourceNaoData.getString("characters");
+        String creator = sourceNaoData.getString("creator");
+
+        String uri = "https://yande.re/post.json" + "?tags=id:" + post_id;
+        JSONObject imgJsonObj = requestBooru(uri, "Yande API", outMessage);
+
+        String jpegUrl = imgJsonObj.getString("sample_url");
+        String tags = imgJsonObj.getString("tags");
+        String fileName = imgJsonObj.getString("md5") + "." + imgJsonObj.getString("file_ext");
+        fileControlApi.downloadPicture_RestTemplate(jpegUrl, fileName, "Yande");
+
+        String message = outMessage.getSender().getNickname() + "，查询出来咯"+
+                "\n来源Yande.re" +
+                "\n角色:" + characters +
+                "\n作者:" + creator +
+                "\n标签:" + tags +
+                "\n相似度:" + similarity +
+                "\n可能的图片地址:" + sourceNaoArray +
+                "\n[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "Yande/" + fileName + "]" +
+                "\n信息来自Yande.re，结果可能不准确，请通过上面的链接访问";
+        outMessage.setMessage(message);
+        return outMessage;
+    }
+
+    private JSONObject requestBooru(String uri, String booru_type, OutMessage outMessage) {
+        // 构造请求图站的请求体
+        log.info("请求地址: " + uri);
+        // 使用代理请求 Yande
+        RestTemplate restTemplate = new RestTemplate();
+        // 借助代理请求
+        if (LouiseConfig.LOUISE_PROXY_PORT > 0)
+            restTemplate.setRequestFactory(new HttpProxy().getFactory(booru_type));
+
+        JSONObject returnJson;
+        JSONArray returnArray;
+
+        String result = restTemplate.getForObject(uri, String.class);
+        if (booru_type == "GelBooru API") {
+            returnJson = JSON.parseObject(result);
+            return returnJson;
+        } else {
+            returnArray = JSON.parseArray(result);
+        }
+
+        if (returnArray == null) {
+            outMessage.setMessage("遗憾, 图片可能已经被删除了😢");
+            throw new ReplyException(outMessage);
+        }
+        return (JSONObject)returnArray.get(0);
     }
 
 }

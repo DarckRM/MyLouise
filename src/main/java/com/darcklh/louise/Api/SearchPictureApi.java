@@ -63,7 +63,7 @@ public class SearchPictureApi{
         log.debug(inMessage.toString());
 
         // TODO 线程名过长
-        // new Thread(() -> searchPictureService.findWithAscii2d(inMessage, url), UniqueGenerator.uniqueThreadName("", "A2d")).start();
+        new Thread(() -> searchPictureService.findWithAscii2d(inMessage, url), UniqueGenerator.uniqueThreadName("", "A2d")).start();
         new Thread(() -> searchPictureService.findWithSourceNAO(inMessage, url), UniqueGenerator.uniqueThreadName("", "NAO")).start();
     }
 

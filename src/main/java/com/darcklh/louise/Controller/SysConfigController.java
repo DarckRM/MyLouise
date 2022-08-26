@@ -33,9 +33,6 @@ public class SysConfigController {
     @Autowired
     SysConfigService sysConfigService;
 
-    @Autowired
-    LouiseConfig louiseConfig;
-
     @RequestMapping("/{type}")
     public Result<SysConfig> findSysConfigByType(@PathVariable String type) {
 
@@ -75,7 +72,7 @@ public class SysConfigController {
         }
         sysConfigService.edit(presentSysConfigs);
         //更新配置
-        louiseConfig.refreshConfig(sysConfigList);
+        LouiseConfig.refreshConfig(sysConfigList);
         logger.info("已刷新系统配置");
         return result;
     }
