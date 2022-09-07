@@ -7,6 +7,7 @@ import com.darcklh.louise.Model.Louise.Group;
 import com.darcklh.louise.Model.Louise.Role;
 import com.darcklh.louise.Model.Louise.User;
 import com.darcklh.louise.Model.Messages.InMessage;
+import com.darcklh.louise.Model.Messages.Node;
 import com.darcklh.louise.Model.Messages.OutMessage;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
@@ -40,6 +41,9 @@ public class MyLouiseApi implements ErrorController {
 
     @Autowired
     private R r;
+
+    @Autowired
+    private SearchPictureService searchPictureService;
 
     @Autowired
     private GroupService groupService;
@@ -285,13 +289,16 @@ public class MyLouiseApi implements ErrorController {
     @RequestMapping("louise/pid/{pixiv_id}")
     private JSONObject findPixivId(@PathVariable String pixiv_id, @RequestBody InMessage inMessage) {
         String nickname = inMessage.getSender().getNickname();
-
-        String message = nickname + "，你要的图片" + pixiv_id + "找到了" +
+        OutMessage outMessage = new OutMessage(inMessage);
+        String msg = nickname + "，你要的图片" + pixiv_id + "找到了" +
                 "\n[CQ:image,file=" +LouiseConfig.PIXIV_PROXY_URL + pixiv_id + ".jpg]" +
                 "\n如果未显示出图片请在pixiv_id后指定第几张作品";
 
-        OutMessage outMessage = new OutMessage(inMessage);
-        outMessage.setMessage(message);
+        if (outMessage.getGroup_id() < 0)
+            outMessage.setMessage(msg);
+        else
+            outMessage.getMessages().add(new Node(msg, inMessage.getSelf_id()));
+        log.info(JSONObject.toJSONString(outMessage));
         r.sendMessage(outMessage);
         return null;
     }
