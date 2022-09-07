@@ -4,7 +4,7 @@
 
 目前已经具有的功能
 
-```text
+```markdown
 1. 请求LoliconAPI查询涩图
 	1.1 根据结果匹配返回完整结果
 2. 请求sourceNAO进行搜图

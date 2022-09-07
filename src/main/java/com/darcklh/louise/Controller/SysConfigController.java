@@ -33,9 +33,6 @@ public class SysConfigController {
     @Autowired
     SysConfigService sysConfigService;
 
-    @Autowired
-    LouiseConfig louiseConfig;
-
     @RequestMapping("/{type}")
     public Result<SysConfig> findSysConfigByType(@PathVariable String type) {
 
@@ -64,10 +61,7 @@ public class SysConfigController {
 
         for (SysConfig sysConfig : sysConfigList) {
             int id = sysConfig.getConfig_id();
-            if (originalSysConfigs.get(id-1).getConfig_value().equals(sysConfig.getConfig_value())) {
-                continue;
-            }
-            else {
+            if (!originalSysConfigs.get(id-1).getConfig_value().equals(sysConfig.getConfig_value())) {
                 i++;
                 result.setMsg("修改了"+i+"条配置");
                 presentSysConfigs.add(sysConfig);
@@ -75,7 +69,7 @@ public class SysConfigController {
         }
         sysConfigService.edit(presentSysConfigs);
         //更新配置
-        louiseConfig.refreshConfig(sysConfigList);
+        LouiseConfig.refreshConfig(sysConfigList);
         logger.info("已刷新系统配置");
         return result;
     }

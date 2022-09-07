@@ -29,7 +29,7 @@ export default defineComponent({
         // 定义ws对象
         webSocket: null,
         // ws请求链接（类似于ws后台地址）
-        ws: 'ws://121.4.179.240:8099/saito_ws/' + this.client_name,
+        ws: websocket_url + this.client_name,
         // ws定时器
         wsTimer: null,
       }

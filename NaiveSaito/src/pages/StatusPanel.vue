@@ -114,7 +114,6 @@ export default defineComponent({
     $route() {
       axios.get('/saito_ws/stop_run_cpu_payload')
       this.clear()
-      axios.get('saito_ws/stop_run_cpu_payload/')
     }
   }
 })

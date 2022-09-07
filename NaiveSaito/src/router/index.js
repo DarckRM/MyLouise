@@ -31,6 +31,10 @@ const routes = [
               component: () => import('../pages/SendNotifiation.vue')
           },
           {
+              path: 'update-panel',
+              component: () => import('../pages/UpdatePanel.vue')
+          },
+          {
               path: 'user-manage',
               component: () => import('../pages/louise/UserManagement.vue')
           },

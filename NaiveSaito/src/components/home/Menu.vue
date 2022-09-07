@@ -20,7 +20,8 @@ import {
   HomeOutline as HomeIcon,
   NotificationsOutline as NoticeIcon,
   Cube as CubeIcon,
-  ImagesOutline as ImagesIcon
+  ImagesOutline as ImagesIcon,
+  SyncOutline as SyncIcon
 } from '@vicons/ionicons5'
 import  { useMessage, NIcon } from 'naive-ui'
 import { router } from '../../router'
@@ -57,6 +58,11 @@ const menuOptions = [
     label: '配置信息',
     key: 'config-info',
     icon: renderIcon(ChipIcon)
+  },
+  {
+    label: '版本更新',
+    key: 'update-panel',
+    icon: renderIcon(SyncIcon)
   },
   {
     label: '发送公告',
@@ -100,7 +106,7 @@ const menuOptions = [
           label: '角色信息',
           key: 'role-info',
           icon: renderIcon(CogIcon)
-        },
+        }
     ]
   }
 ]
