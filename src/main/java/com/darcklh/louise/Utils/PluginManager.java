@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,24 +20,24 @@ public class PluginManager {
 
     Logger logger = LoggerFactory.getLogger(PluginManager.class);
 
-    public static List<PluginInfo> pluginInfos;
+    public static HashMap<Integer, PluginInfo> pluginInfos = new HashMap<>();
 
     private URLClassLoader urlClassLoader;
 
-    public void loadPlugins(List<PluginInfo> pluginInfos) throws MalformedURLException, IllegalAccessException, InstantiationException {
-        init(pluginInfos);
-        for(PluginInfo pluginInfo: pluginInfos) {
-            pluginInfo.setPluginServices(getInstance(pluginInfo.getClass_name()));
+    public void loadPlugins(List<PluginInfo> pluginList) throws MalformedURLException, IllegalAccessException, InstantiationException {
+        init(pluginList);
+        for(PluginInfo pluginInfo: pluginList) {
+            pluginInfo.setPluginService(getInstance(pluginInfo.getClass_name()));
+            pluginInfos.put(pluginInfo.getPlugin_id(), pluginInfo);
         }
-        PluginManager.pluginInfos = pluginInfos;
     }
 
-    private void init(List<PluginInfo> pluginInfos) throws MalformedURLException {
-        int size = pluginInfos.size();
+    private void init(List<PluginInfo> pluginList) throws MalformedURLException {
+        int size = pluginList.size();
         URL[] urls = new URL[size];
 
         for (int i = 0; i < size; i++) {
-            PluginInfo pluginInfo = pluginInfos.get(i);
+            PluginInfo pluginInfo = pluginList.get(i);
             String filePath = pluginInfo.getPath();
             urls[i] = new URL("jar:file:" +filePath+ "!/");
         }

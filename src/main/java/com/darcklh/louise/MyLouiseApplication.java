@@ -1,5 +1,6 @@
 package com.darcklh.louise;
 
+import com.darcklh.louise.Config.LouiseConfig;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

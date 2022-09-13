@@ -1,6 +1,5 @@
 package com.darcklh.louise.Model;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.Messages.OutMessage;
@@ -14,8 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * 和Cqhttp通信的实体

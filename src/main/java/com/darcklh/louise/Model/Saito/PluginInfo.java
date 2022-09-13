@@ -19,12 +19,13 @@ import java.util.List;
 public class PluginInfo {
 
     @TableField(exist = false)
-    PluginService pluginServices;
+    PluginService pluginService;
 
     @TableId
     private Integer plugin_id;
     private String author;
     private String name;
+    private String cmd;
     private String path;
     private String class_name;
     private Timestamp create_time;

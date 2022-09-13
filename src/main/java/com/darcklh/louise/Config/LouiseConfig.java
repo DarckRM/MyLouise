@@ -36,6 +36,7 @@ public class LouiseConfig {
     public static String BOT_LOUISE_CACHE_IMAGE;
     public static String BOT_BASE_URL;
     public static String BOT_HTTP_POST_KEY;
+    public static String BOT_CACHE_LOCATION;
 
     //API相关配置
     public static String PIXIV_REVERSE_PROXY;
@@ -69,6 +70,7 @@ public class LouiseConfig {
         BOT_LOUISE_CACHE_IMAGE = configs.get("BOT.LOUISE_CACHE_IMAGE");
         BOT_BASE_URL = configs.get("BOT.BASE_URL");
         BOT_HTTP_POST_KEY = configs.get("BOT.HTTP_POST_KEY");
+        BOT_CACHE_LOCATION = configs.get("BOT.CACHE_LOCATION");
 
         SOURCENAO_URL = configs.get("API.SOURCENAO.URL");
         SOURCENAO_API_KEY = configs.get("API.SOURCENAO.API_KEY");

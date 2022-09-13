@@ -13,12 +13,11 @@ import com.darcklh.louise.Model.Messages.InMessage;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Model.Saito.FeatureInfo;
+import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.VO.FeatureInfoMin;
-import com.darcklh.louise.Service.FeatureInfoService;
-import com.darcklh.louise.Service.GroupService;
+import com.darcklh.louise.Service.*;
 import com.darcklh.louise.Service.Impl.GroupImpl;
 import com.darcklh.louise.Service.Impl.UserImpl;
-import com.darcklh.louise.Service.UserService;
 import com.darcklh.louise.Utils.HttpServletWrapper;
 import com.darcklh.louise.Utils.isEmpty;
 import org.slf4j.Logger;
@@ -56,6 +55,9 @@ public class LouiseHandler implements HandlerInterceptor {
     FeatureInfoService featureInfoService;
 
     @Autowired
+    PluginInfoService pluginInfoService;
+
+    @Autowired
     R r;
 
     @Override
@@ -86,6 +88,13 @@ public class LouiseHandler implements HandlerInterceptor {
 
         // 获取请求的功能对象
         FeatureInfo featureInfo = featureInfoService.findWithFeatureCmd(command);
+        // 如果是请求插件类功能且不是转发请求则进行转发
+        if (featureInfo.getType() == 1 && !request.getRequestURI().contains("/louise/invoke/")) {
+            PluginInfo pluginInfo = pluginInfoService.findByCmd(command);
+            request.getRequestDispatcher("invoke/" + pluginInfo.getPlugin_id()).forward(request, response);
+            return false;
+        }
+
         // 放行不需要鉴权的命令
         if (featureInfo.getIs_auth() == 0) {
             return true;

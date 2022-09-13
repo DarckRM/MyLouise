@@ -9,6 +9,7 @@ import com.darcklh.louise.Model.Louise.User;
 import com.darcklh.louise.Model.Messages.InMessage;
 import com.darcklh.louise.Model.Messages.Node;
 import com.darcklh.louise.Model.Messages.OutMessage;
+import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Service.*;
@@ -58,15 +59,27 @@ public class MyLouiseApi implements ErrorController {
     private CBIRService cbirService;
 
     /**
+     * 用于接收各类请求 但不做任何处理
+     */
+    @RequestMapping("/louise/*")
+    public String handleRequest() {
+        return "不存在的 URL";
+    }
+
+    /**
      * 插件调用中心
-     * @param plugin
+     * @param pluginId
      * @return
      */
-    @RequestMapping("/louise/p/{plugin}")
-    public JSONObject pluginsCenter(@PathVariable String plugin) {
-        logger.info("rua");
-        PluginInfo pluginInfo = PluginManager.pluginInfos.get(1);
-        pluginInfo.getPluginServices().service(null);
+    @RequestMapping("/louise/invoke/{pluginId}")
+    public JSONObject pluginsCenter(@PathVariable Integer pluginId, @RequestBody InMessage inMessage) {
+        PluginInfo pluginInfo = PluginManager.pluginInfos.get(pluginId);
+        try {
+            pluginInfo.getPluginService().service(inMessage);
+        } catch (Exception e) {
+            log.debug(e.getCause().toString());
+            throw new ReplyException("插件异常，请查看插件帮助信息\n" + pluginInfo.getDescription());
+        }
         return null;
     }
 
