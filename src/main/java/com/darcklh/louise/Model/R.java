@@ -45,7 +45,7 @@ public class R {
             socket.connect(address, 1000);
             socket.close();
         } catch (IOException e){
-            log.info("无法与BOT建立连接: " + e.getMessage());
+            log.warn("无法与BOT建立连接: " + e.getMessage());
             return false;
         }
         return true;
@@ -56,11 +56,22 @@ public class R {
      * @param api
      * @return
      */
-    public JSONObject requestAPI(String api, JSONObject jsonObject) {
+    public JSONObject requestAPI(String api) {
         if (!testConnWithBot())
             return null;
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> cqhttp = new HttpEntity<>(headers);
+        //开始请求
+        log.info("请求接口: " + api);
+        this.refresh();
+        return restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + api, cqhttp, JSONObject.class);
+    }
+
+    public JSONObject requestAPI(String api, JSONObject param) {
+        if (!testConnWithBot())
+            return null;
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> cqhttp = new HttpEntity<>(param.toJSONString(), headers);
         //开始请求
         log.info("请求接口: " + api);
         this.refresh();
@@ -74,6 +85,7 @@ public class R {
      * @return
      */
     public JSONObject requestAPI(String api, OutMessage outMessage) {
+
         if (!testConnWithBot())
             return null;
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -94,17 +106,7 @@ public class R {
             restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + "send_msg", cqhttp, JSONObject.class);
         }
         this.refresh();
-        return response;
-    }
-
-    public JSONObject sendTestMsg(OutMessage outMessage) {
-        if (!testConnWithBot())
-            return null;
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<OutMessage> cqhttp = new HttpEntity<>(outMessage, headers);
-        // 开始请求
-        JSONObject response = restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + "send_msg", cqhttp, JSONObject.class);
-
+        log.info("请求 BOT 返回消息:" + response.toString());
         return response;
     }
 
@@ -113,13 +115,13 @@ public class R {
      * @param outMessage OutMessage
      * @return response String
      */
-    public JSONObject sendMessage(OutMessage outMessage) {
+    public void sendMessage(OutMessage outMessage) {
 
         if (!testConnWithBot())
-            return null;
+            throw new InnerException("B101", "无法连接 BOT， 请确认 Go-Cqhttp 正在运行", "");
         if (outMessage.getMessages().size() != 0)
-            return this.requestAPI("send_group_forward_msg", outMessage);
-        return this.requestAPI("send_msg", outMessage);
+            this.requestAPI("send_group_forward_msg", outMessage);
+        else this.requestAPI("send_msg", outMessage);
     }
 
     /**

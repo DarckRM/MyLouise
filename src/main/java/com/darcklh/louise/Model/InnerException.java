@@ -9,10 +9,10 @@ import java.io.IOException;
 /**
  * @author DarckLH
  * @date 2022/4/18 21:37
- * @Description
+ * @Description 返回系统内部的异常
  */
 @Data
-public class SpecificException extends RuntimeException {
+public class InnerException extends RuntimeException {
 
     /**
      * 异常信息
@@ -25,7 +25,7 @@ public class SpecificException extends RuntimeException {
     private String innerCode;
 
     /**
-     * 返回给QQ端的消息
+     * 返回给客户端的消息
      */
     private JSONObject jsonObject;
 
@@ -40,7 +40,7 @@ public class SpecificException extends RuntimeException {
      * @param errorMsg
      * @param originErrorMessage
      */
-    public SpecificException(String innerCode, String errorMsg, String originErrorMessage) {
+    public InnerException(String innerCode, String errorMsg, String originErrorMessage) {
         super(errorMsg);
         this.innerCode = "SRT" + innerCode;
         this.errorMsg = "RuntimeException: "+errorMsg;
@@ -48,31 +48,12 @@ public class SpecificException extends RuntimeException {
 
     }
 
-    public SpecificException(String innerCode, String errorMsg, JSONObject reply, String originErrorMessage) {
+    public InnerException(String innerCode, String errorMsg, JSONObject reply, String originErrorMessage) {
         super(errorMsg);
         this.innerCode = "SRT" + innerCode;
         this.errorMsg = "RuntimeException: "+errorMsg;
         this.originErrorMessage = "OriginErrorMsg: " + originErrorMessage;
         this.jsonObject = reply;
-    }
-
-    /**
-     * 带返回体的异常
-     * @param innerCode
-     * @param errorMsg
-     * @param reply
-     * @param originErrorMessage
-     */
-    public SpecificException(String innerCode, String errorMsg, String reply, String originErrorMessage) {
-        super(errorMsg);
-        this.innerCode = "SRT" + innerCode;
-        this.errorMsg = "RuntimeException: "+errorMsg;
-        this.originErrorMessage = "OriginErrorMsg: " + originErrorMessage;
-        this.jsonObject = (JSONObject) new JSONObject().put("reply", reply);
-    }
-
-    public SpecificException(String innerCode, String errorMsg, InMessage inMessage, String originErrorMessage) {
-
     }
 
 }

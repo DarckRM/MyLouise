@@ -1,12 +1,8 @@
 package com.darcklh.louise.Controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.darcklh.louise.Model.Louise.User;
 import com.darcklh.louise.Model.Result;
-import com.darcklh.louise.Model.Saito.SysUser;
-import com.darcklh.louise.Model.SpecificException;
 import com.darcklh.louise.Model.VO.UserRole;
-import com.darcklh.louise.Service.SysUserService;
 import com.darcklh.louise.Service.UserService;
 import com.darcklh.louise.Utils.isEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestController

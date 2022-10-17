@@ -43,7 +43,7 @@ public class SearchPictureApi{
         log.info("上传图片的地址:"+ url);
 
         String finalUrl = url;
-        new Thread(() -> searchPictureCenter(inMessage, finalUrl)).start();
+        new Thread(() -> {searchPictureCenter(inMessage, finalUrl); }).start();
 
         returnJson.put("reply", inMessage.getSender().getNickname()+"! 露易丝在搜索了哦！" +
                 "\n目前Ascii2d搜索引擎仍在测试中，受网络影响较大！");
@@ -57,14 +57,16 @@ public class SearchPictureApi{
      * @param inMessage
      * @return
      */
-    private void searchPictureCenter(InMessage inMessage, String url) {
+    private void searchPictureCenter(InMessage inMessage, String url){
 
         log.info("进入搜图流程, 发起用户为:"+ inMessage.getSender().getNickname()+" QQ:"+ inMessage.getUser_id());
         log.debug(inMessage.toString());
 
         // TODO 线程名过长
-        new Thread(() -> searchPictureService.findWithAscii2d(inMessage, url), UniqueGenerator.uniqueThreadName("", "A2d")).start();
+
         new Thread(() -> searchPictureService.findWithSourceNAO(inMessage, url), UniqueGenerator.uniqueThreadName("", "NAO")).start();
+        // new Thread(() -> searchPictureService.findWithAscii2d(inMessage, url), UniqueGenerator.uniqueThreadName("", "A2d")).start();
+
     }
 
 }

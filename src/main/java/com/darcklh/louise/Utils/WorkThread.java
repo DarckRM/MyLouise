@@ -1,9 +1,8 @@
 package com.darcklh.louise.Utils;
 
-import com.darcklh.louise.Model.SpecificException;
+import com.darcklh.louise.Model.InnerException;
 import com.darcklh.louise.Service.MultiTaskService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StopWatch;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -40,9 +39,9 @@ public class WorkThread extends Thread {
                 if (taskService.execute())
                     callBackFunc();
         } catch (IOException e) {
-            throw new SpecificException("500", "文件读写错误", e.getMessage());
+            throw new InnerException("500", "文件读写错误", e.getMessage());
         } catch ( NoSuchAlgorithmException e) {
-            throw new SpecificException("501", "未知的错误", e.getClass() + "-" + e.getMessage());
+            throw new InnerException("501", "未知的错误", e.getClass() + "-" + e.getMessage());
         }
     }
 

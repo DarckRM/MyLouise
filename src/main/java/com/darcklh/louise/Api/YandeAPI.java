@@ -245,23 +245,57 @@ public class YandeAPI {
     private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit) {
 
         String replyImgList = inMessage.getSender().getNickname() +  ", 你的请求结果出来了，你输入的参数是: " + inMessage.getMessage().substring(7) + "\n";
+        OutMessage outMessage = new OutMessage(inMessage);
+        int nsfw = 0;
         for ( Object object: resultJsonArray) {
             if (limit == 0)
                 break;
             JSONObject imgJsonObj = (JSONObject) object;
+            String[] tagList = imgJsonObj.getString("tags").split(" ");
+            // 如果是群聊跳过成人内容
+            if (outMessage.getGroup_id() >= 0)
+                if (isNSFW(tagList)) {
+                    nsfw++;
+                    continue;
+                }
+
             String urlList = imgJsonObj.getString("sample_url");
             String fileName = imgJsonObj.getString("md5") + "." + imgJsonObj.getString("file_ext");
             fileControlApi.downloadPicture_RestTemplate(urlList, fileName, "Yande");
-            replyImgList += "[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "Yande/" + fileName + "]\n";
+            replyImgList += "[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "Yande/" + fileName + "]\r\n";
             limit--;
         }
-        String msg = inMessage.getSender().getNickname() + " 这是Gelbooru的Post页面\n" + replyImgList;
-        OutMessage outMessage = new OutMessage(inMessage);
+        String msg = inMessage.getSender().getNickname() + " 这是Gelbooru的Post页面\r\n" + replyImgList;
+        if (nsfw != 0)
+            msg += "已过滤 " + nsfw + " 张禁止内容图片，请私聊获取完整结果";
         if (outMessage.getGroup_id() < 0)
             outMessage.setMessage(msg);
         else
             outMessage.getMessages().add(new Node(msg, inMessage.getSelf_id()));
         log.info(JSONObject.toJSONString(outMessage));
         r.sendMessage(outMessage);
+    }
+
+    private boolean isNSFW(String[] tagList) {
+        for ( String tag : tagList ) {
+            switch (tag) {
+                case "naked":
+                case "nipples":
+                case "sex":
+                case "anus":
+                case "breasts":
+                case "pussy":
+                case "naked_cape":
+                case "no_bra":
+                case "nopan":
+                case "bikini":
+                case "undressing":
+                case "pantsu":
+                case "monochrome":
+                case "bondage":
+                    return true;
+            }
+        }
+        return false;
     }
 }

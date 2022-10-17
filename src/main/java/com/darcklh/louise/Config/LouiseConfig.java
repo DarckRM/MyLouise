@@ -44,6 +44,7 @@ public class LouiseConfig {
     public static String SOURCENAO_URL;
     public static String SOURCENAO_API_KEY;
     public static String SOURCENAO_ERROR_REQUEST_FAILED;
+    public static String AI_PAINT_URL;
 
     /**
      * 从数据库中更新配置
@@ -75,6 +76,7 @@ public class LouiseConfig {
         SOURCENAO_URL = configs.get("API.SOURCENAO.URL");
         SOURCENAO_API_KEY = configs.get("API.SOURCENAO.API_KEY");
         PIXIV_PROXY_URL = configs.get("API.PIXIV.PROXY_URL");
+        AI_PAINT_URL = configs.get("API.AI_PAINT_URL");
     }
 
 
