@@ -9,10 +9,11 @@ import lombok.Data;
  * @Description 定时任务信息
  */
 @Data
-public class Schedules {
+public class Task {
 
     @TableId
     private Integer schedule_id;
+    private String schedule_name;
     private String run;
     private Integer type;
     private String target;

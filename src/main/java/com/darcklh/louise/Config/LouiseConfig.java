@@ -14,6 +14,7 @@ import java.util.List;
 @Component
 @Data
 @Slf4j
+
 public class LouiseConfig {
 
     public static String SERVER_PORT;
@@ -48,10 +49,8 @@ public class LouiseConfig {
 
     /**
      * 从数据库中更新配置
-     * @param sysConfigs
      */
     public static void refreshConfig(List<SysConfig> sysConfigs) {
-
         //获取系统配置项
         HashMap<String, String> configs = new HashMap<>();
 
