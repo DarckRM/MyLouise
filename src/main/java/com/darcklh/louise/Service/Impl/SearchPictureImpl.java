@@ -73,8 +73,16 @@ public class SearchPictureImpl implements SearchPictureService {
         map.put("db", "999");
         map.put("output_type", "2");
         map.put("numres", "3");
-
-        JSONObject sauceNAO = JSON.parseObject(restTemplate.getForObject(LouiseConfig.SOURCENAO_URL + "?url={url}&db={db}&api_key={api_key}&output_type={output_type}&numres={numres}", String.class, map));
+        JSONObject sauceNAO;
+        try {
+            sauceNAO = JSON.parseObject(restTemplate.getForObject(LouiseConfig.SOURCENAO_URL + "?url={url}&db={db}&api_key={api_key}&output_type={output_type}&numres={numres}", String.class, map));
+        } catch (Exception e) {
+            log.warn("请求 Sauce NAO 的时候异常了");
+            log.warn(e.getLocalizedMessage());
+            outMessage.setMessage("请求 Sauce NAO 的时候异常了\n" + e.getLocalizedMessage());
+            r.sendMessage(outMessage);
+            return;
+        }
         log.debug("查询到的结果: " + sauceNAO);
 
         // 判断结果 Header
