@@ -21,10 +21,6 @@ public class SendPictureApi {
 
     Logger logger = LoggerFactory.getLogger(SendPictureApi.class);
 
-    public String test() {
-        return LouiseConfig.BOT_BASE_URL;
-    }
-
     public JSONObject sendPicture(String id, String nickname, String senderType, InMessage inMessage) {
 
         logger.info("进入发图流程, 发起用户为:"+nickname+" QQ:"+id);

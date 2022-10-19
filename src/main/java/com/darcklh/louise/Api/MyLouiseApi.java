@@ -96,10 +96,20 @@ public class MyLouiseApi implements ErrorController {
      * @return
      */
     @RequestMapping("louise/help")
-    public JSONObject help() {
+    public JSONObject help(@RequestBody InMessage inMessage) {
+        String[] args = inMessage.getMessage().split(" ");
         JSONObject returnJson = new JSONObject();
-        //TODO 暂时先请求网络图片 Linux和Windows对于本地路径的解析不同 很烦
-        returnJson.put("reply","[CQ:image,file="+LouiseConfig.LOUISE_HELP_PAGE+"]");
+        String page = "1";
+        if (args.length > 2)
+            throw new ReplyException("过多的参数");
+        if (args.length == 2)
+            page = args[1];
+        try {
+            Integer.parseInt(page);
+        } catch (NumberFormatException e) {
+           throw new ReplyException("非法的参数格式");
+        }
+        returnJson.put("reply","[CQ:image,file=" + LouiseConfig.LOUISE_HELP_PAGE + page + ".png]");
         return returnJson;
     }
 
