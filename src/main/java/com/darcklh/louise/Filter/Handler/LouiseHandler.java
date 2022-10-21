@@ -78,11 +78,16 @@ public class LouiseHandler implements HandlerInterceptor {
         //对command预处理
         String[] commands = message.split(" ");
         String command = commands[0];
+        // 如果携带独立参数，那么模糊匹配命令后半部分
         if (commands.length > 1)
             command += " %";
         else {
+            // 如果参数是和命令体结合的形式，那么模糊匹配左大括号后半部分
             if (command.contains("/"))
                 command = command.substring(0, command.indexOf("/") + 1) + "{%";
+            else
+            // 如果不携带参数，那么构造命令是否允许无参请求查询条件
+                command += " $%";
         }
         boolean tag = false;
 

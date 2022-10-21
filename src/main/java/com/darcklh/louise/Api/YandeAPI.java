@@ -180,6 +180,8 @@ public class YandeAPI {
                 pageNation[0] = temp[0];
             } else {
                 pageNation = temp;
+                if (Integer.parseInt(pageNation[1]) > 20)
+                    pageNation[1] = "20";
             }
 
         } else {

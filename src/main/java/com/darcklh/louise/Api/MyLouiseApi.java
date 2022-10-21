@@ -77,8 +77,10 @@ public class MyLouiseApi implements ErrorController {
         try {
             pluginInfo.getPluginService().service(inMessage);
         } catch (Exception e) {
-            log.debug(e.getCause().toString());
-            throw new ReplyException("插件异常，请查看插件帮助信息\n" + pluginInfo.getDescription());
+            if (e instanceof ReplyException)
+                throw e;
+            else
+                e.printStackTrace();
         }
         return null;
     }
@@ -97,19 +99,24 @@ public class MyLouiseApi implements ErrorController {
      */
     @RequestMapping("louise/help")
     public JSONObject help(@RequestBody InMessage inMessage) {
+        OutMessage out = new OutMessage(inMessage);
         String[] args = inMessage.getMessage().split(" ");
         JSONObject returnJson = new JSONObject();
+        int intPage = 1;
         String page = "1";
         if (args.length > 2)
             throw new ReplyException("过多的参数");
         if (args.length == 2)
             page = args[1];
         try {
-            Integer.parseInt(page);
+            intPage = Integer.parseInt(page);
         } catch (NumberFormatException e) {
-           throw new ReplyException("非法的参数格式");
+            throw new ReplyException("非法的参数格式");
         }
-        returnJson.put("reply","[CQ:image,file=" + LouiseConfig.LOUISE_HELP_PAGE + page + ".png]");
+        if (intPage >= 3)
+            throw new ReplyException("现在还没有那么多帮助页面");
+        out.setMessage("[CQ:image,file=" + LouiseConfig.LOUISE_HELP_PAGE + page + ".png]");
+        r.sendMessage(out);
         return returnJson;
     }
 

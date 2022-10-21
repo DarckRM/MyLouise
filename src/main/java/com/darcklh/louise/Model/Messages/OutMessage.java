@@ -26,6 +26,7 @@ public class OutMessage {
     private Boolean auto_escape = false;
     // 用于存放发送消息者信息的字段
     private Sender sender;
+    private String post_type;
 
     /**
      * 根据传入的 InMessage 构造 OutMessage

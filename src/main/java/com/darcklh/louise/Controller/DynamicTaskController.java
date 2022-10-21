@@ -27,7 +27,7 @@ public class DynamicTaskController {
     public String startDynamicTask(@RequestBody Task task){
         // 将这个添加到动态定时任务中去
         dynamicTaskService.add(task);
-        return "动态任务:"+task.getSchedule_name()+" 已开启";
+        return "动态任务:"+task.getTask_name()+" 已开启";
     }
 
     /**

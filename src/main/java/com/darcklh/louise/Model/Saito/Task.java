@@ -12,9 +12,9 @@ import lombok.Data;
 public class Task {
 
     @TableId
-    private Integer schedule_id;
-    private String schedule_name;
-    private String run;
+    private Integer task_id;
+    private String task_name;
+    private String cron;
     private Integer type;
     private String target;
     private Integer is_return;
