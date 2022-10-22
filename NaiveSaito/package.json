@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "vite --mode dev",
     "build": "vite build --mode prod",
+    "azur": "vite build --mode azur",
     "serve": "vite preview"
   },
   "dependencies": {

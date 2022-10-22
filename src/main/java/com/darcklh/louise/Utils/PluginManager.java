@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -24,12 +25,13 @@ public class PluginManager {
 
     private URLClassLoader urlClassLoader;
 
-    public void loadPlugins(List<PluginInfo> pluginList) throws MalformedURLException, IllegalAccessException, InstantiationException {
+    public void loadPlugins(List<PluginInfo> pluginList) throws IOException, IllegalAccessException, InstantiationException {
         init(pluginList);
         for(PluginInfo pluginInfo: pluginList) {
             pluginInfo.setPluginService(getInstance(pluginInfo.getClass_name()));
             pluginInfos.put(pluginInfo.getPlugin_id(), pluginInfo);
         }
+        // urlClassLoader.close();
     }
 
     private void init(List<PluginInfo> pluginList) throws MalformedURLException {

@@ -44,9 +44,6 @@ public class MyLouiseApi implements ErrorController {
     private R r;
 
     @Autowired
-    private SearchPictureService searchPictureService;
-
-    @Autowired
     private GroupService groupService;
 
     @Autowired

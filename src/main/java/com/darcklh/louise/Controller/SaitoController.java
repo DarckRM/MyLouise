@@ -32,9 +32,6 @@ public class SaitoController {
     SysUserService sysUserService;
 
     @Autowired
-    List<PluginService> pluginServices;
-
-    @Autowired
     PluginManager pluginManager;
 
     static private boolean output_log = true;
@@ -55,18 +52,6 @@ public class SaitoController {
         Result<SysUser> result = sysUserService.Login(sysUser);
 
         return result;
-    }
-
-    @RequestMapping("saito/plugin-init")
-    public void PluginInit(Integer number) {
-        try {
-            for (int i = 0; i < number; i++) {
-                pluginServices.add(pluginManager.getInstance(PluginManager.pluginInfos.get(i).getClass_name()));
-                pluginServices.get(i).service();
-            }
-        } catch (Exception e) {
-
-        }
     }
 
     /**
