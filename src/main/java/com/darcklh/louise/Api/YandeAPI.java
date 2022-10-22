@@ -246,7 +246,7 @@ public class YandeAPI {
      */
     private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit) {
 
-        String replyImgList = inMessage.getSender().getNickname() +  ", 你的请求结果出来了，你输入的参数是: " + inMessage.getMessage().substring(7) + "\n";
+        String replyImgList = "";
         OutMessage outMessage = new OutMessage(inMessage);
         int nsfw = 0;
         for ( Object object: resultJsonArray) {
@@ -267,13 +267,13 @@ public class YandeAPI {
             replyImgList += "[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "Yande/" + fileName + "]\r\n";
             limit--;
         }
-        String msg = inMessage.getSender().getNickname() + " 这是Gelbooru的Post页面\r\n" + replyImgList;
+        String msg = replyImgList;
         if (nsfw != 0)
             msg += "已过滤 " + nsfw + " 张禁止内容图片，请私聊获取完整结果";
         if (outMessage.getGroup_id() < 0)
-            outMessage.setMessage(msg);
+            outMessage.setMessage("[CQ:at,qq=" + inMessage.getSender().getUser_id() + "], 你的请求结果出来了，你输入的参数是: " + inMessage.getMessage().substring(7) + "\n" + msg);
         else
-            outMessage.getMessages().add(new Node(msg, inMessage.getSelf_id()));
+            outMessage.getMessages().add(new Node(inMessage.getSender().getNickname() + ", 你的请求结果出来了，你输入的参数是: " + inMessage.getMessage().substring(7) + "\n" + msg, inMessage.getSelf_id()));
         log.info(JSONObject.toJSONString(outMessage));
         r.sendMessage(outMessage);
     }

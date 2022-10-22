@@ -82,7 +82,7 @@ public class FeatureInfoImpl implements FeatureInfoService {
     public FeatureInfo findWithFeatureCmd(String feature_cmd) {
         FeatureInfo featureInfo = featureInfoDao.findWithFeatureCmd(feature_cmd);
         if (featureInfo == null)
-            throw new ReplyException("未知的命令");
+            throw new ReplyException("未知的命令，请使用!help [页数]命令获取相关帮助");
         return featureInfo;
     }
 

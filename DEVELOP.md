@@ -73,3 +73,12 @@
 3. 使用QQ进行图片搜索
 ```
 
+## 2022年10月23日00:38:01
+
+!command -> !command%
+
+!command/param
+
+!command [param]
+
+!command/param [param]

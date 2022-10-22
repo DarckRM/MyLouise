@@ -1,6 +1,8 @@
 package com.darcklh.louise.Service.Impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Model.Messages.InMessage;
 import com.darcklh.louise.Model.Messages.OutMessage;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.Saito.Task;
@@ -93,37 +95,49 @@ public class DynamicTaskImpl implements DynamicTaskService {
             log.info("---执行动态任务 - " + task.getTask_name() +  "---");
             try {
                 log.info("系统时间 - " + LocalDateTime.now());
-                // 转化参数构造 OutMessage 对象
-                OutMessage out = new OutMessage();
-
-                if (task.getSender_type().equals("user")) {
-                    out.setGroup_id((long)-1);
-                    out.setUser_id(Long.parseLong(task.getNumber()));
-                }
-                else
-                    out.setGroup_id(Long.parseLong(task.getNumber()));
-
-                Sender sender = new Sender();
-                sender.setUser_id(Long.parseLong(task.getNumber()));
-
-                out.setSender(sender);
-                out.setMessage(task.getParameter());
+                // 转化参数构造 InMessage 对象
+                InMessage in = new InMessage();
+                in.setSelf_id(Long.parseLong(LouiseConfig.BOT_ACCOUNT));
                 // 判断任务类型
                 switch (task.getType()) {
                     // 0 系统任务
                     case 0: break;
                     // 1 发送消息
                     case 1: {
-                        out.setPost_type("message");
-                        r.sendMessage(out);
+                        in.setPost_type("message");
+                        // r.sendMessage(in);
                     }; break;
                     // 2 执行功能
                     case 2: {
-                        out.setPost_type("message");
+                        in.setPost_type("message");
                         // 构造请求体
                         RestTemplate rest = new RestTemplate();
-                        HttpEntity request = new HttpEntity<>(out, null);
-                        JSONObject result = rest.postForObject("http://localhost:8099/louise/" + task.getTarget(), request, JSONObject.class);
+
+                        // 获取执行任务 QQ 对象数组
+                        String[] targets = task.getTarget().split(" ");
+
+                        for (String target: targets) {
+                            String[] params = target.split("-");
+                            // target 中第一个字符代表群发或私发
+                            Sender sender = new Sender();
+                            sender.setUser_id(Long.parseLong(task.getNumber()));
+                            in.setSender(sender);
+                            in.setMessage(task.getParameter());
+                            if (params[0].equals("g")) {
+                                in.setMessage_type("group");
+                                in.setUser_id(Long.parseLong(task.getNumber()));
+                                in.setGroup_id(Long.parseLong(params[1]));
+                            }
+                            else {
+                                in.setMessage_type("private");
+                                in.setUser_id(Long.parseLong(params[1]));
+                                in.setGroup_id((long)-1);
+                            }
+
+                            HttpEntity request = new HttpEntity<>(in, null);
+                            JSONObject result = rest.postForObject("http://localhost:8099/louise/" + task.getUrl(), request, JSONObject.class);
+                        }
+
                     }
                 }
                 Thread.sleep(1000);

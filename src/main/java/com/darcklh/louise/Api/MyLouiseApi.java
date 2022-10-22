@@ -350,13 +350,13 @@ public class MyLouiseApi implements ErrorController {
 
     /**
      * 查询用户信息
-     * @param message
+     * @param inMessage
      * @return
      */
     @RequestMapping("louise/myinfo")
-    public JSONObject myInfo(@RequestBody JSONObject message) {
+    public JSONObject myInfo(@RequestBody InMessage inMessage) {
 
-        String user_id = message.getString("user_id");
+        String user_id = inMessage.getUser_id().toString();
 
         JSONObject returnJson = new JSONObject();
 
@@ -365,20 +365,25 @@ public class MyLouiseApi implements ErrorController {
         if (isEmpty(user)) {
             returnJson.put("reply", "没有你的信息诶");
         } else {
+            OutMessage out = new OutMessage(inMessage);
             String nickname = user.getNickname();
             Timestamp create_time = user.getCreate_time();
             Integer count_setu = user.getCount_setu();
             Integer count_upload = user.getCount_upload();
-            returnJson.put("reply", nickname + "，你的个人信息" +
+
+            String myInfos = nickname + "，你的个人信息" +
                     "\n总共请求功能次数：" + count_setu +
                     "\n总共上传文件次数：" + count_upload +
                     "\n在露易丝这里注册的时间；" + create_time +
                     "\n-----------DIVIDER LINE------------" +
                     "\n你的权限级别：<" + role.getRole_name() + ">" +
                     "\n剩余CREDIT：" + user.getCredit() +
-                    "\nCREDIT BUFF：" + user.getCredit_buff()
-            );
+                    "\nCREDIT BUFF：" + user.getCredit_buff();
+            out.setMessage(myInfos);
+            out.setMessage_type("private");
+            r.sendMessage(out);
         }
+        returnJson.put("reply", "[CQ:at,qq=" + inMessage.getUser_id() + "]已私聊发送你的个人信息");
         return returnJson;
 
     }

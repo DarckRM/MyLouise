@@ -16,6 +16,7 @@ public class Task {
     private String task_name;
     private String cron;
     private Integer type;
+    private String url;
     private String target;
     private Integer is_return;
     private Integer is_parameter;
