@@ -84,7 +84,7 @@ public class LouiseHandler implements HandlerInterceptor {
             command = command.substring(0, command.indexOf("/") + 1) + "{%";
         else
         // 如果不携带参数，那么构造命令是否允许无参请求查询条件
-            command += "%";
+            command += " %";
 
         boolean tag = false;
 

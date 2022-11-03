@@ -1,0 +1,5 @@
+pixiv_url: https://www.pixiv.net/ajax/illust/
+reverse_proxy_url: http://pixiv.rmdarck.icu/
+proxy_on: false
+proxy_url: http://127.0.0.1
+proxy_port: 10809

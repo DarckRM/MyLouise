@@ -313,7 +313,7 @@ public class MyLouiseApi implements ErrorController {
         return returnJson;
     }
 
-    @RequestMapping("louise/pid/{pixiv_id}")
+    //@RequestMapping("louise/pid/{pixiv_id}")
     private JSONObject findPixivId(@PathVariable String pixiv_id, @RequestBody InMessage inMessage) {
         String nickname = inMessage.getSender().getNickname();
         OutMessage outMessage = new OutMessage(inMessage);

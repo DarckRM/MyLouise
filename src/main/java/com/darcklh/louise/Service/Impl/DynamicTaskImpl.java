@@ -133,14 +133,13 @@ public class DynamicTaskImpl implements DynamicTaskService {
                                 in.setUser_id(Long.parseLong(params[1]));
                                 in.setGroup_id((long)-1);
                             }
-
                             HttpEntity request = new HttpEntity<>(in, null);
                             JSONObject result = rest.postForObject("http://localhost:8099/louise/" + task.getUrl(), request, JSONObject.class);
+                            Thread.sleep(3000);
                         }
 
                     }
                 }
-                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

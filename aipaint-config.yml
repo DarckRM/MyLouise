@@ -1,0 +1,16 @@
+app-api: http://louise.rmdarck.icu:8090/generate-stream
+app-file-api: http://louise.rmdarck.icu:8090/file=
+cookie: _ga=GA1.1.916531945.1666441088; cf_clearance=8f4b318c77be7fb2333f30ed20fcc62b87b277fa-1666444119-0-150; _ga_G2MWBTZXQL=GS1.1.1666441087.1.1.1666445768.0.0.0
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36
+prompt: best quality,masterpiece,
+negative-prompt: lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry
+
+width: 512
+height: 768
+steps: 20
+sampler: k_euler_ancestral
+scale: 12
+n_samples: 1
+ucPreset: 0
+noise: 0.2
+strength: 0.58
