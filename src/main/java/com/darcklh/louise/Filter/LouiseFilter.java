@@ -56,6 +56,11 @@ public class LouiseFilter implements Filter {
                     case "meta_event": {logger.debug("心跳检测"); return;}
                     case "notice": {logger.info("暂不处理notice消息"); return;}
                 }
+
+                // 如果消息不以 ! 开头则排除
+                String prefix = jsonObject.getString("message");
+                if (prefix.indexOf('!') != 0) return;
+
                 logger.info("过滤器 1 流程结束"); // 调用filter链中的下一个filter
                 // 在chain.doFiler方法中传递新的request对象
                 filterChain.doFilter(wrapper, servletResponse);

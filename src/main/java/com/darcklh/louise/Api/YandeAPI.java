@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Controller.CqhttpWSController;
 import com.darcklh.louise.Model.Messages.InMessage;
 import com.darcklh.louise.Model.Messages.Node;
 import com.darcklh.louise.Model.Messages.OutMessage;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Utils.HttpProxy;
+import com.darcklh.louise.Utils.UniqueGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,12 +152,40 @@ public class YandeAPI {
     @RequestMapping("louise/yande")
     public JSONObject YandeSearch(@RequestBody InMessage inMessage) {
 
-        JSONObject sendJson = new JSONObject();
+        // 进入监听模式
+        CqhttpWSController.accounts.add(inMessage.getUser_id());
+        CqhttpWSController.listenerCounts++;
+
+        new Thread(() -> {
+            OutMessage outMsg = new OutMessage(inMessage);
+
+            outMsg.setMessage("进入 Yande 搜图模式，请发送你的参数吧");
+            r.sendMessage(outMsg);
+
+            boolean getMsg = false;
+            while (!getMsg) {
+
+                // 尝试从监听队列获取消息体
+                InMessage inMsg = CqhttpWSController.messageMap.get(inMessage.getUser_id());
+                if (inMsg != null) {
+                    inMessage.setMessage(inMessage.getMessage() + inMsg.getMessage());
+                    getMsg = true;
+                    // 监听计数器减少，移除多余消息
+                    CqhttpWSController.listenerCounts--;
+                    CqhttpWSController.messageMap.remove(inMessage.getUser_id());
+                }
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
 
         // 判断是否携带 Tags 参数
         if (inMessage.getMessage().length() < 7) {
-            sendJson.put("reply", "请至少携带一个 Tag 参数，像这样 !yande 参数1 参数2 | 页数 条数\n页数和条数可以不用指定");
-            return sendJson;
+            outMsg.setMessage("请至少携带一个 Tag 参数，像这样 !yande 参数1 参数2 | 页数 条数\n页数和条数可以不用指定");
+            r.sendMessage(outMsg);
+            return;
         }
 
         // 处理命令前缀
@@ -190,14 +220,16 @@ public class YandeAPI {
 
         // pageNation 只准接收两个参数
         if (tags.length > 4) {
-            sendJson.put("reply", "标签参数最大只允许 4 个");
-            return sendJson;
+            outMsg.setMessage("标签参数最大只允许 4 个");
+            r.sendMessage(outMsg);
+            return;
         }
 
         // pageNation 只准接收两个参数
         if (pageNation.length > 2) {
-            sendJson.put("reply", "分页参数只允许传入 页数 和 结果数 位置 两个参数");
-            return sendJson;
+            outMsg.setMessage("分页参数只允许传入 页数 和 结果数 位置 两个参数");
+            r.sendMessage(outMsg);
+            return;
         }
 
         // 构造消息请求体
@@ -232,9 +264,8 @@ public class YandeAPI {
                 return;
             }
             sendYandeResult(inMessage, resultJsonArray, Integer.parseInt(finalPageNation[1]));
-
         }).start();
-
+        }, UniqueGenerator.uniqueThreadName("", "WAT")).start();
         return null;
     }
 
