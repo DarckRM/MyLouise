@@ -30,6 +30,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -134,7 +136,7 @@ public class LouiseHandler implements HandlerInterceptor {
             Group group = groupService.selectById(group_id);
 
             List<FeatureInfoMin> featureInfoMins = featureInfoService.findWithRoleId(group.getRole_id());
-            logger.info("群聊允许的功能列表: " +featureInfoMins);
+            logger.info("群聊允许的功能列表: " + formatList(featureInfoMins));
             for ( FeatureInfoMin featureInfoMin: featureInfoMins) {
                 if (featureInfoMin.getFeature_id().equals(featureInfo.getFeature_id())) {
                     tag = true;
@@ -149,7 +151,7 @@ public class LouiseHandler implements HandlerInterceptor {
         User user = userService.selectById(user_id);
 
         List<FeatureInfoMin> featureInfoMins = featureInfoService.findWithRoleId(user.getRole_id());
-        logger.info("用户允许的功能列表: " +featureInfoMins);
+        logger.info("用户允许的功能列表: " + formatList(featureInfoMins));
         for ( FeatureInfoMin featureInfoMin: featureInfoMins) {
             if (featureInfoMin.getFeature_id().equals(featureInfo.getFeature_id())) {
                 tag = true;
@@ -178,5 +180,15 @@ public class LouiseHandler implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
+    }
+
+    private String formatList(List<FeatureInfoMin> list) {
+        StringBuilder result = new StringBuilder();
+        result.append("[");
+        for ( FeatureInfoMin min : list) {
+            result.append(min.getFeature_id()).append(":").append(min.getFeature_name()).append("; ");
+        }
+        result.append("]");
+        return result.toString();
     }
 }

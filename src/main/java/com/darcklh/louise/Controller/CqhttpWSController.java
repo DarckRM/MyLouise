@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -66,14 +67,29 @@ public class CqhttpWSController {
         if (listenerCounts == 0)
             return;
 
-        log.info("进入监听状态");
+        log.info("正在监听来自 " + Arrays.toString(accounts.toArray()) + " 的消息");
 
         // 排除所有不是 message 类型且不属于监听对象的消息上报
         if (!inMessage.getPost_type().equals("message") || !accounts.contains(inMessage.getUser_id()))
             return;
 
+        log.debug(inMessage.toString());
+
         // 向 messageMap 中写入消息体
         messageMap.put(inMessage.getUser_id(), inMessage);
+    }
+
+    public static void startWatch(Long user_id) {
+        // 进入监听模式
+        accounts.add(user_id);
+        listenerCounts++;
+    }
+
+    public static void stopWatch(Long user_id) {
+        // 监听计数器减少，移除多余消息
+        listenerCounts--;
+        messageMap.remove(user_id);
+        accounts.remove(user_id);
     }
 
 }

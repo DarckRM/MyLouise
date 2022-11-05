@@ -152,40 +152,13 @@ public class YandeAPI {
     @RequestMapping("louise/yande")
     public JSONObject YandeSearch(@RequestBody InMessage inMessage) {
 
-        // 进入监听模式
-        CqhttpWSController.accounts.add(inMessage.getUser_id());
-        CqhttpWSController.listenerCounts++;
-
-        new Thread(() -> {
-            OutMessage outMsg = new OutMessage(inMessage);
-
-            outMsg.setMessage("进入 Yande 搜图模式，请发送你的参数吧");
-            r.sendMessage(outMsg);
-
-            boolean getMsg = false;
-            while (!getMsg) {
-
-                // 尝试从监听队列获取消息体
-                InMessage inMsg = CqhttpWSController.messageMap.get(inMessage.getUser_id());
-                if (inMsg != null) {
-                    inMessage.setMessage(inMessage.getMessage() + inMsg.getMessage());
-                    getMsg = true;
-                    // 监听计数器减少，移除多余消息
-                    CqhttpWSController.listenerCounts--;
-                    CqhttpWSController.messageMap.remove(inMessage.getUser_id());
-                }
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+        OutMessage outMsg = new OutMessage(inMessage);
 
         // 判断是否携带 Tags 参数
         if (inMessage.getMessage().length() < 7) {
             outMsg.setMessage("请至少携带一个 Tag 参数，像这样 !yande 参数1 参数2 | 页数 条数\n页数和条数可以不用指定");
             r.sendMessage(outMsg);
-            return;
+            return null;
         }
 
         // 处理命令前缀
@@ -222,14 +195,14 @@ public class YandeAPI {
         if (tags.length > 4) {
             outMsg.setMessage("标签参数最大只允许 4 个");
             r.sendMessage(outMsg);
-            return;
+            return null;
         }
 
         // pageNation 只准接收两个参数
         if (pageNation.length > 2) {
             outMsg.setMessage("分页参数只允许传入 页数 和 结果数 位置 两个参数");
             r.sendMessage(outMsg);
-            return;
+            return null;
         }
 
         // 构造消息请求体
@@ -241,20 +214,22 @@ public class YandeAPI {
         String[] finalPageNation = pageNation;
 
         new Thread(() -> {
-            String tagsParam = "";
+            StringBuilder tagsParam = new StringBuilder();
             // 构造 Tags 参数
             for(String tag : tags)
-                tagsParam += tag + "+";
+                tagsParam.append(tag).append("+");
 
-            String uri = "https://yande.re/post.json" + "?tags=" + tagsParam + "&limit=" + finalPageNation[1] + "&page=" + finalPageNation[0];
-            log.info("请求地址: " + uri);
+            StringBuilder uri = new StringBuilder();
+            uri.append("https://yande.re/post.json?tags=").append(tagsParam.toString()).append("&limit=").append(finalPageNation[1]).append("&page=").append(finalPageNation[0]);
+
+            log.info("请求地址: " + uri.toString());
             // 使用代理请求 Yande
             RestTemplate restTemplate = new RestTemplate();
             // 借助代理请求
             if (LouiseConfig.LOUISE_PROXY_PORT > 0)
                 restTemplate.setRequestFactory(new HttpProxy().getFactory("Yande API"));
 
-            String result = restTemplate.getForObject(uri, String.class);
+            String result = restTemplate.getForObject(uri.toString(), String.class);
             JSONArray resultJsonArray = JSON.parseArray(result);
 
             assert resultJsonArray != null;
@@ -265,7 +240,6 @@ public class YandeAPI {
             }
             sendYandeResult(inMessage, resultJsonArray, Integer.parseInt(finalPageNation[1]));
         }).start();
-        }, UniqueGenerator.uniqueThreadName("", "WAT")).start();
         return null;
     }
 

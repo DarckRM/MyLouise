@@ -1,4 +1,4 @@
-app-api: http://louise.rmdarck.icu:8090/generate-stream
+app-api: http://louise.rmdarck.icu:8090/api/predict/
 app-file-api: http://louise.rmdarck.icu:8090/file=
 cookie: _ga=GA1.1.916531945.1666441088; cf_clearance=8f4b318c77be7fb2333f30ed20fcc62b87b277fa-1666444119-0-150; _ga_G2MWBTZXQL=GS1.1.1666441087.1.1.1666445768.0.0.0
 user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36
@@ -7,10 +7,15 @@ negative-prompt: lowres, bad anatomy, bad hands, text, error, missing fingers, e
 
 width: 512
 height: 768
-steps: 20
+steps: 28
+img_to_steps: 50
 sampler: k_euler_ancestral
 scale: 12
 n_samples: 1
 ucPreset: 0
 noise: 0.2
-strength: 0.58
+strength: 0.62
+nsfw: hairjob,oral,fellatio,deepthroat,gokkun,gag,ballgag,bitgag,facial,handjob,areolae,nipples,puffy nipples,small nipples,nipple pull,nipple torture,nipple tweak,nipple piercing,breast grab,lactation,breast sucking/nipple suck,breast feeding,paizuri,multiple paizuri,piercing,thigh sex,footjob,masturbation,penis,testicles,ejaculation,cum,cum inside,cum on breast,pussy/vaginal,pubic hair,shaved pussy,no pussy,clitoris,fat mons,cameltoe,pussy juice,female ejaculation,cervix,fingering,multiple insertions,huge ass,buttjob,anus,anal fisting,anilingus,enema,incest,pegging,gangbang,tribadism,voyeurism,exhibitionism,rape,doggystyle,missionary,dildo,cock ring,artificial vagina,nyotaimori,
+img_fn: 72
+text_fn: 50
+session: 8wxrwpvkrg7

@@ -71,14 +71,17 @@ public class MyLouiseApi implements ErrorController {
     @RequestMapping("/louise/invoke/{pluginId}")
     public JSONObject pluginsCenter(@PathVariable Integer pluginId, @RequestBody InMessage inMessage) {
         PluginInfo pluginInfo = PluginManager.pluginInfos.get(pluginId);
-        try {
-            pluginInfo.getPluginService().service(inMessage);
-        } catch (Exception e) {
-            if (e instanceof ReplyException)
-                throw e;
-            else
-                e.printStackTrace();
-        }
+        new Thread(() -> {
+            try {
+                pluginInfo.getPluginService().service(inMessage);
+
+            } catch (Exception e) {
+                if (e instanceof ReplyException)
+                    throw e;
+                else
+                    e.printStackTrace();
+            }
+        }, UniqueGenerator.uniqueThreadName("PLG", "Plugin Invoke")).start();
         return null;
     }
 
