@@ -1,5 +1,6 @@
 package com.darcklh.louise.Model.Messages;
 
+import com.darcklh.louise.Model.GoCqhttp.MessagePost;
 import com.darcklh.louise.Model.Sender;
 import lombok.Data;
 
@@ -12,7 +13,7 @@ import lombok.Data;
 public class InMessage {
 
     // 事件发生的时间戳
-    private Integer time;
+    private Long time;
     // 收到事件的机器人 QQ 号
     private Long self_id;
     // 上报类型 message: 消息; request: 请求; notice: 通知; meta_event: 元事件
@@ -37,5 +38,24 @@ public class InMessage {
     private Sender sender;
     // 临时会话来源
     private String temp_source;
+
+    public InMessage() {
+
+    }
+
+    public InMessage(MessagePost post) {
+        this.setTime(post.getTime());
+        this.setSelf_id(post.getSelf_id());
+        this.setPost_type(post.getPost_type().name());
+        this.setSub_type(post.getSub_type().name());
+        this.setMessage_id(post.getMessage_id());
+        this.setMessage_type(post.getMessage_type());
+        this.setUser_id(post.getUser_id());
+        this.setGroup_id(post.getGroup_id());
+        this.setMessage(post.getMessage());
+        this.setRaw_message(post.getRaw_message());
+        this.setFont(post.getFont());
+        this.setSender(post.getSender());
+    }
 
 }

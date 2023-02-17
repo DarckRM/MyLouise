@@ -18,6 +18,8 @@ public interface GroupService extends BaseService<Group> {
     public Group selectById(String group_id);
     public String editBy(Group group);
     public String add(Group group);
+    public String update(Group group);
+    public String getGroupAdmin(String group_id);
     public String switchStatus(String group_id);
     public boolean isGroupExist(String group_id);
     public boolean isGroupEnabled(String group_id);

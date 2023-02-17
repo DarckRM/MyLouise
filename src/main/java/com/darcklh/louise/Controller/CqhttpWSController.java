@@ -1,26 +1,40 @@
 package com.darcklh.louise.Controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Model.GoCqhttp.AllPost;
+import com.darcklh.louise.Model.GoCqhttp.MessagePost;
+import com.darcklh.louise.Model.GoCqhttp.NoticePost;
+import com.darcklh.louise.Model.GoCqhttp.RequestPost;
+import com.darcklh.louise.Model.Louise.Group;
 import com.darcklh.louise.Model.Messages.InMessage;
-import com.darcklh.louise.Model.WebSocketClient;
-import com.darcklh.louise.Utils.InMessageDecoder;
-import com.darcklh.louise.Utils.InMessageEncoder;
+import com.darcklh.louise.Model.R;
+import com.darcklh.louise.Model.Saito.PluginInfo;
+import com.darcklh.louise.Utils.PluginManager;
+import com.darcklh.louise.Utils.PostDecoder;
+import com.darcklh.louise.Utils.PostEncoder;
+import com.darcklh.louise.Utils.UniqueGenerator;
+import com.mysql.cj.protocol.x.Notice;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author DarckLH
  * @date 2022/11/4 6:10
  * @Description
  */
-@ServerEndpoint(value="/go-cqhttp", decoders = { InMessageDecoder.class }, encoders = { InMessageEncoder.class })
+@ServerEndpoint(value="/go-cqhttp", decoders = { PostDecoder.class }, encoders = { PostEncoder.class })
 @Component
 @Slf4j
 public class CqhttpWSController {
@@ -43,7 +57,6 @@ public class CqhttpWSController {
     public void onOpen(Session session) {
         this.session = session;
         this.isConnect = true;
-
         log.info("成功和 go-cqhttp 建立 WebSocket 连接");
     }
 
@@ -59,24 +72,82 @@ public class CqhttpWSController {
     }
 
     @OnMessage
-    public void onMessage(InMessage inMessage, Session session) {
-        log.debug("收到 go-cqhttp 报文:" + inMessage);
+    public void onMessage(AllPost post, Session session) {
+        log.debug("收到 go-cqhttp 报文:" + post.toString());
         // TODO 暂时先跳过所有心跳反应，后续可以实现 BOT 状态监听
 
-        // 如果当前不除于监听状态则不接受任何消息
+        switch (post.getPost_type()) {
+            case meta_event: return;
+            case message: handleMessagePost((MessagePost) post); return;
+            case notice: handleNoticePost((NoticePost) post); return;
+            case request: handleRequestPost((RequestPost) post);
+        }
+    }
+
+    private void handleMessagePost(MessagePost post) {
+        InMessage inMessage = new InMessage(post);
+        // 向所有监听模式插件发送消息
+        Pattern pattern;
+        // TODO 使用正则表达式判断
+        for ( Map.Entry<Integer, PluginInfo> entry: PluginManager.pluginInfos.entrySet()) {
+            if (entry.getValue().getType() == 1) {
+                pattern = Pattern.compile(entry.getValue().getCmd());
+                if (pattern.matcher(inMessage.getMessage()).find()) {
+                    new Thread(() -> {
+                        entry.getValue().getPluginService().service(inMessage);
+                    }, "WS PLG-" + entry.getValue().getName()).start();
+                }
+            }
+        }
+
+        // 如果当前不处于特殊监听状态则不添加消息到 messageMap 中
         if (listenerCounts == 0)
             return;
 
         log.info("正在监听来自 " + Arrays.toString(accounts.toArray()) + " 的消息");
 
         // 排除所有不是 message 类型且不属于监听对象的消息上报
-        if (!inMessage.getPost_type().equals("message") || !accounts.contains(inMessage.getUser_id()))
+        if (!accounts.contains(post.getUser_id()))
             return;
 
-        log.debug(inMessage.toString());
-
         // 向 messageMap 中写入消息体
-        messageMap.put(inMessage.getUser_id(), inMessage);
+        messageMap.put(post.getUser_id(), inMessage);
+    }
+
+    private void handleNoticePost(NoticePost post) {
+
+    }
+
+    private void handleRequestPost(RequestPost post) {
+        // 判断 request_type
+        JSONObject jsonObject = new JSONObject();
+        R r = new R();
+        switch (post.getRequest_type()) {
+            case friend: {
+                // 允许添加好友并且回复一些基础语句
+                jsonObject.put("flag", post.getFlag());
+                jsonObject.put("approve", true);
+                r.requestAPI("set_friend_add_request", jsonObject);
+                // 添加好友后补充发送消息
+                jsonObject.put("user_id", post.getUser_id());
+                jsonObject.put("message", "露易丝已经成功添加好友，有什么问题的话可以在私聊里回复!help哦");
+                r.requestAPI("send_msg", jsonObject);
+            }
+            case group: {
+                // TODO 暂不处理加群请求
+                if (post.getSub_type() == RequestPost.SubType.add)
+                    return;
+                // 允许添加群组并且回复一些基础语句
+                jsonObject.put("flag", post.getFlag());
+                jsonObject.put("sub_type", "invite");
+                jsonObject.put("approve", true);
+                r.requestAPI("set_group_add_request", jsonObject);
+                jsonObject.put("group_id", post.getGroup_id());
+                jsonObject.put("message", "各位好，这里是露易丝bot，请管理员发送!group_join注册群聊哦，获取其它帮助请发送!help");
+                r.requestAPI("send_msg", jsonObject);
+            }
+            default:
+        }
     }
 
     public static void startWatch(Long user_id) {

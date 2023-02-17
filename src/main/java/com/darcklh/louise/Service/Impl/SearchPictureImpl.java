@@ -14,6 +14,9 @@ import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Service.SearchPictureService;
 import com.darcklh.louise.Utils.HttpProxy;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,15 +25,18 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author DarckLH
@@ -190,6 +196,7 @@ public class SearchPictureImpl implements SearchPictureService {
         JSONObject resultData = new JSONObject();
         OutMessage outMessage = new OutMessage(inMessage);
         String nickname = outMessage.getSender().getNickname();
+        RestTemplate restTemplate = new RestTemplate();
         //由于Ascii2d返回的是HTML文档 借助Jsoup进行解析
         try {
 
@@ -200,9 +207,10 @@ public class SearchPictureImpl implements SearchPictureService {
              *      再以获取到的URL做请求Ascii2d
              */
             log.info("正在向Ascii2d上传图片 URL https://ascii2d.net/search/uri/?utf8=✓&uri=" + url);
+
+            fileControlApi.downloadPicture_RestTemplate(url, "temp.jpg", "temp");
             String uri = "https://ascii2d.net/search/uri";
             String utf8 = "✓";
-
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.add("utf8", utf8);
             params.add("uri", url);
@@ -210,27 +218,35 @@ public class SearchPictureImpl implements SearchPictureService {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.USER_AGENT, "PostmanRuntime/7.26.8");
             headers.add("Connection","keep-alive");
-//            headers.add(HttpHeaders.DATE, n);
-            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+            HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+
+            CloseableHttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
+            factory.setHttpClient(httpClient);
+            restTemplate.setRequestFactory(factory);
 
             // 借助代理请求
             if (LouiseConfig.LOUISE_PROXY_PORT > 0)
                 restTemplate.setRequestFactory(new HttpProxy().getFactory("Ascii2d 上传"));
 
             ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, request, String.class);
+            // 搜索完成后删除缓存图片
+            File file = new File(LouiseConfig.LOUISE_CACHE_IMAGE_LOCATION + "temp/temp.jpg");
+            file.delete();
 
-            String colorSearchUrl = response.getBody().substring(35,100);
-            String bovwSearchUrl = "https://ascii2d.net/search/bovw/" + colorSearchUrl.substring(colorSearchUrl.length() - 32);
-
-            //解析Document查询出来的第一个数据
-            log.info("上传完成 图片的检索URL为 " + bovwSearchUrl);
-            log.info("开始进行特征检索");
-            params.clear();
-            HttpEntity<MultiValueMap<String, String>> request2 = new HttpEntity<>(params, headers);
-            ResponseEntity<String> result = restTemplate.exchange(bovwSearchUrl, HttpMethod.GET, request2, String.class);
-            Document document = Jsoup.parse(result.getBody());
+//            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, request, String.class);
+//
+//            String colorSearchUrl = response.getBody().substring(35,100);
+//            String bovwSearchUrl = "https://ascii2d.net/search/bovw/" + colorSearchUrl.substring(colorSearchUrl.length() - 32);
+//
+//            //解析Document查询出来的第一个数据
+//            log.info("上传完成 图片的检索URL为 " + bovwSearchUrl);
+//            log.info("开始进行特征检索");
+//            params.clear();
+//            HttpEntity<MultiValueMap<String, String>> request2 = new HttpEntity<>(params, headers);
+//            ResponseEntity<String> result = restTemplate.exchange(bovwSearchUrl, HttpMethod.GET, request2, String.class);
+            Document document = Jsoup.parse(Objects.requireNonNull(response.getBody()));
 
             Element element = document.getElementsByClass("info-box").get(1).select(".detail-box h6").get(0);
             Element img = document.getElementsByClass("image-box").get(1).getElementsByAttribute("loading").get(0);

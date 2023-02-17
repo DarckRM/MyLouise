@@ -73,7 +73,7 @@ public class R {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> cqhttp = new HttpEntity<>(param.toJSONString(), headers);
         //开始请求
-        log.info("请求接口: " + api);
+        log.info("请求 cqhttp 接口: " + api);
         this.refresh();
         return restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + api, cqhttp, JSONObject.class);
     }

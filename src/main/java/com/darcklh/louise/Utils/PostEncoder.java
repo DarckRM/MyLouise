@@ -1,6 +1,7 @@
 package com.darcklh.louise.Utils;
 
 import com.alibaba.fastjson.JSON;
+import com.darcklh.louise.Model.GoCqhttp.AllPost;
 import com.darcklh.louise.Model.Messages.InMessage;
 
 import javax.websocket.EncodeException;
@@ -12,7 +13,7 @@ import javax.websocket.EndpointConfig;
  * @date 2022/11/4 6:30
  * @Description
  */
-public class InMessageEncoder implements Encoder.Text<InMessage> {
+public class PostEncoder implements Encoder.Text<AllPost> {
     @Override
     public void init(EndpointConfig endpointConfig) {
 
@@ -24,7 +25,7 @@ public class InMessageEncoder implements Encoder.Text<InMessage> {
     }
 
     @Override
-    public String encode(InMessage inMessage) throws EncodeException {
-        return JSON.toJSONString(inMessage);
+    public String encode(AllPost post) throws EncodeException {
+        return JSON.toJSONString(post);
     }
 }

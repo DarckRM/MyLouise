@@ -14,6 +14,7 @@ import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Service.*;
 import com.darcklh.louise.Utils.PluginManager;
+import com.darcklh.louise.Utils.ReplyExceptionHandler;
 import com.darcklh.louise.Utils.UniqueGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -71,17 +72,11 @@ public class MyLouiseApi implements ErrorController {
     @RequestMapping("/louise/invoke/{pluginId}")
     public JSONObject pluginsCenter(@PathVariable Integer pluginId, @RequestBody InMessage inMessage) {
         PluginInfo pluginInfo = PluginManager.pluginInfos.get(pluginId);
-        new Thread(() -> {
-            try {
-                pluginInfo.getPluginService().service(inMessage);
-
-            } catch (Exception e) {
-                if (e instanceof ReplyException)
-                    throw e;
-                else
-                    e.printStackTrace();
-            }
-        }, UniqueGenerator.uniqueThreadName("PLG", "Plugin Invoke")).start();
+        Thread t = new Thread(() -> {
+            pluginInfo.getPluginService().service(inMessage);
+        }, UniqueGenerator.uniqueThreadName("PLG", "Plugin Invoke"));
+        t.setUncaughtExceptionHandler(new ReplyExceptionHandler());
+        t.start();
         return null;
     }
 
@@ -191,13 +186,50 @@ public class MyLouiseApi implements ErrorController {
         group.setGroup_id(group_id.toString());
         //快速返回
         JSONObject returnJson = new JSONObject();
-        //注册用户
+
         //判断如果是私聊禁止注册
         if (group_id == -1) {
-            returnJson.put("reply","露易丝不支持私聊注册群组哦，\n请在群聊里使用吧");
+            returnJson.put("reply", "露易丝不支持私聊注册群组哦，请在群聊里使用吧");
             return returnJson;
         }
+
         returnJson.put("reply", groupService.add(group));
+        return returnJson;
+    }
+
+    /**
+     * 更新群组信息
+     * @param inMessage
+     * @return
+     */
+    @RequestMapping("louise/group_update")
+    public JSONObject groupUpdate(@RequestBody InMessage inMessage) {
+        Long group_id = inMessage.getGroup_id();
+        Group group = new Group();
+        group.setGroup_id(group_id.toString());
+        //快速返回
+        JSONObject returnJson = new JSONObject();
+
+        //判断如果是私聊禁止更新
+        if (group_id == -1) {
+            returnJson.put("reply", "露易丝不支持私聊更新群组哦，请在群聊里使用吧");
+            return returnJson;
+        }
+
+        // TODO 需要处理管理员变动的上报事件，否则会造成数据库与 QQ 端数据不一致从而影响权限判断
+        // 更新前校验管理员身份
+        String group_admins = groupService.getGroupAdmin(group.getGroup_id());
+        String[] admin_list = group_admins.split(",");
+        for ( String admin: admin_list ) {
+            // 如果发言者是该群的管理员，那么允许更新群聊
+            if(admin.equals(inMessage.getUser_id().toString()))
+                break;
+            else
+                returnJson.put("reply", "露易丝只允许群管理员进行更新哦，请联系管理员吧");
+            return returnJson;
+        }
+
+        returnJson.put("reply", groupService.update(group));
         return returnJson;
     }
 

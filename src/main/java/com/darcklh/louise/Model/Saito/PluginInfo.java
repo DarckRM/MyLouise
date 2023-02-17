@@ -23,6 +23,7 @@ public class PluginInfo {
 
     @TableId
     private Integer plugin_id;
+    private int type;
     private String author;
     private String name;
     private String cmd;

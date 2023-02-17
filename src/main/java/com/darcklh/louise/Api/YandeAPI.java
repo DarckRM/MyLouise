@@ -40,6 +40,21 @@ public class YandeAPI {
     R r;
 
     /**
+     * Konachan 同属 Booru 类型图站
+     * 和 Yande 放在一起处理
+     */
+    @RequestMapping("louise/konachan/tags")
+    public JSONObject KonachanTags(@RequestBody InMessage inMessage) {
+        // 处理命令前缀
+        String[] msg;
+        msg = inMessage.getMessage().split(" ");
+        if (msg.length <= 1)
+            throw new ReplyException("参数错误，请按如下格式尝试 !konachan/tags [参数]");
+        return requestTags(msg, "https://konachan.com/tag.json?name=", "konachan", inMessage);
+    }
+
+
+    /**
      * 根据 Tag 返回可能的 Tags 列表
      * @param inMessage
      * @return
@@ -52,56 +67,18 @@ public class YandeAPI {
         msg = inMessage.getMessage().split(" ");
         if (msg.length <= 1)
             throw new ReplyException("参数错误，请按如下格式尝试 !yande/tags [参数]");
+        return requestTags(msg, "https://yande.re/tag.json?name=", "yande", inMessage);
+    }
 
-        String tag = msg[1];
-
-        // 返回值
-        JSONObject returnJson = new JSONObject();
-
-        // TODO: 总记录条数太多 会引起 QQ 风控
-        String uri = "https://yande.re/tag.json?name=" + tag + "&limit=" + 20;
-        // 使用代理请求 Yande
-        RestTemplate restTemplate = new RestTemplate();
-        // 借助代理请求
-        if (LouiseConfig.LOUISE_PROXY_PORT > 0)
-            restTemplate.setRequestFactory(new HttpProxy().getFactory("Yande API"));
-
-        String result = restTemplate.getForObject(uri, String.class);
-        log.info("请求 Yande: " + uri);
-        StringBuilder tagList = new StringBuilder(inMessage.getSender().getNickname() + ", 你是否在找?\n");
-        JSONArray resultJsonArray = JSON.parseArray(result);
-
-        assert resultJsonArray != null;
-
-        if(resultJsonArray.size() == 0) {
-            returnJson.put("reply", "没有找到你想要的结果呢");
-            return returnJson;
-        }
-
-        for ( Object object: resultJsonArray) {
-            JSONObject tagObj = (JSONObject) object;
-            String name = tagObj.getString("name");
-            Integer count = tagObj.getInteger("count");
-            Integer typeId = tagObj.getInteger("type");
-
-            String type = "";
-            switch (typeId) {
-                case 0: type = "通常"; break;
-                case 1: type = "作者"; break;
-                case 3: type = "版权"; break;
-                case 4: type = "角色"; break;
-            }
-            tagList.append(name).append(" 类型: ").append(type).append(" 有 ").append(count).append(" 张 \r\n");
-        }
-
-        OutMessage outMessage = new OutMessage(inMessage);
-        if (outMessage.getGroup_id() < 0)
-            outMessage.setMessage(tagList.toString());
-        else
-            outMessage.getMessages().add(new Node(tagList.toString(), inMessage.getSelf_id()));
-        r.sendMessage(outMessage);
-
-        return null;
+    /**
+     * 获取涩涩的流行 Konachan 壁纸
+     * @param inMessage
+     * @param type
+     * @return
+     */
+    @RequestMapping("louise/konachan/{type}")
+    public JSONObject KonachanPic(@RequestBody InMessage inMessage, @PathVariable String type) {
+        return requestPopular("https://konachan.com/post/popular_by_", "Konachan", type, inMessage);
     }
 
     /**
@@ -109,49 +86,83 @@ public class YandeAPI {
      */
     @RequestMapping("louise/yande/{type}")
     public JSONObject YandePic(@RequestBody InMessage inMessage, @PathVariable String type) {
+        return requestPopular("https://yande.re/post/popular_by_", "Yande", type, inMessage);
+    }
 
-        // 返回值
-        JSONObject sendJson = new JSONObject();
-
-        // 校验参数合法性
-        if (!type.equals("day") && !type.equals("week") && !type.equals("month")) {
-            sendJson.put("reply", "Yande 功能仅支持参数 day | week | month，请这样 !yande/[参数] 请求哦");
-            return sendJson;
-        }
-
-        // 构造消息请求体
-        OutMessage outMessage = new OutMessage(inMessage);
-        outMessage.setMessage(inMessage.getSender().getNickname() + ", 开始请求 Yande 的 Every " + type + " 精选图片");
-        r.sendMessage(outMessage);
-
-        String uri = "https://yande.re/post/popular_by_" + type + ".json";
-
-        new Thread(() -> {
-            // 使用代理请求 Yande
-            RestTemplate restTemplate = new RestTemplate();
-            // 借助代理请求
-            if (LouiseConfig.LOUISE_PROXY_PORT > 0)
-                restTemplate.setRequestFactory(new HttpProxy().getFactory("Yande API"));
-
-            String result = restTemplate.getForObject(uri + "?limit=" + LIMIT, String.class);
-            log.info("请求 Yande: " + uri + "?limit=" + LIMIT);
-            JSONArray resultJsonArray = JSON.parseArray(result);
-
-            assert resultJsonArray != null;
-            if(resultJsonArray.size() == 0) {
-                outMessage.setMessage("没有找到你想要的结果呢");
-                r.sendMessage(outMessage);
-                return;
-            }
-            sendYandeResult(inMessage, resultJsonArray, LIMIT);
-
-        }).start();
-        return null;
+    @RequestMapping("louise/konachan")
+    public JSONObject KonachanSearch(@RequestBody InMessage inMessage) {
+        return requestBooru("https://konachan.com/post.json?tags=", "Konachan", inMessage);
     }
 
     @RequestMapping("louise/yande")
     public JSONObject YandeSearch(@RequestBody InMessage inMessage) {
+        return requestBooru("https://yande.re/post.json?tags=", "Yande", inMessage);
+    }
 
+    /**
+     *
+     * @param inMessage
+     * @param resultJsonArray
+     * @param limit 如果是精选图集则只展示 15 张
+     */
+    private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit, String fileOrigin) {
+
+        String replyImgList = "";
+        OutMessage outMessage = new OutMessage(inMessage);
+        int nsfw = 0;
+        for ( Object object: resultJsonArray) {
+            if (limit == 0)
+                break;
+            JSONObject imgJsonObj = (JSONObject) object;
+            String[] tagList = imgJsonObj.getString("tags").split(" ");
+            // 如果是群聊跳过成人内容
+            if (outMessage.getGroup_id() >= 0)
+                if (isNSFW(tagList)) {
+                    nsfw++;
+                    continue;
+                }
+
+            String urlList = imgJsonObj.getString("jpeg_url");
+            String fileName = imgJsonObj.getString("md5") + "." + imgJsonObj.getString("file_ext");
+            fileControlApi.downloadPicture_RestTemplate(urlList, fileName, fileOrigin);
+            replyImgList += "[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + fileOrigin + "/" + fileName + "]\r\n";
+            limit--;
+        }
+        String msg = replyImgList;
+        if (nsfw != 0)
+            msg += "已过滤 " + nsfw + " 张禁止内容图片，请私聊获取完整结果";
+        if (outMessage.getGroup_id() < 0)
+            outMessage.setMessage("[CQ:at,qq=" + inMessage.getSender().getUser_id() + "], 你的请求结果出来了，你输入的参数是: " + inMessage.getMessage().substring(7) + "\n" + msg);
+        else
+            outMessage.getMessages().add(new Node(inMessage.getSender().getNickname() + ", 你的请求结果出来了，你输入的参数是: " + inMessage.getMessage().substring(7) + "\n" + msg, inMessage.getSelf_id()));
+        log.info(JSONObject.toJSONString(outMessage));
+        r.sendMessage(outMessage);
+    }
+
+    private boolean isNSFW(String[] tagList) {
+        for ( String tag : tagList ) {
+            switch (tag) {
+                case "naked":
+                case "nipples":
+                case "sex":
+                case "anus":
+                case "breasts":
+                case "pussy":
+                case "naked_cape":
+                case "no_bra":
+                case "nopan":
+                case "bikini":
+                case "undressing":
+                case "pantsu":
+                case "monochrome":
+                case "bondage":
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private JSONObject requestBooru(String url, String target, InMessage inMessage) {
         OutMessage outMsg = new OutMessage(inMessage);
 
         // 判断是否携带 Tags 参数
@@ -162,7 +173,8 @@ public class YandeAPI {
         }
 
         // 处理命令前缀
-        String message = inMessage.getMessage().substring(7);
+        String message = inMessage.getMessage();
+        message = message.substring(message.indexOf(' '));
         String[] tags;
         String[] pageNation = new String[2];
 
@@ -220,14 +232,14 @@ public class YandeAPI {
                 tagsParam.append(tag).append("+");
 
             StringBuilder uri = new StringBuilder();
-            uri.append("https://yande.re/post.json?tags=").append(tagsParam.toString()).append("&limit=").append(finalPageNation[1]).append("&page=").append(finalPageNation[0]);
+            uri.append(url).append(tagsParam.toString()).append("&limit=").append(finalPageNation[1]).append("&page=").append(finalPageNation[0]);
 
             log.info("请求地址: " + uri.toString());
             // 使用代理请求 Yande
             RestTemplate restTemplate = new RestTemplate();
             // 借助代理请求
             if (LouiseConfig.LOUISE_PROXY_PORT > 0)
-                restTemplate.setRequestFactory(new HttpProxy().getFactory("Yande API"));
+                restTemplate.setRequestFactory(new HttpProxy().getFactory(target + " API"));
 
             String result = restTemplate.getForObject(uri.toString(), String.class);
             JSONArray resultJsonArray = JSON.parseArray(result);
@@ -238,71 +250,101 @@ public class YandeAPI {
                 r.sendMessage(outMessage);
                 return;
             }
-            sendYandeResult(inMessage, resultJsonArray, Integer.parseInt(finalPageNation[1]));
+            sendYandeResult(inMessage, resultJsonArray, Integer.parseInt(finalPageNation[1]), target);
         }).start();
         return null;
     }
 
-    /**
-     *
-     * @param inMessage
-     * @param resultJsonArray
-     * @param limit 如果是精选图集则只展示 15 张
-     */
-    private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit) {
+    private JSONObject requestPopular(String uri, String target, String type, InMessage inMessage) {
+        // 返回值
+        JSONObject sendJson = new JSONObject();
 
-        String replyImgList = "";
-        OutMessage outMessage = new OutMessage(inMessage);
-        int nsfw = 0;
-        for ( Object object: resultJsonArray) {
-            if (limit == 0)
-                break;
-            JSONObject imgJsonObj = (JSONObject) object;
-            String[] tagList = imgJsonObj.getString("tags").split(" ");
-            // 如果是群聊跳过成人内容
-            if (outMessage.getGroup_id() >= 0)
-                if (isNSFW(tagList)) {
-                    nsfw++;
-                    continue;
-                }
-
-            String urlList = imgJsonObj.getString("sample_url");
-            String fileName = imgJsonObj.getString("md5") + "." + imgJsonObj.getString("file_ext");
-            fileControlApi.downloadPicture_RestTemplate(urlList, fileName, "Yande");
-            replyImgList += "[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "Yande/" + fileName + "]\r\n";
-            limit--;
+        // 校验参数合法性
+        if (!type.equals("day") && !type.equals("week") && !type.equals("month")) {
+            sendJson.put("reply", target + " 功能仅支持参数 day | week | month，请这样 !" + target.toLowerCase() + "/[参数] 请求哦");
+            return sendJson;
         }
-        String msg = replyImgList;
-        if (nsfw != 0)
-            msg += "已过滤 " + nsfw + " 张禁止内容图片，请私聊获取完整结果";
-        if (outMessage.getGroup_id() < 0)
-            outMessage.setMessage("[CQ:at,qq=" + inMessage.getSender().getUser_id() + "], 你的请求结果出来了，你输入的参数是: " + inMessage.getMessage().substring(7) + "\n" + msg);
-        else
-            outMessage.getMessages().add(new Node(inMessage.getSender().getNickname() + ", 你的请求结果出来了，你输入的参数是: " + inMessage.getMessage().substring(7) + "\n" + msg, inMessage.getSelf_id()));
-        log.info(JSONObject.toJSONString(outMessage));
+
+        // 构造消息请求体
+        OutMessage outMessage = new OutMessage(inMessage);
+        outMessage.setMessage(inMessage.getSender().getNickname() + ", 开始请求 " + target + " 的 Every " + type + " 精选图片");
         r.sendMessage(outMessage);
+
+       uri += type + ".json";
+
+        String finalUri = uri;
+        new Thread(() -> {
+            // 使用代理请求 Yande
+            RestTemplate restTemplate = new RestTemplate();
+            // 借助代理请求
+            if (LouiseConfig.LOUISE_PROXY_PORT > 0)
+                restTemplate.setRequestFactory(new HttpProxy().getFactory(target +" API"));
+
+            String result = restTemplate.getForObject(finalUri + "?limit=" + LIMIT, String.class);
+            log.info("请求 " + target + ": " + finalUri + "?limit=" + LIMIT);
+            JSONArray resultJsonArray = JSON.parseArray(result);
+
+            assert resultJsonArray != null;
+            if(resultJsonArray.size() == 0) {
+                outMessage.setMessage("没有找到你想要的结果呢");
+                r.sendMessage(outMessage);
+                return;
+            }
+            sendYandeResult(inMessage, resultJsonArray, LIMIT, target);
+
+        }).start();
+        return null;
     }
 
-    private boolean isNSFW(String[] tagList) {
-        for ( String tag : tagList ) {
-            switch (tag) {
-                case "naked":
-                case "nipples":
-                case "sex":
-                case "anus":
-                case "breasts":
-                case "pussy":
-                case "naked_cape":
-                case "no_bra":
-                case "nopan":
-                case "bikini":
-                case "undressing":
-                case "pantsu":
-                case "monochrome":
-                case "bondage":
-                    return true;
-            }
+    private JSONObject requestTags(String[] msg, String uri, String target, InMessage inMessage) {
+        String tag = msg[1];
+
+        // 返回值
+        JSONObject returnJson = new JSONObject();
+
+        // TODO: 总记录条数太多 会引起 QQ 风控
+        uri += tag + "&limit=" + 20;
+        // 使用代理请求 Yande
+        RestTemplate restTemplate = new RestTemplate();
+        // 借助代理请求
+        if (LouiseConfig.LOUISE_PROXY_PORT > 0)
+            restTemplate.setRequestFactory(new HttpProxy().getFactory("Yande API"));
+
+        String result = restTemplate.getForObject(uri, String.class);
+        log.info("请求 Yande: " + uri);
+        StringBuilder tagList = new StringBuilder(inMessage.getSender().getNickname() + ", 你是否在找?\n");
+        JSONArray resultJsonArray = JSON.parseArray(result);
+
+        assert resultJsonArray != null;
+
+        if(resultJsonArray.size() == 0) {
+            returnJson.put("reply", "没有找到你想要的结果呢");
+            return returnJson;
         }
-        return false;
+
+        for ( Object object: resultJsonArray) {
+            JSONObject tagObj = (JSONObject) object;
+            String name = tagObj.getString("name");
+            Integer count = tagObj.getInteger("count");
+            Integer typeId = tagObj.getInteger("type");
+
+            String type = "";
+            switch (typeId) {
+                case 0: type = "通常"; break;
+                case 1: type = "作者"; break;
+                case 3: type = "版权"; break;
+                case 4: type = "角色"; break;
+            }
+            tagList.append(name).append(" 类型: ").append(type).append(" 有 ").append(count).append(" 张 \r\n");
+        }
+
+        OutMessage outMessage = new OutMessage(inMessage);
+        if (outMessage.getGroup_id() < 0)
+            outMessage.setMessage(tagList.toString());
+        else
+            outMessage.getMessages().add(new Node(tagList.toString(), inMessage.getSelf_id()));
+        r.sendMessage(outMessage);
+
+        return null;
     }
 }
