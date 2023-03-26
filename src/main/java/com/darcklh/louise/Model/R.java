@@ -62,7 +62,7 @@ public class R {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> cqhttp = new HttpEntity<>(headers);
         //开始请求
-        log.info("请求接口: " + api);
+        log.info("请求 cqhttp 接口: " + api);
         this.refresh();
         return restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + api, cqhttp, JSONObject.class);
     }
@@ -91,7 +91,7 @@ public class R {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> cqhttp = new HttpEntity<>(JSONObject.toJSONString(outMessage), headers);
         // 开始请求
-        log.info("请求接口: " + api);
+        log.info("请求 cqhttp 接口: " + api);
         JSONObject response = restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + api, cqhttp, JSONObject.class);
 
         // 校验请求结果
@@ -106,7 +106,7 @@ public class R {
             restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + "send_msg", cqhttp, JSONObject.class);
         }
         this.refresh();
-        log.info("请求 BOT 返回消息:" + response.toString());
+        log.info("接口 " + api + " 返回消息:" + response.toString());
         return response;
     }
 

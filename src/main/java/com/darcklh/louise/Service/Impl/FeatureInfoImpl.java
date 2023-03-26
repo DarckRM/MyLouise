@@ -79,10 +79,10 @@ public class FeatureInfoImpl implements FeatureInfoService {
     }
 
     @Override
-    public FeatureInfo findWithFeatureCmd(String feature_cmd) {
+    public FeatureInfo findWithFeatureCmd(String feature_cmd, String qq) {
         FeatureInfo featureInfo = featureInfoDao.findWithFeatureCmd(feature_cmd);
         if (featureInfo == null)
-            throw new ReplyException("未知的命令，请使用!help [页数]命令获取相关帮助");
+            throw new ReplyException("[CQ:at,qq=" + qq + "]未知的命令，请使用!help [页数]命令获取相关帮助");
         return featureInfo;
     }
 

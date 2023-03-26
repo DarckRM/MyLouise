@@ -130,7 +130,7 @@ public class CqhttpWSController {
                 r.requestAPI("set_friend_add_request", jsonObject);
                 // 添加好友后补充发送消息
                 jsonObject.put("user_id", post.getUser_id());
-                jsonObject.put("message", "露易丝已经成功添加好友，有什么问题的话可以在私聊里回复!help哦");
+                jsonObject.put("message", "露易丝已经成功添加好友，有什么问题的话可以在私聊里发送!help哦");
                 r.requestAPI("send_msg", jsonObject);
             }
             case group: {

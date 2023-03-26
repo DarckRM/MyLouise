@@ -31,11 +31,13 @@ public class NoticePost implements AllPost {
     private enum NoticeType {
         group_upload,
         group_admin,
+        group_card,
         group_increase,
         group_decrease,
         friend_add,
         group_recall,
         friend_recall,
+        client_status,
         notify,
         essence
     }

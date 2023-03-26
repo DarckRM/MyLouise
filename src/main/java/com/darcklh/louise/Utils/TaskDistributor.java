@@ -41,14 +41,6 @@ public class TaskDistributor {
                 remainIndces--;
             }
         }
-        // 打印任务的分配情况
-//        for (int i = 0; i < taskListPerThread.length; i++) {
-//            log.debug("线程 "+i+ "的任务数：" + taskListPerThread[i].size()+ " 区间["
-//                    + ((MultiTaskService) taskListPerThread[i].get(0)).getTaskId()
-//                    + ","
-//                    + ((MultiTaskService) taskListPerThread[i].get(taskListPerThread[i].size() - 1))
-//                    .getTaskId() + "]");
-//        }
         return taskListPerThread;
     }
 }

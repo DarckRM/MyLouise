@@ -50,9 +50,6 @@ public class LouiseFilter implements Filter {
             if (prefix.indexOf('!') != 0) return;
             if (prefix.indexOf('[') == 0) return;
 
-            log.info("请求 <Louise> ");
-            log.info("过滤器 1 流程结束"); // 调用filter链中的下一个filter
-
             // 如果 URI 仅包含 louise 则是预处理请求
             String uri = request.getRequestURI();
             if (uri.equals("/louise")) {

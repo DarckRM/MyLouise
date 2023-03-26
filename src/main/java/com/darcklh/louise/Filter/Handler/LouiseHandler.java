@@ -64,8 +64,6 @@ public class LouiseHandler implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
-        logger.info("拦截器合法性校验");
-
         //获取相关信息
         HttpServletWrapper wrapper = new HttpServletWrapper(request);
         String body = wrapper.getBody();
@@ -91,7 +89,7 @@ public class LouiseHandler implements HandlerInterceptor {
         boolean tag = false;
 
         // 获取请求的功能对象
-        FeatureInfo featureInfo = featureInfoService.findWithFeatureCmd(command);
+        FeatureInfo featureInfo = featureInfoService.findWithFeatureCmd(command, user_id);
         // 如果是请求插件类功能且不是转发请求则进行转发
         if (featureInfo.getType() == 1 && !request.getRequestURI().contains("/louise/invoke/")) {
             PluginInfo pluginInfo = pluginInfoService.findByCmd(command);
@@ -109,10 +107,10 @@ public class LouiseHandler implements HandlerInterceptor {
         // 判断用户是否存在并启用
         if (isAvailable == 0) {
             logger.info("未登记的用户" + user_id);
-            throw new ReplyException(LouiseConfig.LOUISE_ERROR_UNKNOWN_USER);
+            throw new ReplyException("请在群内发送!join以启用你的使用权限");
         } else if (isAvailable == -1) {
             logger.info("未启用的用户" + user_id);
-            throw new ReplyException(LouiseConfig.LOUISE_ERROR_BANNED_USER);
+            throw new ReplyException("你的权限已被暂时禁用");
         }
 
         //判断功能是否启用
@@ -184,7 +182,6 @@ public class LouiseHandler implements HandlerInterceptor {
 
     private String formatList(List<FeatureInfoMin> list) {
         StringBuilder result = new StringBuilder();
-        result.append("[");
         for ( FeatureInfoMin min : list) {
             result.append(min.getFeature_id()).append(":").append(min.getFeature_name()).append("; ");
         }
