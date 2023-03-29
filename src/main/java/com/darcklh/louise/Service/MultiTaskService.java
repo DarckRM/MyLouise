@@ -24,10 +24,14 @@ public interface MultiTaskService {
      * 执行任务
      */
     public boolean execute() throws NoSuchAlgorithmException, IOException;
-
+    // 任务完成执行回调函数
+    public boolean callback();
     public int getTaskId();
     public int getStatus();
     public void setTaskId(int taskId);
     public void setStatus(int taskId);
-
+    public int getThreadId();
+    public void setThreadId(int thread_id);
+    int getTotal();
+    void setTotal(int total);
 }

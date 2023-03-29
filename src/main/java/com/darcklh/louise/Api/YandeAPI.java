@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
-import com.darcklh.louise.Controller.CqhttpWSController;
 import com.darcklh.louise.Model.Louise.BooruTags;
 import com.darcklh.louise.Model.Messages.InMessage;
 import com.darcklh.louise.Model.Messages.Node;
@@ -13,14 +12,11 @@ import com.darcklh.louise.Model.MultiThreadTask.DownloadPicTask;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Service.BooruTagsService;
-import com.darcklh.louise.Service.Impl.CalcImageTask;
+import com.darcklh.louise.Service.UserService;
 import com.darcklh.louise.Utils.HttpProxy;
 import com.darcklh.louise.Utils.TaskDistributor;
-import com.darcklh.louise.Utils.UniqueGenerator;
 import com.darcklh.louise.Utils.WorkThread;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +26,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -46,6 +41,9 @@ public class YandeAPI {
 
     @Autowired
     FileControlApi fileControlApi;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private BooruTagsService booruTagsService;
@@ -211,11 +209,12 @@ public class YandeAPI {
      * @param resultJsonArray
      * @param limit 如果是精选图集则只展示 15 张
      */
-    private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit, String fileOrigin) throws InterruptedException {
+    private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit, String fileOrigin, String[] tags_info) throws InterruptedException {
 
         String replyImgList = "";
         List<DownloadPicTask> taskList = new ArrayList<>();
         OutMessage outMessage = new OutMessage(inMessage);
+        int taskId = 0;
         int nsfw = 0;
         for ( Object object: resultJsonArray) {
             if (limit == 0)
@@ -231,32 +230,48 @@ public class YandeAPI {
             String fileName = imgJsonObj.getString("md5") + "." + imgJsonObj.getString("file_ext");
             // 分配下载任务
 //            fileControlApi.downloadPicture_RestTemplate(imgJsonObj.getString("jpeg_url"), fileName, fileOrigin);
-            taskList.add(new DownloadPicTask(imgJsonObj.getString("jpeg_url"), fileName, fileOrigin, fileControlApi));
+            taskList.add(new DownloadPicTask(taskId, imgJsonObj.getString("jpeg_url"), fileName, fileOrigin, fileControlApi));
             replyImgList += "[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + fileOrigin + "/" + fileName + "]\r\n";
+            taskId++;
             limit--;
         }
         List[] taskListPerThread = TaskDistributor.distributeTasks(taskList, 4);
-
+        List<WorkThread> threads = new ArrayList<>();
         for (int j = 0; j < taskListPerThread.length; j++) {
-            Thread workThread = new WorkThread(taskListPerThread[j], j);
-            workThread.start();
+            WorkThread workThread = new WorkThread(taskListPerThread[j], j);
+            threads.add(workThread);
         }
-        int status = -1;
-        while(DownloadPicTask.already_downloaded.size() != taskList.size()) {
-            if (status != DownloadPicTask.already_downloaded.size()) {
-                status = DownloadPicTask.already_downloaded.size();
+
+        for (WorkThread thread : threads)
+            thread.start();
+
+        // 所有任务完成则继续
+        int done = 0;
+        int total_cost = 0;
+        while(true) {
+            if (total_cost > 90000) {
+                outMessage.setMessage("[CQ:at,qq=" + inMessage.getSender().getUser_id() + "]你的请求处理超时了，请稍后再试吧 |д`)");
+                throw new ReplyException(outMessage);
+            }
+            for (WorkThread thread : threads )
+                done += thread.getRestTask();
+            if (done == 0)
+                break;
+            else {
+                done = 0;
                 Thread.sleep(5000);
+                total_cost += 5000;
             }
         }
 
-        String announce = "现已支持部分中文搜索，如果想追加中文词条请使用!yande/help查看说明\n";
+        String announce = "现已支持部分中文搜索(原神)，请使用角色正确中文名，如果想追加中文词条请使用!yande/help查看说明\n";
         String msg = replyImgList;
         if (nsfw != 0)
             msg += "已过滤 " + nsfw + " 张禁止内容图片，请私聊获取完整结果";
         if (outMessage.getGroup_id() < 0)
-            outMessage.setMessage(announce + "[CQ:at,qq=" + inMessage.getSender().getUser_id() + "], 你的请求结果出来了，你输入的参数是: " + inMessage.getMessage().substring(7) + "\n" + msg);
+            outMessage.setMessage(announce + "[CQ:at,qq=" + inMessage.getSender().getUser_id() + "], 你的请求结果出来了，你输入的参数是: " + Arrays.toString(tags_info) + "\n" + msg);
         else
-            outMessage.getMessages().add(new Node(announce + inMessage.getSender().getNickname() + ", 你的请求结果出来了，你输入的参数是: " + inMessage.getMessage().substring(7) + "\n" + msg, inMessage.getSelf_id()));
+            outMessage.getMessages().add(new Node(announce + inMessage.getSender().getNickname() + ", 你的请求结果出来了，你输入的参数是: " + Arrays.toString(tags_info) + "\n" + msg, inMessage.getSelf_id()));
         log.info(JSONObject.toJSONString(outMessage));
         r.sendMessage(outMessage);
     }
@@ -298,6 +313,7 @@ public class YandeAPI {
         String message = inMessage.getMessage();
         message = message.substring(message.indexOf(' '));
         String[] tags;
+        String[] tags_info;
         String[] pageNation = new String[2];
 
         pageNation[0] = "1";
@@ -313,16 +329,31 @@ public class YandeAPI {
             ArrayList<String> tag_array = new ArrayList<>(Arrays.asList(tags));
             tag_array.removeIf(s -> s.equals(""));
             tags = tag_array.toArray(new String[0]);
+            tags_info = tag_array.toArray(new String[0]);
             int index = 0;
             BooruTags booruTags = new BooruTags();
             while (index < tags.length) {
                 if (tags[index].matches("[^\\x00-\\xff]+$")) {
+                    String nickname = "";
                     booruTags.setCn_name(tags[index]);
                     List<BooruTags> booru_list = booruTagsService.findByAlter(booruTags);
-                    if (booru_list.size() != 0)
+                    if (booru_list.size() != 0) {
+                        if (booru_list.get(0).getInfo() == null)
+                            nickname = "";
+                        else
+                            nickname = userService.selectById(booru_list.get(0).getInfo()).getNickname();
                         tags[index] = booru_list.get(0).getOrigin_name();
-                        // 如果无法处理则替换为 girl
-                    else tags[index] = "*";
+                        tags_info[index] = booru_list.get(0).getCn_name();
+                        if (nickname.equals(""))
+                            tags_info[index] += "(root record)";
+                        else
+                            tags_info[index] += "(" + nickname + ")";
+                    }
+                    // 如果无法处理则替换为 girl
+                    else {
+                        tags_info[index] = tags[index] + " 未支持 替换默认tag";
+                        tags[index] = "*";
+                    }
                 }
                 index++;
             }
@@ -342,17 +373,32 @@ public class YandeAPI {
             ArrayList<String> tag_array = new ArrayList<>(Arrays.asList(tags));
             tag_array.removeIf(s -> s.equals(""));
             tags = tag_array.toArray(new String[0]);
+            tags_info = tag_array.toArray(new String[0]);
             // 处理参数如果遇到中文参数则进行替换
             int index = 0;
             BooruTags booruTags = new BooruTags();
             while (index < tags.length) {
                 if (tags[index].matches("[^\\x00-\\xff]+$")) {
+                    String nickname = "";
                     booruTags.setCn_name(tags[index]);
                     List<BooruTags> booru_list = booruTagsService.findByAlter(booruTags);
-                    if (booru_list.size() != 0)
+                    if (booru_list.size() != 0) {
+                        if (booru_list.get(0).getInfo() == null)
+                            nickname = "";
+                        else
+                            nickname = userService.selectById(booru_list.get(0).getInfo()).getNickname();
                         tags[index] = booru_list.get(0).getOrigin_name();
-                        // 如果无法处理则替换为 girl
-                    else tags[index] = "*";
+                        tags_info[index] = booru_list.get(0).getCn_name();
+                        if (nickname.equals(""))
+                            tags_info[index] += "(root record)";
+                        else
+                            tags_info[index] += "(" + nickname + ")";
+                    }
+                    // 如果无法处理则替换为 girl
+                    else {
+                        tags_info[index] = tags[index] + " 未支持 替换默认tag";
+                        tags[index] = "*";
+                    }
                 }
                 index++;
             }
@@ -378,10 +424,11 @@ public class YandeAPI {
         String[] finalPageNation = pageNation;
 
         String[] finalTags = tags;
+        String[] final_tags_info = tags_info;
         new Thread(() -> {
             // 构造消息请求体
             OutMessage outMessage = new OutMessage(inMessage);
-            outMessage.setMessage("[CQ:at,qq=" + inMessage.getSender().getUser_id() + "]" + inMessage.getSender().getNickname() + ", 开始检索 Yande 图片咯");
+            outMessage.setMessage("[CQ:at,qq=" + inMessage.getSender().getUser_id() + "] 开始检索 Yande 图片咯");
             r.sendMessage(outMessage);
             StringBuilder tagsParam = new StringBuilder();
             // 构造 Tags 参数
@@ -397,18 +444,17 @@ public class YandeAPI {
             // 借助代理请求
             if (LouiseConfig.LOUISE_PROXY_PORT > 0)
                 restTemplate.setRequestFactory(new HttpProxy().getFactory(target + " API"));
-
             String result = restTemplate.getForObject(uri.toString(), String.class);
             JSONArray resultJsonArray = JSON.parseArray(result);
 
             assert resultJsonArray != null;
             if(resultJsonArray.size() == 0) {
-                outMessage.setMessage("[CQ:at,qq=" + inMessage.getSender().getUser_id() + "]" + "没有找到你想要的结果呢");
+                outMessage.setMessage("[CQ:at,qq=" + inMessage.getSender().getUser_id() + "]" + "没有找到你想要的结果呢，请检查参数是否正确，或者发送!yande/help获取帮助 |д`)");
                 r.sendMessage(outMessage);
                 return;
             }
             try {
-                sendYandeResult(inMessage, resultJsonArray, Integer.parseInt(finalPageNation[1]), target);
+                sendYandeResult(inMessage, resultJsonArray, Integer.parseInt(finalPageNation[1]), target, final_tags_info);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -451,7 +497,7 @@ public class YandeAPI {
                 return;
             }
             try {
-                sendYandeResult(inMessage, resultJsonArray, LIMIT, target);
+                sendYandeResult(inMessage, resultJsonArray, LIMIT, target, null);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

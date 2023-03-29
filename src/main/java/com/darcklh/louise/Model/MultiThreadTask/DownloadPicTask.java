@@ -27,16 +27,17 @@ public class DownloadPicTask implements MultiTaskService {
 
     private int status;
     private int taskId;
-
+    private int thread_id;
+    private int total;
     private String urlList;
     private String fileName;
     private String fileOrigin;
     // 总任务计数器
-    public static List<Integer> already_downloaded = Collections.synchronizedList(new ArrayList<>());
 
     private FileControlApi fileControlApi;
 
-    public DownloadPicTask(String urlList, String fileName, String fileOrigin, FileControlApi fileControlApi) {
+    public DownloadPicTask(int taskId, String urlList, String fileName, String fileOrigin, FileControlApi fileControlApi) {
+        this.taskId = taskId;
         this.urlList = urlList;
         this.fileName = fileName;
         this.fileOrigin = fileOrigin;
@@ -44,12 +45,26 @@ public class DownloadPicTask implements MultiTaskService {
     }
 
     @Override
-    public synchronized boolean execute() throws NoSuchAlgorithmException, IOException {
+    public boolean execute() throws NoSuchAlgorithmException, IOException {
         setStatus(MultiTaskService.RUNNING);
         fileControlApi.downloadPicture_RestTemplate(urlList, fileName, fileOrigin);
-        already_downloaded.add(0);
-        log.info("当前下载数: " + DownloadPicTask.already_downloaded.size());
+        log.info("任务列表 " + thread_id + ": 剩下 " + total + "张");
         setStatus(FINISHED);
         return true;
+    }
+
+    @Override
+    public boolean callback() {
+        return false;
+    }
+
+    @Override
+    public int getThreadId() {
+        return this.thread_id;
+    }
+
+    @Override
+    public void setThreadId(int thread_id) {
+        this.thread_id = thread_id;
     }
 }

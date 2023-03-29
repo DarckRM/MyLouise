@@ -54,6 +54,7 @@ public class NoticePost implements AllPost {
         lift_ban,
         poke,
         add,
-        delete
+        delete,
+        honor
     }
 }
