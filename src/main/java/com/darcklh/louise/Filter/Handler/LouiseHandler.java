@@ -20,6 +20,7 @@ import com.darcklh.louise.Service.Impl.GroupImpl;
 import com.darcklh.louise.Service.Impl.UserImpl;
 import com.darcklh.louise.Utils.HttpServletWrapper;
 import com.darcklh.louise.Utils.isEmpty;
+import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -90,15 +93,25 @@ public class LouiseHandler implements HandlerInterceptor {
 
         // 获取请求的功能对象
         FeatureInfo featureInfo = featureInfoService.findWithFeatureCmd(command, user_id);
+        logger.info("用户 " + user_id + " 请求 " + featureInfo.getFeature_name() + " at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date().getTime()));
+        //判断功能是否启用
+        if (featureInfo.getIs_enabled() != 1) {
+            throw new ReplyException("功能<" + featureInfo.getFeature_name() + ">未启用");
+        }
+
         // 如果是请求插件类功能且不是转发请求则进行转发
         if (featureInfo.getType() == 1 && !request.getRequestURI().contains("/louise/invoke/")) {
             PluginInfo pluginInfo = pluginInfoService.findByCmd(command);
+            // 更新调用统计数据
+            featureInfoService.addCount(featureInfo.getFeature_id(), group_id, user_id);
             request.getRequestDispatcher("invoke/" + pluginInfo.getPlugin_id()).forward(request, response);
             return false;
         }
 
         // 放行不需要鉴权的命令
         if (featureInfo.getIs_auth() == 0) {
+            // 更新调用统计数据
+            featureInfoService.addCount(featureInfo.getFeature_id(), group_id, user_id);
             return true;
         }
 
@@ -112,12 +125,6 @@ public class LouiseHandler implements HandlerInterceptor {
             logger.info("未启用的用户" + user_id);
             throw new ReplyException("你的权限已被暂时禁用");
         }
-
-        //判断功能是否启用
-        if (featureInfo.getIs_enabled() != 1) {
-            throw new ReplyException("功能<" + featureInfo.getFeature_name() + ">未启用");
-        }
-
 
         // 判断群聊还是私聊
         if (inMessage.getGroup_id() != -1) {

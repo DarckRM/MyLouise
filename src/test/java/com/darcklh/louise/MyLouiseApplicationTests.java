@@ -58,22 +58,5 @@ class MyLouiseApplicationTests {
 //        }
 //
 ////    }
-//    @Autowired
-//    BooruTagsDao booruTagsDao;
-//
-//    @Test
-//    public void refreshGroupList() {
-//        BooruTags booruTags = new BooruTags();
-//        booruTags.setOrigin_name("yuki_miku");
-//        booruTags.setCn_name("snow_miku");
-//        booruTags.setAlter_name("雪初音");
-//        booruTags.setInfo("412543224");
-//        // 校验是否存在其它词条与之对应
-//        QueryWrapper<BooruTags> wrapper = new QueryWrapper<>(booruTags);
-//        wrapper.eq("cn_name", booruTags.getCn_name());
-//        wrapper.eq("alter_name", booruTags.getAlter_name());
-//        if(booruTagsDao.selectList(wrapper).size() != 0) {
-//            log.info("已存在 " + booruTags.getOrigin_name() + " -> " + booruTags.getCn_name() + " -> " + booruTags.getAlter_name() + " 的记录");
-//        }
-//    }
+
 }

@@ -26,7 +26,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author DarckLH
@@ -209,24 +211,24 @@ public class YandeAPI {
      * @param resultJsonArray
      * @param limit 如果是精选图集则只展示 15 张
      */
-    private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit, String fileOrigin, String[] tags_info) throws InterruptedException {
+    private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit, Integer page, String fileOrigin, String[] tags_info) throws InterruptedException {
 
         String replyImgList = "";
         List<DownloadPicTask> taskList = new ArrayList<>();
         OutMessage outMessage = new OutMessage(inMessage);
         int taskId = 0;
-        int nsfw = 0;
+        String page_nation = page + "页/" +  limit + "条";
         for ( Object object: resultJsonArray) {
             if (limit == 0)
                 break;
             JSONObject imgJsonObj = (JSONObject) object;
-            String[] tagList = imgJsonObj.getString("tags").split(" ");
+//            String[] tagList = imgJsonObj.getString("tags").split(" ");
             // 如果是群聊跳过成人内容
-            if (outMessage.getGroup_id() >= 0)
-                if (isNSFW(tagList)) {
-                    nsfw++;
-                    continue;
-                }
+//            if (outMessage.getGroup_id() >= 0)
+//                if (isNSFW(tagList)) {
+//                    nsfw++;
+//                    continue;
+//                }
             String fileName = imgJsonObj.getString("md5") + "." + imgJsonObj.getString("file_ext");
             // 分配下载任务
 //            fileControlApi.downloadPicture_RestTemplate(imgJsonObj.getString("jpeg_url"), fileName, fileOrigin);
@@ -264,14 +266,15 @@ public class YandeAPI {
             }
         }
 
-        String announce = "现已支持部分中文搜索(原神)，请使用角色正确中文名，如果想追加中文词条请使用!yande/help查看说明\n";
+        String announce = "支持中文搜索(原神)，请使用角色正确中文名\n如果想追加中文词条请使用!yande/help查看说明\n";
+
         String msg = replyImgList;
-        if (nsfw != 0)
-            msg += "已过滤 " + nsfw + " 张禁止内容图片，请私聊获取完整结果";
+        if (outMessage.getGroup_id() >= 0)
+            msg += "已过滤过于离谱的图片，如需全部资料请私聊 (`ヮ´)";
         if (outMessage.getGroup_id() < 0)
-            outMessage.setMessage(announce + "[CQ:at,qq=" + inMessage.getSender().getUser_id() + "], 你的请求结果出来了，你输入的参数是: " + Arrays.toString(tags_info) + "\n" + msg);
+            outMessage.setMessage(announce + "[CQ:at,qq=" + inMessage.getSender().getUser_id() + "], 你的请求结果出来了，你的参数是: " + Arrays.toString(tags_info) + "\n" + page_nation + "\n" + msg);
         else
-            outMessage.getMessages().add(new Node(announce + inMessage.getSender().getNickname() + ", 你的请求结果出来了，你输入的参数是: " + Arrays.toString(tags_info) + "\n" + msg, inMessage.getSelf_id()));
+            outMessage.getMessages().add(new Node(announce + inMessage.getSender().getNickname() + ", 你的请求结果出来了，你的参数是: " + Arrays.toString(tags_info) + "\n" + page_nation + "\n" + msg, inMessage.getSelf_id()));
         log.info(JSONObject.toJSONString(outMessage));
         r.sendMessage(outMessage);
     }
@@ -304,7 +307,7 @@ public class YandeAPI {
 
         // 判断是否携带 Tags 参数
         if (inMessage.getMessage().length() < 7) {
-            outMsg.setMessage("请至少携带一个 Tag 参数，像这样 !yande 参数1 参数2 | 页数 条数\n页数和条数可以不用指定");
+            outMsg.setMessage("请至少携带一个 Tag 参数，像这样 !yande 参数1 参数2 页数 条数\n页数和条数可以不用指定");
             r.sendMessage(outMsg);
             return null;
         }
@@ -315,114 +318,86 @@ public class YandeAPI {
         String[] tags;
         String[] tags_info;
         String[] pageNation = new String[2];
-
         pageNation[0] = "1";
         pageNation[1] = "10";
 
-        // 判断是否携带分页参数
-        if (message.contains("|")) {
-            // 获取参数列表
-            String paramOne = message.substring(0, message.indexOf("|") - 1);
-            String paramTwo = message.substring(message.indexOf("|") + 2);
+        // 格式化 Message
+        tags = message.trim().split(" ");
+        ArrayList<String> tag_array = new ArrayList<>(Arrays.asList(tags));
+        tag_array.removeIf(s -> s.equals(""));
 
-            tags = paramOne.trim().split(" ");
-            ArrayList<String> tag_array = new ArrayList<>(Arrays.asList(tags));
-            tag_array.removeIf(s -> s.equals(""));
-            tags = tag_array.toArray(new String[0]);
-            tags_info = tag_array.toArray(new String[0]);
-            int index = 0;
-            BooruTags booruTags = new BooruTags();
-            while (index < tags.length) {
-                if (tags[index].matches("[^\\x00-\\xff]+$")) {
-                    String nickname = "";
-                    booruTags.setCn_name(tags[index]);
-                    List<BooruTags> booru_list = booruTagsService.findByAlter(booruTags);
-                    if (booru_list.size() != 0) {
-                        if (booru_list.get(0).getInfo() == null)
-                            nickname = "";
-                        else
-                            nickname = userService.selectById(booru_list.get(0).getInfo()).getNickname();
-                        tags[index] = booru_list.get(0).getOrigin_name();
-                        tags_info[index] = booru_list.get(0).getCn_name();
-                        if (nickname.equals(""))
-                            tags_info[index] += "(root record)";
-                        else
-                            tags_info[index] += "(" + nickname + ")";
-                    }
-                    // 如果无法处理则替换为 girl
-                    else {
-                        tags_info[index] = tags[index] + " 未支持 替换默认tag";
-                        tags[index] = "*";
-                    }
-                }
-                index++;
-            }
-            String[] temp = paramTwo.split(" ");
-
-            // 如果只有一个分页参数代表 页数
-            if (temp.length == 1) {
-                pageNation[0] = temp[0];
-            } else {
-                pageNation = temp;
-                if (Integer.parseInt(pageNation[1]) > 20)
-                    pageNation[1] = "20";
+        // 遍历 tag_array 处理数字参数作为分页信息
+        int pos = 0;
+        Iterator<String> it = tag_array.iterator();
+        while (it.hasNext()) {
+            String tag = it.next();
+            if (pos > 1) {
+                outMsg.setMessage("[CQ:at,qq=" + outMsg.getUser_id() + "]" + "分页参数只有两个啦 页数 条数 (ﾟдﾟ)");
+                throw new ReplyException(outMsg);
             }
 
-        } else {
-            tags = message.trim().split(" ");
-            ArrayList<String> tag_array = new ArrayList<>(Arrays.asList(tags));
-            tag_array.removeIf(s -> s.equals(""));
-            tags = tag_array.toArray(new String[0]);
-            tags_info = tag_array.toArray(new String[0]);
-            // 处理参数如果遇到中文参数则进行替换
-            int index = 0;
-            BooruTags booruTags = new BooruTags();
-            while (index < tags.length) {
-                if (tags[index].matches("[^\\x00-\\xff]+$")) {
-                    String nickname = "";
-                    booruTags.setCn_name(tags[index]);
-                    List<BooruTags> booru_list = booruTagsService.findByAlter(booruTags);
-                    if (booru_list.size() != 0) {
-                        if (booru_list.get(0).getInfo() == null)
-                            nickname = "";
-                        else
-                            nickname = userService.selectById(booru_list.get(0).getInfo()).getNickname();
-                        tags[index] = booru_list.get(0).getOrigin_name();
-                        tags_info[index] = booru_list.get(0).getCn_name();
-                        if (nickname.equals(""))
-                            tags_info[index] += "(root record)";
-                        else
-                            tags_info[index] += "(" + nickname + ")";
-                    }
-                    // 如果无法处理则替换为 girl
-                    else {
-                        tags_info[index] = tags[index] + " 未支持 替换默认tag";
-                        tags[index] = "*";
-                    }
+            try {
+                if (Integer.parseInt(tag) < 0) {
+                    outMsg.setMessage("[CQ:at,qq=" + outMsg.getUser_id() + "]" + "暂不支持负数分页 (*´д`)");
+                    throw new ReplyException(outMsg);
                 }
-                index++;
+                pageNation[pos] = tag;
+                pos++;
+                it.remove();
+            } catch (NumberFormatException e) {
+                log.info("原始参数: " + tag);
             }
         }
 
+        // 如果群聊加上过滤 tag
+        if (outMsg.getGroup_id() != -1)
+            tag_array.add("-rating:explicit");
+
+        tags = tag_array.toArray(new String[0]);
+        tags_info = tag_array.toArray(new String[0]);
+
+        // 处理参数如果遇到中文参数则进行替换
+        int index = 0;
+        BooruTags booruTags = new BooruTags();
+        while (index < tags.length) {
+            if (tags[index].matches("[^\\x00-\\xff]+$")) {
+                String nickname = "";
+                booruTags.setCn_name(tags[index]);
+                List<BooruTags> booru_list = booruTagsService.findByAlter(booruTags);
+                if (booru_list.size() != 0) {
+                    if (booru_list.get(0).getInfo() == null)
+                        nickname = "";
+                    else
+                        nickname = userService.selectById(booru_list.get(0).getInfo()).getNickname();
+                    tags[index] = booru_list.get(0).getOrigin_name();
+                    tags_info[index] = booru_list.get(0).getCn_name();
+                    if (nickname.equals(""))
+                        tags_info[index] += "(默认)";
+                    else
+                        tags_info[index] += "(" + nickname + ")";
+                }
+                // 如果无法处理则替换为 girl
+                else {
+                    tags_info[index] = tags[index] + " 未支持 已替换";
+                    tags[index] = "*";
+                }
+            }
+            index++;
+        }
+
         // pageNation 只准接收两个参数
-        if (tags.length > 4) {
-            outMsg.setMessage("标签参数最大只允许 4 个");
+        if (tags.length > 12) {
+            outMsg.setMessage("标签参数最大只允许 12 个");
             r.sendMessage(outMsg);
             return null;
         }
 
-        // pageNation 只准接收两个参数
-        if (pageNation.length > 2) {
-            outMsg.setMessage("分页参数只允许传入 页数 和 结果数 位置 两个参数");
-            r.sendMessage(outMsg);
-            return null;
-        }
-
-        // 对 tag 进行中文对照
+        // 修改最大条数
+        if (Integer.parseInt(pageNation[1]) > 20)
+            pageNation[1] = "20";
 
         // 处理线程安全问题
         String[] finalPageNation = pageNation;
-
         String[] finalTags = tags;
         String[] final_tags_info = tags_info;
         new Thread(() -> {
@@ -454,7 +429,7 @@ public class YandeAPI {
                 return;
             }
             try {
-                sendYandeResult(inMessage, resultJsonArray, Integer.parseInt(finalPageNation[1]), target, final_tags_info);
+                sendYandeResult(inMessage, resultJsonArray, Integer.parseInt(finalPageNation[1]), Integer.parseInt(finalPageNation[0]), target, final_tags_info);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -497,7 +472,7 @@ public class YandeAPI {
                 return;
             }
             try {
-                sendYandeResult(inMessage, resultJsonArray, LIMIT, target, null);
+                sendYandeResult(inMessage, resultJsonArray, LIMIT, 1, target, null);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
