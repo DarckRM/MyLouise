@@ -222,13 +222,12 @@ public class YandeAPI {
             if (limit == 0)
                 break;
             JSONObject imgJsonObj = (JSONObject) object;
-//            String[] tagList = imgJsonObj.getString("tags").split(" ");
+            String[] tagList = imgJsonObj.getString("tags").split(" ");
             // 如果是群聊跳过成人内容
-//            if (outMessage.getGroup_id() >= 0)
-//                if (isNSFW(tagList)) {
-//                    nsfw++;
-//                    continue;
-//                }
+            if (outMessage.getGroup_id() >= 0)
+                if (isNSFW(tagList))
+                    continue;
+
             String fileName = imgJsonObj.getString("md5") + "." + imgJsonObj.getString("file_ext");
             // 分配下载任务
 //            fileControlApi.downloadPicture_RestTemplate(imgJsonObj.getString("jpeg_url"), fileName, fileOrigin);
@@ -361,10 +360,18 @@ public class YandeAPI {
         BooruTags booruTags = new BooruTags();
         while (index < tags.length) {
             if (tags[index].matches("[^\\x00-\\xff]+$")) {
-                String nickname = "";
+                String nickname;
                 booruTags.setCn_name(tags[index]);
                 List<BooruTags> booru_list = booruTagsService.findByAlter(booruTags);
+
                 if (booru_list.size() != 0) {
+
+                    // 如果返回了多个结果 优先考虑创建者的 QQ 匹配
+                    if (booru_list.size() > 1)
+                        for (BooruTags bt: booru_list)
+                            if (bt.getInfo().equals(inMessage.getUser_id().toString()))
+                                booru_list.set(0, bt);
+
                     if (booru_list.get(0).getInfo() == null)
                         nickname = "";
                     else

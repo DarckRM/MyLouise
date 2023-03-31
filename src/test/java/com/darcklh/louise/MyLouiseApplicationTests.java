@@ -34,29 +34,23 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.http.HttpClient;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MyLouiseApplicationTests {
 
-//    @Autowired
-//    GroupService groupService;
-//
-//    @Test
-//    public void run() {
-//        List<Group> group_list = groupService.findBy();
-//
-//        for ( Group group : group_list) {
-//            try {
-//                groupService.update(group);
-//            } catch (Exception ignored) {
-//            }
-//        }
-//
-////    }
 
 }

@@ -14,10 +14,4 @@ public interface PluginService {
     public JSONObject service(InMessage inMessage);
     public JSONObject service();
 
-    /**
-     * 初始化函数
-     * @return 返回是否成功初始化
-     */
-    public boolean init();
-
 }
