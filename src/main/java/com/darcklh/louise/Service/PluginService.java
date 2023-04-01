@@ -11,7 +11,23 @@ public interface PluginService {
 
     String pluginName();
 
-    public JSONObject service(InMessage inMessage);
-    public JSONObject service();
+    /**
+     * 请求的 inMessage 作为参数调用函数
+     * @param inMessage
+     * @return
+     */
+    JSONObject service(InMessage inMessage);
+    JSONObject service();
 
+    /**
+     * 插件的初始化函数
+     * @return boolean represent init status
+     */
+    public boolean init();
+
+    /**
+     * 插件的重载函数
+     * @return boolean represent reload status
+     */
+    public boolean reload();
 }

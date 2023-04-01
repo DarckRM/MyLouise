@@ -67,13 +67,8 @@ public class PluginInfoImpl implements PluginInfoService {
             log.info("卸载已安装的插件");
             PluginManager.pluginInfos.clear();
         }
-        int number = 0;
         try {
             pluginManager.loadPlugins(pluginInfos);
-            for (PluginInfo pluginInfo : pluginInfos) {
-                log.info("加载插件 <-- " + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +" -->");
-                number++;
-            }
         } catch (Exception e) {
             log.info("加载插件失败: " + e.getMessage());
         }

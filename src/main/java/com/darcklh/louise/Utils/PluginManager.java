@@ -2,6 +2,7 @@ package com.darcklh.louise.Utils;
 
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Service.PluginService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import java.util.List;
 /**
  * 插件管理类
  */
+@Slf4j
 @Component
 public class PluginManager {
 
@@ -28,7 +30,20 @@ public class PluginManager {
     public void loadPlugins(List<PluginInfo> pluginList) throws IOException, IllegalAccessException, InstantiationException {
         init(pluginList);
         for(PluginInfo pluginInfo: pluginList) {
-            pluginInfo.setPluginService(getInstance(pluginInfo.getClass_name()));
+            log.info("加载插件 <-- " + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +" -->");
+            PluginService plugin_service = getInstance(pluginInfo.getClass_name());
+            log.info("|________> 执行初始化函数中 >>>");
+            try {
+            if(plugin_service.init()) {
+                log.info(pluginInfo.getName() + " 加载成功");
+            } else
+                log.info(pluginInfo.getName() + " 加载失败");
+            } catch (NoClassDefFoundError error) {
+                log.error("插件 " + pluginInfo.getName() + " 加载失败");
+                log.error(error.getMessage());
+                continue;
+            }
+            pluginInfo.setPluginService(plugin_service);
             pluginInfos.put(pluginInfo.getPlugin_id(), pluginInfo);
         }
         // urlClassLoader.close();
