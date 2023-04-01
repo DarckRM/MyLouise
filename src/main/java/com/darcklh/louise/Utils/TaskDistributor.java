@@ -9,7 +9,7 @@ import java.util.List;
 @Slf4j
 public class TaskDistributor {
 
-    public static List[] distributeTasks(List taskList, int threadCount) {
+    public static List<MultiTaskService>[] distributeTasks(List taskList, int threadCount) {
 
         // 每个线程至少要执行的任务数,假如不为零则表示每个线程都会分配到任务
         int minTaskCount = taskList.size() / threadCount;
@@ -27,7 +27,7 @@ public class TaskDistributor {
         // 相同的变量，不然会在执行中改变 remainTaskCount 原有值，产生麻烦
         int remainIndces = remainTaskCount;
         for (int i = 0; i < taskListPerThread.length; i++) {
-            taskListPerThread[i] = new ArrayList();
+            taskListPerThread[i] = new ArrayList<>();
             // 如果大于零，线程要分配到基本的任务
             if (minTaskCount > 0) {
                 for (int j = taskIndex; j < minTaskCount + taskIndex; j++) {
@@ -41,14 +41,6 @@ public class TaskDistributor {
                 remainIndces--;
             }
         }
-        // 打印任务的分配情况
-//        for (int i = 0; i < taskListPerThread.length; i++) {
-//            log.debug("线程 "+i+ "的任务数：" + taskListPerThread[i].size()+ " 区间["
-//                    + ((MultiTaskService) taskListPerThread[i].get(0)).getTaskId()
-//                    + ","
-//                    + ((MultiTaskService) taskListPerThread[i].get(taskListPerThread[i].size() - 1))
-//                    .getTaskId() + "]");
-//        }
         return taskListPerThread;
     }
 }

@@ -9,16 +9,18 @@ import com.darcklh.louise.Mapper.RoleDao;
 import com.darcklh.louise.Mapper.UserDao;
 import com.darcklh.louise.Model.Louise.Group;
 import com.darcklh.louise.Model.Louise.User;
+import com.darcklh.louise.Model.Messages.InMessage;
 import com.darcklh.louise.Model.R;
+import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Model.Saito.FeatureInfo;
+import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.VO.FeatureInfoMin;
-import com.darcklh.louise.Service.FeatureInfoService;
-import com.darcklh.louise.Service.GroupService;
+import com.darcklh.louise.Service.*;
 import com.darcklh.louise.Service.Impl.GroupImpl;
 import com.darcklh.louise.Service.Impl.UserImpl;
-import com.darcklh.louise.Service.UserService;
 import com.darcklh.louise.Utils.HttpServletWrapper;
 import com.darcklh.louise.Utils.isEmpty;
+import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,82 +60,88 @@ public class LouiseHandler implements HandlerInterceptor {
     FeatureInfoService featureInfoService;
 
     @Autowired
+    PluginInfoService pluginInfoService;
+
+    @Autowired
     R r;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
-        logger.info("拦截器合法性校验");
-
-        String command = request.getRequestURI();
-
-        //对command预处理
-        if (command.contains("/louise/pid/"))
-            command = "/louise/pid/{pid}";
-
-        //对command预处理
-        if (command.contains("/louise/yande/"))
-            command = "/louise/yande/{type}";
-
-        response.setContentType("application/json; charset=utf-8");
-
         //获取相关信息
         HttpServletWrapper wrapper = new HttpServletWrapper(request);
         String body = wrapper.getBody();
         logger.debug("拦截器请求Body: " + body);
 
-        JSONObject jsonObject = JSONObject.parseObject(body);
-        String group_id = jsonObject.getString("group_id");
-        String user_id = jsonObject.getJSONObject("sender").getString("user_id");
+        InMessage inMessage = JSONObject.parseObject(body).toJavaObject(InMessage.class);
 
-        Boolean tag = false;
+        String group_id = inMessage.getGroup_id().toString();
+        String user_id = inMessage.getSender().getUser_id().toString();
+        String message = inMessage.getMessage();
 
-        //放行join
-        if (command.equals("/louise/join")) {
+        //对command预处理
+        String[] commands = message.split(" ");
+        String command = commands[0];
+
+        // 如果参数是和命令体结合的形式，那么模糊匹配左大括号后半部分
+        if (command.contains("/"))
+            command = command.substring(0, command.indexOf("/") + 1) + "{%";
+        else
+        // 如果不携带参数，那么构造命令是否允许无参请求查询条件
+            command += " %";
+
+        boolean tag = false;
+
+        // 获取请求的功能对象
+        FeatureInfo featureInfo = featureInfoService.findWithFeatureCmd(command, user_id);
+        logger.info("用户 " + user_id + " 请求 " + featureInfo.getFeature_name() + " at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date().getTime()));
+        //判断功能是否启用
+        if (featureInfo.getIs_enabled() != 1) {
+            throw new ReplyException("功能<" + featureInfo.getFeature_name() + ">未启用");
+        }
+
+        // 如果是请求插件类功能且不是转发请求则进行转发
+        if (featureInfo.getType() == 1 && !request.getRequestURI().contains("/louise/invoke/")) {
+            PluginInfo pluginInfo = pluginInfoService.findByCmd(command);
+            // 更新调用统计数据
+            featureInfoService.addCount(featureInfo.getFeature_id(), group_id, user_id);
+            request.getRequestDispatcher("invoke/" + pluginInfo.getPlugin_id()).forward(request, response);
+            return false;
+        }
+
+        // 放行不需要鉴权的命令
+        if (featureInfo.getIs_auth() == 0) {
+            // 更新调用统计数据
+            featureInfoService.addCount(featureInfo.getFeature_id(), group_id, user_id);
             return true;
         }
 
-        //放行help
-        if (command.equals("/louise/help")) {
-            return true;
+        int isAvailable = userService.isUserAvaliable(user_id);
+
+        // 判断用户是否存在并启用
+        if (isAvailable == 0) {
+            logger.info("未登记的用户" + user_id);
+            throw new ReplyException("请在群内发送!join以启用你的使用权限");
+        } else if (isAvailable == -1) {
+            logger.info("未启用的用户" + user_id);
+            throw new ReplyException("你的权限已被暂时禁用");
         }
 
-        //放行group_join
-        if (command.equals("/louise/group_join")) {
-            return true;
-        }
-
-        int isAvaliable = userService.isUserAvaliable(user_id);
-
-        //判断用户是否存在并启用
-        if (isAvaliable == 0) {
-            return returnFalseMessage(LouiseConfig.LOUISE_ERROR_UNKNOWN_USER, "未登记的用户" + user_id, response);
-        } else if (isAvaliable == -1) {
-            return returnFalseMessage(LouiseConfig.LOUISE_ERROR_BANNED_USER, "未启用的用户" + user_id, response);
-        }
-
-        //判断群是否启用
-        if (group_id != null && !groupService.isGroupEnabled(group_id)) {
-            return returnFalseMessage("主人不准露易丝在这个群里说话哦", "未启用的群组: " + group_id, response);
-        }
-
-        //获取请求的功能对象
-        FeatureInfo featureInfo = featureInfoService.findWithFeatureURL(command);
-
-        try {
-            //判断功能是否启用
-            if (featureInfo.getIs_enabled()!=1) {
-                return returnFalseMessage("功能<" + featureInfo.getFeature_name() + ">未启用", "功能未启用: " + group_id, response);
+        // 判断群聊还是私聊
+        if (inMessage.getGroup_id() != -1) {
+            if (groupService.isGroupExist(group_id)) {
+                if (!groupService.isGroupEnabled(group_id)) {
+                    logger.info("未启用的群组: " + group_id);
+                    throw new ReplyException("主人不准露易丝在这个群里说话哦");
+                }
+            } else {
+                logger.info("未注册的群组: " + group_id);
+                throw new ReplyException("群聊还没有在 Louise 中注册哦");
             }
-        } catch (Exception e) {
-            return returnFalseMessage("未知的命令", "请求未知命令"+command, response);
-        }
 
-        //判断群是否具有请求权限
-        if(!isEmpty.isEmpty(group_id)) {
             Group group = groupService.selectById(group_id);
 
             List<FeatureInfoMin> featureInfoMins = featureInfoService.findWithRoleId(group.getRole_id());
-            logger.info("群聊允许的功能列表: " +featureInfoMins);
+            logger.info("群聊允许的功能列表: " + formatList(featureInfoMins));
             for ( FeatureInfoMin featureInfoMin: featureInfoMins) {
                 if (featureInfoMin.getFeature_id().equals(featureInfo.getFeature_id())) {
                     tag = true;
@@ -137,33 +149,31 @@ public class LouiseHandler implements HandlerInterceptor {
                 }
             }
             if (!tag)
-                return returnFalseMessage("这个群聊的权限不准用这个功能哦", "群" + group_id +"权限不足", response);
-        } else {
-            tag = true;
+                throw new ReplyException("这个群聊的权限不准用这个功能哦");
         }
 
-        if(tag) {
-            tag = false;
-            User user = userService.selectById(user_id);
+        tag = false;
+        User user = userService.selectById(user_id);
 
-            List<FeatureInfoMin> featureInfoMins = featureInfoService.findWithRoleId(user.getRole_id());
-            logger.info("用户允许的功能列表: " +featureInfoMins);
-            for ( FeatureInfoMin featureInfoMin: featureInfoMins) {
-                if (featureInfoMin.getFeature_id().equals(featureInfo.getFeature_id())) {
-                    tag = true;
-                    break;
-                }
+        List<FeatureInfoMin> featureInfoMins = featureInfoService.findWithRoleId(user.getRole_id());
+        logger.info("用户允许的功能列表: " + formatList(featureInfoMins));
+        for ( FeatureInfoMin featureInfoMin: featureInfoMins) {
+            if (featureInfoMin.getFeature_id().equals(featureInfo.getFeature_id())) {
+                tag = true;
+                break;
             }
-            if (!tag)
-                return returnFalseMessage("你的权限还不准用这个功能哦", "用户" + user_id +"权限不足", response);
         }
+        if (!tag)
+            throw new ReplyException("你的权限还不准用这个功能哦");
 
         //合法性校验通过 扣除CREDIT
         int credit = userService.minusCredit(user_id, featureInfo.getCredit_cost());
         if (credit < 0) {
-            return returnFalseMessage("你的CREDIT余额不足哦", "用户 " + user_id + " CREDIT不足", response);
+            throw new ReplyException("你的CREDIT余额不足哦");
         }
 
+        // 更新调用统计数据
+        featureInfoService.addCount(featureInfo.getFeature_id(), group_id, user_id);
         logger.info("功能 " +featureInfo.getFeature_name() + " 消耗用户 " + user_id +" CREDIT " + featureInfo.getCredit_cost());
 
         return true;
@@ -177,14 +187,12 @@ public class LouiseHandler implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
     }
 
-    public Boolean returnFalseMessage(String msg, String log, HttpServletResponse response) throws Exception{
-        PrintWriter writer = response.getWriter();
-        JSONObject returnJson = new JSONObject();
-        logger.info(log);
-        returnJson.put("reply", msg);
-        writer.print(returnJson);
-        writer.close();
-        return false;
+    private String formatList(List<FeatureInfoMin> list) {
+        StringBuilder result = new StringBuilder();
+        for ( FeatureInfoMin min : list) {
+            result.append(min.getFeature_id()).append(":").append(min.getFeature_name()).append("; ");
+        }
+        result.append("]");
+        return result.toString();
     }
-
 }

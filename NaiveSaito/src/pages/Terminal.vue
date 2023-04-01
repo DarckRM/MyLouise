@@ -20,7 +20,7 @@
     <p>请注意，除非你非常确定修改参数意味着什么，否则请不要随意修改这里的内容</p>
 </n-alert>
 <n-card title="输出">
-    <div v-html="terminal_output" style="height: 300px; overflow: scroll"></div>
+    <div v-html="terminal_output" style="height: 300px; overflow: scroll; font-size: 10px"></div>
     <WebSocket ref="webSocket" :client_name="client_name" data=""></WebSocket>
     <n-button>追踪日志</n-button>
     <n-button @click="clear">停止追踪</n-button>

@@ -2,10 +2,12 @@ package com.darcklh.louise.Service.Impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.darcklh.louise.Mapper.RoleDao;
 import com.darcklh.louise.Mapper.UserDao;
 import com.darcklh.louise.Model.Louise.User;
-import com.darcklh.louise.Model.SpecificException;
+import com.darcklh.louise.Model.InnerException;
+import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Model.VO.UserRole;
 import com.darcklh.louise.Service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +28,7 @@ import static com.darcklh.louise.Utils.isEmpty.isEmpty;
  */
 @Slf4j
 @Service
-public class UserImpl implements UserService {
+public class UserImpl extends ServiceImpl<UserDao, User> implements UserService {
 
     @Autowired
     UserDao userDao;
@@ -43,8 +45,8 @@ public class UserImpl implements UserService {
         List<String> users_id = findAllUserID();
         for (String id : users_id)
             if (id.equals(user_id)) {
-                jsonObject.put("reply", "你已经注册过了哦");
-                throw new SpecificException("U101", "用户 " + user_id + " 已注册", jsonObject, "没有原始异常");
+                log.warn("用户 " + user_id + " 已注册");
+                throw new ReplyException("你已经注册过了哦");
             }
 
         //构造Rest请求模板
@@ -80,7 +82,7 @@ public class UserImpl implements UserService {
 
         if (userDao.insert(user) == 0) {
             jsonObject.put("reply", "注册失败了，遗憾！请稍后再试吧");
-            log.info("用户 " + user.getUser_id() + "(" + user.getNickname() + ") 注册失败!");
+            log.warn("用户 " + user.getUser_id() + "(" + user.getNickname() + ") 注册失败!");
         }
         else
             jsonObject.put("reply","注册成功了！请输入!help获得进一步帮助");
@@ -92,7 +94,7 @@ public class UserImpl implements UserService {
     public User selectById(String user_id) {
         User user = userDao.selectById(user_id);
         if (isEmpty(user)) {
-            log.info("用户 " + user_id + " 不存在");
+            log.warn("用户 " + user_id + " 不存在");
             return null;
         }
         return user;
@@ -126,7 +128,7 @@ public class UserImpl implements UserService {
     public String banUser(String user_id) {
         String reply = "变更状态失败";
         if (userDao.banUser(user_id) == 1) {
-            reply = isUserAvaliable(user_id) == -1 ? "用户"+user_id+"已解封" : "用户"+user_id+"已封禁";
+            reply = isUserAvaliable(user_id) == 1 ? "用户"+user_id+"已解封" : "用户"+user_id+"已封禁";
         }
         return reply;
     }

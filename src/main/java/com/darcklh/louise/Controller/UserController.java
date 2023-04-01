@@ -3,10 +3,7 @@ package com.darcklh.louise.Controller;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Model.Louise.User;
 import com.darcklh.louise.Model.Result;
-import com.darcklh.louise.Model.Saito.SysUser;
-import com.darcklh.louise.Model.SpecificException;
 import com.darcklh.louise.Model.VO.UserRole;
-import com.darcklh.louise.Service.SysUserService;
 import com.darcklh.louise.Service.UserService;
 import com.darcklh.louise.Utils.isEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestController
@@ -49,10 +44,23 @@ public class UserController {
     }
 
     @RequestMapping("save")
-    public Result edit(@RequestBody UserRole userRole) {
+    public Result save(@RequestBody UserRole userRole) {
         Result result = new Result();
         result.setMsg(userService.joinLouise(userRole.getUser_id(), userRole.getGroup_id()).toString());
         result.setCode(200);
+        return result;
+    }
+
+    @RequestMapping("edit")
+    public Result<String> edit(@RequestBody User user) {
+        Result<String> result = new Result<>();
+        if(userService.updateById(user)) {
+            result.setCode(200);
+            result.setMsg("修改成功");
+            return result;
+        }
+        result.setCode(300);
+        result.setMsg("修改失败");
         return result;
     }
 

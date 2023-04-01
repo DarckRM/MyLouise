@@ -18,11 +18,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
  * @author DarckLH
  * @date 2021/9/8 18:42
@@ -34,9 +30,6 @@ public class SaitoController {
 
     @Autowired
     SysUserService sysUserService;
-
-    @Autowired
-    List<PluginService> pluginServices;
 
     @Autowired
     PluginManager pluginManager;
@@ -59,18 +52,6 @@ public class SaitoController {
         Result<SysUser> result = sysUserService.Login(sysUser);
 
         return result;
-    }
-
-    @RequestMapping("saito/plugin-init")
-    public void PluginInit(Integer number) {
-        try {
-            for (int i = 0; i < number; i++) {
-                pluginServices.add(pluginManager.getInstance(pluginManager.pluginInfos.get(i).getClass_name()));
-                pluginServices.get(i).service();
-            }
-        } catch (Exception e) {
-
-        }
     }
 
     /**

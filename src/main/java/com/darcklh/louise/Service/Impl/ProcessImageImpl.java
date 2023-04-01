@@ -2,7 +2,7 @@ package com.darcklh.louise.Service.Impl;
 
 import com.darcklh.louise.Mapper.ProcessImageDao;
 import com.darcklh.louise.Model.Louise.ProcessImage;
-import com.darcklh.louise.Model.SpecificException;
+import com.darcklh.louise.Model.InnerException;
 import com.darcklh.louise.Service.ProcessImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class ProcessImageImpl implements ProcessImageService {
                 log.info("文件删除失败！");
             }
         }catch(Exception e){
-            throw new SpecificException("500", "删除文件失败", e.getMessage());
+            throw new InnerException("500", "删除文件失败", e.getMessage());
         }
         return processImageDao.deleteById(processImage.getHash_code());
     }

@@ -8,6 +8,7 @@ import com.darcklh.louise.Utils.isEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,6 +46,8 @@ public class SysUserImpl implements SysUserService {
         //验证密码
         if (findUser.getPassword().equals(sysUser.getPassword())) {
             result.setCode(200);
+            // 修改密码为 Token 有效期
+            findUser.setPassword(Long.toString(new Date().getTime()));
             result.setData(findUser);
             result.setMsg("登录成功");
             return result;

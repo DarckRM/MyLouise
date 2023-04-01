@@ -3,10 +3,10 @@ package com.darcklh.louise.Api;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
-import com.darcklh.louise.Model.MessageInfo;
+import com.darcklh.louise.Model.Messages.InMessage;
+import com.darcklh.louise.Utils.HttpProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,23 +21,23 @@ public class SendPictureApi {
 
     Logger logger = LoggerFactory.getLogger(SendPictureApi.class);
 
-    public String test() {
-        return LouiseConfig.BOT_BASE_URL;
-    }
-
-    public JSONObject sendPicture(String id, String nickname, String senderType, MessageInfo messageInfo) {
+    public JSONObject sendPicture(String id, String nickname, String senderType, InMessage inMessage) {
 
         logger.info("进入发图流程, 发起用户为:"+nickname+" QQ:"+id);
 
         //构造Rest请求模板
         RestTemplate restTemplate = new RestTemplate();
 
+        // 借助代理请求
+        if (LouiseConfig.LOUISE_PROXY_PORT > 0)
+            restTemplate.setRequestFactory(new HttpProxy().getFactory("Lolicon API 请求"));
+
         JSONObject jsonObject = new JSONObject();
 
         //构造请求LoliApi V2的请求体
         HttpHeaders loli = new HttpHeaders();
         loli.setContentType(MediaType.APPLICATION_JSON);
-        JSONObject requestLoli = generateRequestBody(messageInfo.getRaw_message().substring(5), "tag");
+        JSONObject requestLoli = generateRequestBody(inMessage.getRaw_message().substring(5), "tag");
         requestLoli.put("size","regular");
 
         //TODO 请求第三方API的状态码判断

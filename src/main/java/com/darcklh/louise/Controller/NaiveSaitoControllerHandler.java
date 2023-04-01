@@ -1,12 +1,14 @@
 package com.darcklh.louise.Controller;
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Model.R;
+import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Model.Result;
-import com.darcklh.louise.Model.SpecificException;
+import com.darcklh.louise.Model.InnerException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -20,16 +22,18 @@ import java.sql.SQLIntegrityConstraintViolationException;
 @ControllerAdvice(annotations = RestController.class)
 public class NaiveSaitoControllerHandler {
 
-    @ExceptionHandler(value = SpecificException.class)
+    @Autowired
+    R r;
+
+    @ExceptionHandler(value = InnerException.class)
     @ResponseBody
-    public JSONObject specificExceptionHandler(SpecificException sE) {
-        JSONObject jsonObject;
+    public JSONObject InnerExceptionHandler(InnerException sE) {
+
         Result<String> result = new Result<>();
         result.setMsg(sE.getMessage());
         log.info("errorMsg={},innerCode={},exception={}", sE.getErrorMsg(), sE.getInnerCode(), sE.getOriginErrorMessage());
-        jsonObject = sE.getJsonObject();
-        jsonObject.put("result", result);
-        return jsonObject;//正式返回给前端信息
+        sE.getJsonObject().put("result", result);
+        return sE.getJsonObject();
     }
 
     @ExceptionHandler(value = Exception.class)
@@ -63,14 +67,13 @@ public class NaiveSaitoControllerHandler {
         return jsonObject;
     }
 
-    public JSONObject handleIOException(IOException e) throws UnsupportedEncodingException {
-
-        JSONObject jsonObject = new JSONObject();
-        Result result = new Result();
-        setData(result, "文件读写异常！", 503, e);
-        jsonObject.put("result", result);
-        return jsonObject;
-
+    @ExceptionHandler(value = ReplyException.class)
+    @ResponseBody
+    public JSONObject handleReplyException(ReplyException e) {
+        if (e.getType() == 0)
+            return e.getReply();
+        r.sendMessage(e.getOutMessage());
+        return null;
     }
 
     void setData(Result result,String errorMsg, Integer innerCode, Exception e) throws UnsupportedEncodingException {

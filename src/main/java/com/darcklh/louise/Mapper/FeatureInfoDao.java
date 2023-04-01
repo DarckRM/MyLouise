@@ -25,9 +25,15 @@ public interface FeatureInfoDao extends BaseMapper<FeatureInfo> {
     @Select("SELECT * FROM t_feature_info WHERE feature_url = #{feature_url}")
     public FeatureInfo findWithFeatureURL(String feature_url);
 
+    @Select("SELECT * FROM t_feature_info WHERE feature_cmd LIKE #{feature_cmd}")
+    public FeatureInfo findWithFeatureCmd(String feature_cmd);
+
     @Update("UPDATE t_feature_info SET is_enabled = -is_enabled WHERE feature_id = #{feature_id}")
     public Integer switchStatus(Integer feature_id);
 
     @Select("SELECT is_enabled FROM t_feature_info WHERE feature_id = #{feature_id}")
     public Integer isEnabled(Integer feature_id);
+
+    @Select("UPDATE t_feature_info SET count = count + 1 WHERE feature_id = #{feature_id}")
+    public Integer addCount(Integer feature_id);
 }

@@ -1,27 +1,16 @@
 package com.darcklh.louise.Model.Louise;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.darcklh.louise.Model.SpecificException;
+import com.darcklh.louise.Model.InnerException;
 import com.darcklh.louise.Utils.EncryptUtils;
 import lombok.Data;
 
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 @Data
 public class ProcessImage {
@@ -61,7 +50,7 @@ public class ProcessImage {
         this.histogram_json = histogram_json;
     }
 
-    private BufferedImage readImage() throws SpecificException, IOException {
+    private BufferedImage readImage() throws InnerException, IOException {
 
         BufferedImage bImage;
         File imageFile = new File(this.image_path + "/" + this.image_name);

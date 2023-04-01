@@ -46,26 +46,26 @@ public class RoleImpl implements RoleService{
     }
 
     public Integer delRoleFeature(Integer role_id) {
-        return roleDao.delRoleFeature(role_id);
+        return roleDao.delRoleFeatureByRoleId(role_id);
     }
 
     @Override
     public String editBy(Role role) {
-        String reply = "修改失败了";
+        String reply = "修改失败";
         if (roleDao.updateById(role) > 0) {
-            reply = "修改成功了";
+            reply = "修改成功";
         }
         return reply;
     }
 
     public String edit(RoleFeatureId roleFeatureId) {
         Role role = new Role();
-        role.setIs_enabled(-1);
+        role.setRole_id(roleFeatureId.getRole_id());
         role.setRole_name(roleFeatureId.getRole_name());
         role.setInfo(roleFeatureId.getInfo());
-        String reply = "修改失败了";
+        String reply = "修改失败";
         if (roleDao.updateById(role) > 0) {
-            reply = "修改成功了";
+            reply = "修改成功";
         }
         return reply;
     }

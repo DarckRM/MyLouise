@@ -7,6 +7,7 @@ import com.darcklh.louise.Model.VO.RoleFeatureId;
 import com.darcklh.louise.Service.RoleService;
 import com.darcklh.louise.Utils.isEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("saito/role/")
-public class    RoleController {
+public class RoleController {
 
     @Autowired
     RoleService roleService;
@@ -41,18 +42,28 @@ public class    RoleController {
     }
 
     @RequestMapping("edit")
-    public Result edit(@RequestBody RoleFeatureId roleFeatureId) {
+    public Result edit(@RequestBody RoleFeatureId roleFeatureId, Integer type) {
+
         Result result = new Result();
 
-        //先清除原本的role-feature信息
-        if (roleService.delRoleFeature(roleFeatureId.getRole_id()) >= 0) {
+        // 判断是否修改功能权限列表
+        if (type != null) {
 
-            for (Integer feature_id: roleFeatureId.getFeatureInfoList()) {
-                roleService.addRoleFeature(roleFeatureId.getRole_id(), feature_id + 1);
+            // 清除原本的 role-feature 信息
+            int delCounts = roleService.delRoleFeature(roleFeatureId.getRole_id());
+            if (delCounts >= 0) {
+                for (Integer feature_id: roleFeatureId.getFeatureInfoList())
+                    roleService.addRoleFeature(roleFeatureId.getRole_id(), feature_id);
+                result.setMsg(roleService.edit(roleFeatureId));
+                result.setCode(200);
+            } else {
+                result.setMsg("更新失败");
+                result.setCode(502);
             }
+        } else {
             result.setMsg(roleService.edit(roleFeatureId));
+            result.setCode(200);
         }
-        result.setCode(200);
         return result;
     }
 
@@ -68,7 +79,10 @@ public class    RoleController {
 
     //TODO 实体类逻辑有点混乱 可以改进
     @RequestMapping("save")
-    public Result save(@RequestBody RoleFeatureId roleFeatureId){
+    public Result<Role> save(@RequestBody RoleFeatureId roleFeatureId){
+
+        Result<Role> result = new Result<Role>();
+
         Role role = new Role();
         FeatureInfoMin infoMin = new FeatureInfoMin();
         role.setFeatureInfoList(new ArrayList<>());
@@ -79,8 +93,10 @@ public class    RoleController {
             role.getFeatureInfoList().add(infoMin);
         }
 
-        String msg = roleService.add(role);
-        return null;
+        result.setMsg(roleService.add(role));
+        result.setCode(200);
+
+        return result;
     }
 
 }

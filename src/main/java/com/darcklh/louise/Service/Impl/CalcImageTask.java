@@ -18,6 +18,8 @@ import java.util.Map;
 public class CalcImageTask implements MultiTaskService {
 
     private int status;
+    private int thread_id;
+    private int total;
     // 声明一个任务的自有业务含义的变量，用于标识任务
     private int taskId;
     private String taskInfo;
@@ -46,5 +48,20 @@ public class CalcImageTask implements MultiTaskService {
         setStatus(FINISHED);
         this.image = null;
         return true;
+    }
+
+    @Override
+    public boolean callback() {
+        return false;
+    }
+
+    @Override
+    public int getThreadId() {
+        return this.thread_id;
+    }
+
+    @Override
+    public void setThreadId(int thread_id) {
+        this.thread_id = thread_id;
     }
 }

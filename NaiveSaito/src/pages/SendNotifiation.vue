@@ -1,42 +1,40 @@
 <template>
-    <div>
-        <n-h1 prefix="bar" style="font-weight: 400; font-size: 32px">
-            发送公告
-        <span style="font-weight: 200; font-size: 16px">(Send Notifiaction)</span>
-        <n-popover trigger="click">
-            <template #trigger>
-                <n-button text style="font-size: 26px">
-                    <n-icon>
-                        <HelpIcon /> 
-                    </n-icon>
-                </n-button>
-            </template>
-            <p>利用Bot账号选择向群或者用户发送消息</p>
-        </n-popover>
-        </n-h1>
-    </div>
-<n-divider />
-<n-alert title="Warning" type="warning" style="margin-bottom: 20px">
+  <div>
+    <n-h1 prefix="bar" style="font-weight: 400; font-size: 32px">
+        发送公告
+    <span style="font-weight: 200; font-size: 16px">(Send Notifiaction)</span>
+    <n-popover trigger="click">
+      <template #trigger>
+        <n-button text style="font-size: 26px">
+          <n-icon>
+            <HelpIcon /> 
+          </n-icon>
+        </n-button>
+      </template>
+      <p>利用Bot账号选择向群或者用户发送消息</p>
+    </n-popover>
+    </n-h1>
+  </div>
+  <n-divider />
+  <n-alert title="Warning" type="warning" style="margin-bottom: 20px">
     <p>如果Bot账号所在群并非群管理员或者不具备发送公告的权限，发送公告类通知会失败</p>
-</n-alert>
-
-<n-grid x-gap="30" :cols="2">
-    <n-gi>
-        <n-card title="选择目标以及公告类型">
-            <n-radio-group v-model:value="notifiation.type" style="margin-bottom: 20px">
-                <n-radio value=1>公告类</n-radio>
-                <n-radio value=0>文本类</n-radio>
-            </n-radio-group>
-            <n-data-table :columns="columns" :data="dataList" :pagination="pagination" :row-key="row => row.group_id" @update:checked-row-keys="handleCheck" />
-        </n-card>
+  </n-alert>
+  <n-grid :x-gap="12" :y-gap="8" :cols="12" item-responsive responsive="screen">
+    <n-gi span="12 m:12 l:4">
+      <n-card title="选择目标以及公告类型">
+        <n-radio-group v-model:value="notifiation.type" style="margin-bottom: 20px">
+          <n-radio value=1>公告类</n-radio>
+          <n-radio value=0>文本类</n-radio>
+        </n-radio-group>
+        <n-data-table :columns="columns" :data="dataList" :pagination="pagination" :row-key="row => row.group_id" @update:checked-row-keys="handleCheck" />
+      </n-card>
     </n-gi>
-    <n-gi>
-        <n-card title="公告文本">
-            <n-input v-model:value="notifiation.msg" type="textarea" placeholder="请输入你需要发送的文本"/>
-        </n-card>
+    <n-gi span="12 m:12 l:4">
+      <n-card title="公告文本">
+        <n-input v-model:value="notifiation.msg" type="textarea" placeholder="请输入你需要发送的文本"/>
+      </n-card>
     </n-gi>
-
-</n-grid>
+  </n-grid>
 </template>
 
 <script>

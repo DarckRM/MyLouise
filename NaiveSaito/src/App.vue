@@ -6,7 +6,9 @@
 <template>
 <n-message-provider>
 <n-dialog-provider>
-<router-view></router-view>
+<n-notification-provider>
+  <router-view></router-view>
+</n-notification-provider>
 </n-dialog-provider>
 </n-message-provider>
 </template>
@@ -25,14 +27,15 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { NDivider, NMessageProvider, NDialogProvider } from 'naive-ui'
+import { NDivider, NMessageProvider, NDialogProvider, NNotificationProvider } from 'naive-ui'
 import { router } from './router'
 
 export default defineComponent({
   components: {
     NDivider,
     NMessageProvider,
-    NDialogProvider
+    NDialogProvider,
+    NNotificationProvider
   }
 })
 </script>

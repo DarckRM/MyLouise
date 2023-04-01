@@ -18,6 +18,8 @@ public class Group {
     private String member_count;
     private String group_memo;
     private String group_name;
+    private String group_owner;
+    private String group_admins;
     private Integer group_level;
     private Integer is_enabled;
     private String avatar;

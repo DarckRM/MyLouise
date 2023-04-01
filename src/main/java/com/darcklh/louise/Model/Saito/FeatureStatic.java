@@ -1,5 +1,6 @@
 package com.darcklh.louise.Model.Saito;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
@@ -13,10 +14,11 @@ import java.sql.Timestamp;
 @Data
 public class FeatureStatic {
 
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer invoke_id;
+    private String user_id;
+    private String group_id;
     private Integer feature_id;
     private Timestamp invoke_time;
-    private Integer count;
 
 }
