@@ -64,7 +64,10 @@ const routes = [
   {
     path: '/',
     name: 'Login',
-    component: () => import('../components/LoginPage.vue')
+    component: () => import('../components/LoginPage.vue'),
+    meta: {
+      auth: false
+    }
   },
   {
     path: '/403',
@@ -100,10 +103,14 @@ export const router = createRouter({
 export default router
 
 router.beforeEach((to, from, next) => {
-  if(to.meta.auth && store.state.status != true) {
+  const now = new Date()
+  if(now - store.state.token > 518400 && to.meta.auth) {
+    store.commit('del_token', "")
+    return next('/403')
+  }
+  if(to.meta.auth && !store.state.status) {
     return next('/403')
   } else {
     next()
   }
 })
-

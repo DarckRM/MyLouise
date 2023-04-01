@@ -58,15 +58,16 @@ public class SysConfigController {
         Result result = new Result();
         result.setMsg("未变更配置");
         int i = 0;
-
+        int index = 0;
         for (SysConfig sysConfig : sysConfigList) {
-            int id = sysConfig.getConfig_id();
-            if (!originalSysConfigs.get(id-1).getConfig_value().equals(sysConfig.getConfig_value())) {
+            if (!originalSysConfigs.get(index).getConfig_value().equals(sysConfig.getConfig_value())) {
                 i++;
-                result.setMsg("修改了"+i+"条配置");
                 presentSysConfigs.add(sysConfig);
             }
+            index++;
         }
+        if (i != 0)
+            result.setMsg("修改了"+i+"条配置");
         sysConfigService.edit(presentSysConfigs);
         //更新配置
         LouiseConfig.refreshConfig(sysConfigList);

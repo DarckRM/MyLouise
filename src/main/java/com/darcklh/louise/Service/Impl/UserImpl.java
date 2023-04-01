@@ -2,6 +2,7 @@ package com.darcklh.louise.Service.Impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.darcklh.louise.Mapper.RoleDao;
 import com.darcklh.louise.Mapper.UserDao;
 import com.darcklh.louise.Model.Louise.User;
@@ -27,7 +28,7 @@ import static com.darcklh.louise.Utils.isEmpty.isEmpty;
  */
 @Slf4j
 @Service
-public class UserImpl implements UserService {
+public class UserImpl extends ServiceImpl<UserDao, User> implements UserService {
 
     @Autowired
     UserDao userDao;
@@ -127,7 +128,7 @@ public class UserImpl implements UserService {
     public String banUser(String user_id) {
         String reply = "变更状态失败";
         if (userDao.banUser(user_id) == 1) {
-            reply = isUserAvaliable(user_id) == -1 ? "用户"+user_id+"已解封" : "用户"+user_id+"已封禁";
+            reply = isUserAvaliable(user_id) == 1 ? "用户"+user_id+"已解封" : "用户"+user_id+"已封禁";
         }
         return reply;
     }
