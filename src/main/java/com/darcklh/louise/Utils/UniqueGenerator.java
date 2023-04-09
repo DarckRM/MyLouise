@@ -36,7 +36,7 @@ public class UniqueGenerator {
      * @return
      */
     public static String uniqueThreadName(String name, String detail) {
-        String threadName = name + "-" + uniqueDateID("HH:mm:ss") + "-" + detail;
+        String threadName = name + "-" + detail;
         return threadName;
     }
 

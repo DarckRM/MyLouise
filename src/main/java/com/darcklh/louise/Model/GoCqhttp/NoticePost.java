@@ -31,6 +31,7 @@ public class NoticePost implements AllPost {
     private enum NoticeType {
         group_upload,
         group_admin,
+        group_ban,
         group_card,
         group_increase,
         group_decrease,

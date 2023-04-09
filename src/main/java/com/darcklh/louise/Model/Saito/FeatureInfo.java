@@ -19,7 +19,7 @@ public class FeatureInfo {
     private String feature_name;
     private String feature_cmd;
     private Integer credit_cost;
-    private String invoke_limit;
+    private Integer invoke_limit;
     private String description;
     private String info;
     private Integer is_original;

@@ -30,16 +30,15 @@ public class PluginManager {
     public void loadPlugins(List<PluginInfo> pluginList) throws IOException, IllegalAccessException, InstantiationException {
         init(pluginList);
         for(PluginInfo pluginInfo: pluginList) {
-            log.info("加载插件 <-- " + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +" -->");
+            log.info("[" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 执行初始化函数 >>>");
             PluginService plugin_service = getInstance(pluginInfo.getClass_name());
-            log.info("|________> 执行初始化函数中 >>>");
             try {
             if(plugin_service.init()) {
-                log.info(pluginInfo.getName() + " 加载成功");
+                log.info("[" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 加载成功 <<<");
             } else
                 log.info(pluginInfo.getName() + " 加载失败");
             } catch (NoClassDefFoundError error) {
-                log.error("插件 " + pluginInfo.getName() + " 加载失败");
+                log.error("[" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 加载失败 <<<");
                 log.error(error.getMessage());
                 continue;
             }

@@ -96,9 +96,7 @@ public class R {
 
         // 校验请求结果
         if(!verifyRequest(response)) {
-            String message = "Louise 无法发送消息，可能是被干扰了，请尝试私聊😢😢\n";
-            message += "错误解释: " + response.getString("wording") + "\n";
-            message += "错误消息: " + response.getString("msg") + "\n";
+            String message = "露易丝被企鹅干扰了，请尝试私聊 (>д<)\n";
             outMessage.setMessage(message);
             cqhttp = new HttpEntity<>(JSONObject.toJSONString(outMessage), headers);
 

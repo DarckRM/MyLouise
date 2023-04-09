@@ -1,0 +1,3 @@
+chat_api: https://api.openai.com/v1/chat/completions
+api_key: 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
+total_token: 2500000
