@@ -15,6 +15,7 @@ import com.darcklh.louise.Utils.PostEncoder;
 import com.darcklh.louise.Utils.UniqueGenerator;
 import com.mysql.cj.protocol.x.Notice;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.Call;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -161,6 +162,43 @@ public class CqhttpWSController {
         listenerCounts--;
         messageMap.remove(user_id);
         accounts.remove(user_id);
+    }
+
+    /**
+     * 指定超时时间和用户ID尝试获取用户发送的消息
+     * @param callBack
+     * @param userId
+     * @param exceedTime
+     * @return InMessage inMessage
+     */
+    public static InMessage getMessage(GoCallBack callBack, Long userId, Long exceedTime) {
+        // 进入监听模式
+        CqhttpWSController.startWatch(userId);
+        int interval = 0;
+        InMessage inMessage;
+        while (interval < exceedTime) {
+            inMessage = messageMap.get(userId);
+            if (inMessage != null) {
+                // 监听计数器减少，移除多余消息
+                CqhttpWSController.stopWatch(userId);
+                callBack.call(inMessage);
+                return inMessage;
+            }
+            interval += 1000;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        // 监听计数器减少，移除多余消息
+        CqhttpWSController.stopWatch(userId);
+        callBack.call(null);
+        return null;
+    }
+
+    public interface GoCallBack {
+        void call(InMessage inMessage);
     }
 
 }

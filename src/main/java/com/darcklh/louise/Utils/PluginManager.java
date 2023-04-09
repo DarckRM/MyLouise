@@ -34,11 +34,11 @@ public class PluginManager {
             PluginService plugin_service = getInstance(pluginInfo.getClass_name());
             try {
             if(plugin_service.init()) {
-                log.info("[" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 加载成功 <<<");
+                log.info("[" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 初始化插件成功 <<<");
             } else
                 log.info(pluginInfo.getName() + " 加载失败");
             } catch (NoClassDefFoundError error) {
-                log.error("[" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 加载失败 <<<");
+                log.error("[" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 初始化插件失败 <<<");
                 log.error(error.getMessage());
                 continue;
             }

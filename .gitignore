@@ -1,5 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 cache/
+config/
 src/main/resources/application-dev.yml
 src/main/resources/application.yml
 plugins/
