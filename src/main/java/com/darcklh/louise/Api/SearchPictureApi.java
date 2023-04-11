@@ -75,7 +75,7 @@ public class SearchPictureApi{
     private void searchPictureCenter(InMessage inMessage, String url){
         // TODO 线程名过长
         new Thread(() -> searchPictureService.findWithSourceNAO(inMessage, url), UniqueGenerator.uniqueThreadName("", "NAO")).start();
-        new Thread(() -> searchPictureService.findWithAscii2d(inMessage, url), UniqueGenerator.uniqueThreadName("", "A2d")).start();
+        // new Thread(() -> searchPictureService.findWithAscii2d(inMessage, url), UniqueGenerator.uniqueThreadName("", "A2d")).start();
 
     }
 

@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.Louise.BooruTags;
 import com.darcklh.louise.Model.Messages.InMessage;
+import com.darcklh.louise.Model.Messages.Message;
 import com.darcklh.louise.Model.Messages.Node;
 import com.darcklh.louise.Model.Messages.OutMessage;
 import com.darcklh.louise.Model.MultiThreadTask.DownloadPicTask;
@@ -212,12 +213,13 @@ public class YandeAPI {
      * @param limit 如果是精选图集则只展示 15 张
      */
     private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit, Integer page, String fileOrigin, String[] tags_info) throws InterruptedException {
-
+        Message message = Message.build(inMessage);
         StringBuilder replyImgList = new StringBuilder();
         List<DownloadPicTask> taskList = new ArrayList<>();
         OutMessage outMessage = new OutMessage(inMessage);
         int taskId = 0;
         String page_nation = page + "页/" +  limit + "条";
+        Node imageNode = Node.build();
         for ( Object object: resultJsonArray) {
             if (limit == 0)
                 break;
@@ -229,10 +231,10 @@ public class YandeAPI {
                     continue;
 
             String fileName = imgJsonObj.getString("md5") + "." + imgJsonObj.getString("file_ext");
-            // 分配下载任务
-//            fileControlApi.downloadPicture_RestTemplate(imgJsonObj.getString("jpeg_url"), fileName, fileOrigin);
+
             taskList.add(new DownloadPicTask(taskId, imgJsonObj.getString("jpeg_url"), fileName, fileOrigin, fileControlApi));
-            replyImgList.append("[CQ:image,file=").append(LouiseConfig.BOT_LOUISE_CACHE_IMAGE).append(fileOrigin).append("/").append(fileName).append("]\r\n");
+            // replyImgList.append(LouiseConfig.BOT_LOUISE_CACHE_IMAGE).append(fileOrigin).append("/").append(fileName);
+            imageNode.image(LouiseConfig.BOT_LOUISE_CACHE_IMAGE + fileOrigin + "/" + fileName).text("\n");
             taskId++;
             limit--;
         }
@@ -250,10 +252,8 @@ public class YandeAPI {
         int done = 0;
         int total_cost = 0;
         while(true) {
-            if (total_cost > 90000) {
-                outMessage.setMessage("[CQ:at,qq=" + inMessage.getSender().getUser_id() + "]你的请求处理超时了，请稍后再试吧 |д`)");
-                throw new ReplyException(outMessage);
-            }
+            if (total_cost > 90000)
+                message.at(message.getUser_id()).text("你的请求处理超时了，请稍候再试吧 |д`)").fall();
             for (WorkThread thread : threads )
                 done += thread.getRestTask();
             if (done == 0)
@@ -264,18 +264,13 @@ public class YandeAPI {
                 total_cost += 5000;
             }
         }
-
         String announce = "支持中文搜索(原神)，请使用角色正确中文名\n如果想追加中文词条请使用!yande/help查看说明\n";
-
-        String msg = replyImgList.toString();
-        if (outMessage.getGroup_id() >= 0)
-            msg += "已过滤过于离谱的图片，如需全部资料请私聊 (`ヮ´)";
-        if (outMessage.getGroup_id() < 0)
-            outMessage.setMessage(announce + "[CQ:at,qq=" + inMessage.getSender().getUser_id() + "], 你的请求结果出来了，你的参数是: " + Arrays.toString(tags_info) + "\n" + page_nation + "\n" + msg);
-        else
-            outMessage.getMessages().add(new Node(announce + inMessage.getSender().getNickname() + ", 你的请求结果出来了，你的参数是: " + Arrays.toString(tags_info) + "\n" + page_nation + "\n" + msg, inMessage.getSelf_id()));
-        log.info(JSONObject.toJSONString(outMessage));
-        r.sendMessage(outMessage);
+        message.node(Node.build()
+                .text(announce)
+                .text("你的请求结果出来了，你的参数是: " + Arrays.toString(tags_info) + "\n分页: " + page_nation), 0);
+        if (message.getGroup_id() >= 0)
+            message.node(Node.build().text("已过滤过于离谱的图片，如需全部资料请私聊 (`ヮ´)"));
+        message.node(imageNode).send();
     }
 
     private boolean isNSFW(String[] tagList) {

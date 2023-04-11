@@ -1,16 +1,9 @@
 package com.darcklh.louise.Model.Messages;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.Sender;
-import com.darcklh.louise.Utils.OkHttpUtils;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
 
@@ -44,6 +37,7 @@ public class Message {
     private Sender sender;
     // 临时会话来源
     private String temp_source;
+
     public Message (InMessage inMessage) {
         this.setMessage_type(inMessage.getMessage_type());
         this.setGroup_id(inMessage.getGroup_id());
@@ -64,10 +58,9 @@ public class Message {
         return new Message(inMessage);
     }
 
-    public Message clear() {
+    public void clear() {
         this.message.clear();
         this.messages.clear();
-        return this;
     }
 
     public Message at(Long user_id) {
@@ -100,6 +93,16 @@ public class Message {
         return this;
     }
 
+    public Message text(String text, int index) {
+        JSONObject obj = new JSONObject();
+        obj.put("type", "text");
+        JSONObject data = new JSONObject();
+        data.put("text", text);
+        obj.put("data", data);
+        this.message.add(index, obj);
+        return this;
+    }
+
     public Message image(String image) {
         JSONObject obj = new JSONObject();
         obj.put("type", "image");
@@ -107,6 +110,16 @@ public class Message {
         data.put("file", image);
         obj.put("data", data);
         this.message.add(obj);
+        return this;
+    }
+
+    public Message image(String image, int index) {
+        JSONObject obj = new JSONObject();
+        obj.put("type", "image");
+        JSONObject data = new JSONObject();
+        data.put("file", image);
+        obj.put("data", data);
+        this.message.add(index, obj);
         return this;
     }
 
@@ -142,13 +155,51 @@ public class Message {
 
     public void send() {
         R r = new R();
-        r.send(this);
+        if (this.group_id == -1 && this.messages.size() != 0) {
+            Message message = Message.build();
+            message.setUser_id(this.user_id);
+            message.setGroup_id(this.group_id);
+            message.setMessage_type("privacy");
+            message.setSender(this.sender);
+            for (Node node : messages) {
+                nodeToMessage(message, node);
+                message.send();
+            }
+        } else {
+            r.send(this);
+        }
         this.clear();
+    }
+
+    private void nodeToMessage(Message message, Node node) {
+        for (Node.Transfer transfer : node.transfers) {
+            switch (transfer.nodeType) {
+                case text: message.text(transfer.value); break;
+                case image: message.image(transfer.value); break;
+            }
+        }
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void send(MessageCallBack func) {
         R r = new R();
-        func.call(r.send(this));
+        if (this.group_id == -1 && this.messages.size() != 0) {
+            Message message = Message.build();
+            message.setUser_id(this.user_id);
+            message.setGroup_id(this.group_id);
+            message.setMessage_type("privacy");
+            message.setSender(this.sender);
+            for (Node node : messages) {
+                nodeToMessage(message, node);
+                message.send(func);
+            }
+        } else {
+            func.call(r.send(this));
+        }
         this.clear();
     }
 

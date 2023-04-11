@@ -32,6 +32,7 @@ class MyLouiseApplicationTests {
 //        message.node(Node.build().text("测试链式调用1\n换行"))
 //                .node(Node.build().text("测试链式调用1").image("https://blog.rmdarck.icu/p/%E6%AC%A2%E8%BF%8E%E8%AE%BF%E9%97%AE%E6%9C%AC%E5%8D%9A%E5%AE%A2/44C021F1CE3E72F088B2C9DDB3EB9569_hu0e23e75987d65a58a8de15746cdad4e8_9183_1600x0_resize_q75_box.jpg"))
 //                .node(Node.build().text("测试插入节点"), 0)
+//                .reply(-318257162)
 //                .send((result) -> {
 //                    log.info(result.toString());
 //                });
