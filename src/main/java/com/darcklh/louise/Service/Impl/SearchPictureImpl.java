@@ -5,14 +5,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Api.FileControlApi;
 import com.darcklh.louise.Config.LouiseConfig;
-import com.darcklh.louise.Model.Messages.InMessage;
-import com.darcklh.louise.Model.Messages.Node;
-import com.darcklh.louise.Model.Messages.OutMessage;
+import com.darcklh.louise.Model.Messages.*;
 import com.darcklh.louise.Model.R;
-import com.darcklh.louise.Model.Messages.Messages;
 import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Service.SearchPictureService;
 import com.darcklh.louise.Utils.HttpProxy;
+import com.darcklh.louise.Utils.OkHttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -33,10 +31,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.util.*;
 
 /**
  * @author DarckLH
@@ -61,132 +59,113 @@ public class SearchPictureImpl implements SearchPictureService {
      */
     @Override
     public void findWithSourceNAO(InMessage inMessage, String url) {
-        log.info("进入SourceNAO识别流程");
         // 构造返回体
         OutMessage outMessage = new OutMessage(inMessage);
-
-        // 构造Rest请求模板
-        RestTemplate restTemplate = new RestTemplate();
-
-        // 借助代理请求
-        if (LouiseConfig.LOUISE_PROXY_PORT > 0)
-            restTemplate.setRequestFactory(new HttpProxy().getFactory("sourceNAO 请求"));
-
-        // 构造请求SourceNAO的请求体
-        Map<String, String> map = new HashMap<>();
-        map.put("url", url);
-        map.put("api_key", LouiseConfig.SOURCENAO_API_KEY);
-        map.put("db", "999");
-        map.put("output_type", "2");
-        map.put("numres", "3");
+        Message message = new Message(inMessage);
+        String res;
         JSONObject sauceNAO;
+
         try {
-            sauceNAO = JSON.parseObject(restTemplate.getForObject(LouiseConfig.SOURCENAO_URL + "?url={url}&db={db}&api_key={api_key}&output_type={output_type}&numres={numres}", String.class, map));
+            log.info("开始请求 sauceNAO 图片上传地址: " + url);
+            Proxy proxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", 7890));
+            // sauceNAO = JSON.parseObject(restTemplate.getForObject(LouiseConfig.SOURCENAO_URL + "?url={url}&db={db}&api_key={api_key}&output_type={output_type}&numres={numres}", String.class, map));
+            res = OkHttpUtils.builder(proxy).url(LouiseConfig.SOURCENAO_URL)
+                    .addParam("url", url)
+                    .addParam("api_key", LouiseConfig.SOURCENAO_API_KEY)
+                    .addParam("db", "999")
+                    .addParam("output_type", "2")
+                    .addParam("numres", "5")
+                    .get()
+                    .async();
         } catch (Exception e) {
-            log.warn("请求 Sauce NAO 的时候异常了");
-            log.warn(e.getLocalizedMessage());
-            outMessage.setMessage("请求 Sauce NAO 的时候异常了\n" + e.getLocalizedMessage());
-            r.sendMessage(outMessage);
+            e.printStackTrace();
+            message.text("请求 SauceNAO 出现异常").fall();
             return;
         }
-        log.debug("查询到的结果: " + sauceNAO);
-
+        sauceNAO = JSONObject.parseObject(res);
         // 判断结果 Header
         int status = sauceNAO.getJSONObject("header").getInteger("status");
-
-        if (status != 0) {
-            if (status > 0)
-                outMessage.setMessage("SauceNAO 遇到了某些问题\n" + "错误信息: " + sauceNAO.getJSONObject("header").getString("message"));
-            else
-                outMessage.setMessage("SauceNAO 未能找到合理的结果，或者来源不支持，或者请求次数超限，请稍后再试\n" + "错误信息: " + sauceNAO.getJSONObject("header").getString("message"));
-            r.sendMessage(outMessage);
-            return;
-        }
 
         JSONArray results = sauceNAO.getJSONArray("results");
         JSONObject header = new JSONObject();
         JSONObject data = new JSONObject();
         Integer indexId = -9;
         String similarity = "";
+        String maxSimilarity = "none";
+        Integer bestIndexId = -1;
         String index_name = "";
-        boolean flag = false;
+        // 低可能性和不支持来源结果集
+        List<JSONObject> bestMatches = new ArrayList<>();
 
         for (Object object : results) {
-
-            if (flag)
-                break;
-
             // 获取单个结果的信息
             JSONObject result = (JSONObject) object;
             header = result.getJSONObject("header");
             data = result.getJSONObject("data");
-
             indexId = header.getInteger("index_id");
             similarity = header.getString("similarity");
             index_name = header.getString("index_name");
-
+            if (maxSimilarity.equals("none"))
+                maxSimilarity = similarity;
             // 跳过无法处理的来源
             switch (header.getInteger("index_id")) {
                 case 5:
                 case 4:
                 case 12:
                 case 9:
-                case 25: flag = true; break;
+                case 25: {
+                    //  最佳结果
+                    if (bestMatches.size() == 0) {
+                        bestMatches.add(result);
+                        bestIndexId = indexId;
+                    }
+                }; break;
                 default: {
-                    outMessage.setMessage("暂不支持返回该来源的具体信息" +
-                            "来源信息: " + index_name +
-                            "相似度: " + similarity +
-                            "[CQ:image,file=" + header.getString("thumbnail") + "]");
-                    r.sendMessage(outMessage);
+                    message.node(Node.build().text("其他结果\n" + index_name + "\n相似度 " + similarity)
+                            .text("\n" + data.toJSONString())
+                            .image("\n" + header.getString("thumbnail")));
                 }
             }
         }
 
-        // 格式化结果
-        log.info("最合理结果: " + data.toString());
-        header.put("invoker", "NAO");
+        // 最大相似度低于 70 直接返回或者没有支持的来源
+        if (Float.parseFloat(maxSimilarity) < 70.0 || bestMatches.size() == 0) {
+            JSONObject bestHeader = bestMatches.get(0).getJSONObject("header");
+            JSONObject bestData = bestMatches.get(0).getJSONObject("data");
 
-        // 相似度低于70%的结果以缩略图显示 排除Twitter来源
-        if (Float.parseFloat(similarity) < 70.0 && indexId != 41) {
-            log.info("结果可能性低");
-            outMessage.setMessage("找到的结果相似度为" + similarity +
-                    "\n此为不大可能的结果: \n" +
-                    data.getJSONArray("ext_urls").toString() +
-                    "\n[CQ:image,file=" + header.getString("thumbnail") + "]");
-            r.sendMessage(outMessage);
+            message.node(Node.build().text("可能性过低的结果\n" + bestHeader.getString("index_name")
+                    + "\n相似度: " + bestHeader.getString("similarity")
+                    + "\n具体信息:\n" + bestData.toJSONString())
+                    .image(bestHeader.getString("thumbnail")), 0).send();
+            // outMessage.getMessages().add(new Node(bestInfo, inMessage.getSelf_id()));
+//            if (badList.size() != 0)
+//                for (String one : badList)
+//                    outMessage.getMessages().add(new Node(one, inMessage.getSelf_id()));
             return;
         }
+        // 格式化结果
+        log.info("最佳结果: " + bestMatches.get(0).toString());
+        data = bestMatches.get(0).getJSONObject("data");
+        header.put("invoker", "NAO");
+
         //判断结果来源以及是否可以处理 如twitter之流来源很难获取图片 会补充URL以供查看
-        String msg = "";
-        switch (indexId) {
+        switch (bestIndexId) {
             //来自Pixiv
             case 5:
-                msg = handleFromPixiv(outMessage, similarity, data, header);
+                handleFromPixiv(similarity, data, header, message).send();
                 break;
             //TODO 暂时禁用推特来源 未解决图片缓存路径问题
             case 4:
-                msg = handleFromTwitter(outMessage, similarity, data, header);
+                handleFromTwitter(similarity, data, header, message).send();
                 break;
             case 12:
-                msg = handleFromYande(outMessage, similarity, data, header);
+                handleFromYande(similarity, data, message).send();
                 break;
             case 9:
             case 25:
-                msg = handleFromGelbooru(outMessage, similarity, data, header);
+                handleFromGelbooru(similarity, data, message).send();
                 break;
-            default: {
-                outMessage.setMessage("暂不支持返回该来源的具体信息" +
-                        "来源信息: " + index_name +
-                        "相似度: " + similarity +
-                        "[CQ:image,file=" + header.getString("thumbnail") + "]");
-                 r.sendMessage(outMessage);
-            }
         }
-        if (outMessage.getGroup_id() < 0)
-            outMessage.setMessage(msg);
-        else
-            outMessage.getMessages().add(new Node(msg, inMessage.getSelf_id()));
-        r.sendMessage(outMessage);
     }
 
     @Override
@@ -195,6 +174,7 @@ public class SearchPictureImpl implements SearchPictureService {
 
         JSONObject resultData = new JSONObject();
         OutMessage outMessage = new OutMessage(inMessage);
+        Message message = Message.build(inMessage);
         String nickname = outMessage.getSender().getNickname();
         RestTemplate restTemplate = new RestTemplate();
         //由于Ascii2d返回的是HTML文档 借助Jsoup进行解析
@@ -278,13 +258,7 @@ public class SearchPictureImpl implements SearchPictureService {
             resultData.put("index_name", 0);
             resultData.put("thumbnail", thumbnail);
             resultData.put("invoker", "A2d");
-            String msg = handleFromPixiv(outMessage, "来自Ascii2d", resultData, resultData);
-            if (outMessage.getGroup_id() < 0)
-                outMessage.setMessage(msg);
-            else
-                outMessage.getMessages().add(new Node(msg, inMessage.getSelf_id()));
-            r.sendMessage(outMessage);
-
+            handleFromPixiv("来自Ascii2d", resultData, resultData, message).send();
         } catch (Exception e) {
             log.info("请求失败： "+e.getMessage());
             outMessage.setMessage("请求Ascii2d失败了！");
@@ -295,15 +269,14 @@ public class SearchPictureImpl implements SearchPictureService {
 
     /**
      * 处理来自Pixiv的图
-     * @param outMessage OutMessage
      * @param similarity String
      * @param resultData JSONObject
      * @param resultHeader JSONObject
      * @return JSONObject
      */
-    private String handleFromPixiv(OutMessage outMessage, String similarity, JSONObject resultData, JSONObject resultHeader) {
-
-        String nickname = outMessage.getSender().getNickname();
+    private Message handleFromPixiv(String similarity, JSONObject resultData, JSONObject resultHeader, Message message) {
+        Node node = Node.build();
+        String nickname = message.getSender().getNickname();
         String invoker = resultHeader.getString("invoker");
         String pixiv_id = resultData.getString("pixiv_id");
         String title = resultData.getString("title");
@@ -360,46 +333,43 @@ public class SearchPictureImpl implements SearchPictureService {
                 start = 1;
                 end = count;
             }
-
             //大于1张图的情况
-            String images = "";
             for (int i = start; i <= end; i++) {
                 //下载图片到本地
                 fileControlApi.downloadPicture_RestTemplate(LouiseConfig.PIXIV_PROXY_URL + pixiv_id + "-" + i + ".jpg", pixiv_id + "-" + i + ".jpg", "pixiv");
-                images += "[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "pixiv/" + pixiv_id + "-" + i + ".jpg]";
+                node.image(LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "pixiv/" + pixiv_id + "-" + i + ".jpg").text("\n");
             }
-            String msg = nickname + "，查询出来咯，有" + count + "张结果" + "，精确结果在第" + index + "张" +
-                "\n来源Pixiv" +
-                "\n标题:" + title +
-                "\n作者:" + member_name +
-                "\n相似度:" + similarity +
-                "\n可能的图片地址:" + ext_urls +
-                "\n[CQ:image,file="+thumbnail+"]" +
-                "\n" + images + "";
-            return msg;
+            message.node(node.text(nickname + "，查询出来咯，有" + count + "张结果" + "，精确结果在第" + index + "张" +
+                    "\n来源Pixiv" +
+                    "\n标题:" + title +
+                    "\n作者:" + member_name +
+                    "\n相似度:" + similarity +
+                    "\n可能的图片地址:" + ext_urls + "\n")
+                    .image(thumbnail), 0);
+            return message;
         } catch (Exception e) {
             log.debug(e.getLocalizedMessage());
             fileControlApi.downloadPicture_RestTemplate(LouiseConfig.PIXIV_PROXY_URL + pixiv_id + ".jpg", pixiv_id + ".jpg", "pixiv");
-            String msg = nickname+"，查询出来咯"+
-                "\n来源Pixiv"+
-                "\n标题:"+title+
-                "\n作者:"+member_name+
-                "\n相似度:"+similarity+
-                "\n可能的图片地址:"+ext_urls+
-                "\n[CQ:image,file="+thumbnail+"]" +
-                "\n[CQ:image,file="+url+"]";
-            return msg;
+            message.node(node.text(nickname + "，查询出来咯" +
+                    "\n来源Pixiv" +
+                    "\n标题:" + title +
+                    "\n作者:" + member_name +
+                    "\n相似度:" + similarity +
+                    "\n可能的图片地址:" + ext_urls + "\n")
+                    .image(thumbnail)
+                    .image(url), 0);
+            return message;
         }
     }
     /**
      * 处理来自Twitter的图
-     * @param outMessage OutMessage
+     * @param message Message
      * @param similarity String
      * @param sourceNaoData JSONObject
      * @param sourceNaoHeader JSONObject
      * @return JSONObject
      */
-    private String handleFromTwitter(OutMessage outMessage, String similarity, JSONObject sourceNaoData, JSONObject sourceNaoHeader) {
+    private Message handleFromTwitter(String similarity, JSONObject sourceNaoData, JSONObject sourceNaoHeader, Message message) {
         String sourceNaoArray = sourceNaoData.getJSONArray("ext_urls").toString();
         String twitter_user_id = sourceNaoData.getString("twitter_user_id");
         String twitter_user_handle = sourceNaoData.getString("twitter_user_handle");
@@ -413,25 +383,24 @@ public class SearchPictureImpl implements SearchPictureService {
         //TODO 暂时无法下载Twitter的图片
         fileControlApi.downloadPicture_RestTemplate(finalUrl, imageUrl, "Twiiter");
 
-        return outMessage.getSender().getNickname()+"，查询出来咯"+
-            "\n来源Twitter" +
-            "\n推文用户:" + twitter_user_handle+
-            "\n用户ID:" + twitter_user_id+
-            "\n相似度:" + similarity+
-            "\n图片可能无法正常显示，说明缺乏网络环境，请点击链接访问"+
-            "\n推文地址:" + sourceNaoArray+
-            "\n图片地址:" + finalUrl+
-            "\n[CQ:image,file=" + finalUrl+"]";
+        return message.text(message.getSender().getNickname()+"，查询出来咯"+
+                "\n来源Twitter" +
+                "\n推文用户:" + twitter_user_handle+
+                "\n用户ID:" + twitter_user_id+
+                "\n相似度:" + similarity+
+                "\n图片可能无法正常显示，说明缺乏网络环境，请点击链接访问"+
+                "\n推文地址:" + sourceNaoArray+
+                "\n图片地址:" + finalUrl + "\n")
+                .image(finalUrl);
     }
     /**
      * 处理来自Danbooru的图
-     * @param outMessage OutMessage
      * @param similarity String
      * @param sourceNaoData JSONObject
-     * @param sourceNaoHeader JSONObject
+     * @param message Message
      * @return JSONObject
      */
-    private String handleFromGelbooru(OutMessage outMessage, String similarity, JSONObject sourceNaoData, JSONObject sourceNaoHeader) {
+    private Message handleFromGelbooru(String similarity, JSONObject sourceNaoData, Message message) {
 
         log.info("处理Gelbooru来源");
         String sourceNaoArray = sourceNaoData.getJSONArray("ext_urls").toString();
@@ -440,26 +409,26 @@ public class SearchPictureImpl implements SearchPictureService {
         String gelbooru_id = sourceNaoData.getString("gelbooru_id");
 
         String uri = "https://gelbooru.com/index.php?page=dapi&s=post&q=index&json=1&id=" + gelbooru_id;
-        JSONObject imgJsonObj = requestBooru(uri, "GelBooru API", outMessage).getJSONArray("post").getJSONObject(0);
+        JSONObject imgJsonObj = requestBooru(uri, "GelBooru API", message).getJSONArray("post").getJSONObject(0);
 
         String jpegUrl = imgJsonObj.getString("file_url");
         String fileName = "image_" + imgJsonObj.getString("image");
         String tags = imgJsonObj.getString("tags");
         fileControlApi.downloadPicture_RestTemplate(jpegUrl, fileName, "Gelbooru");
 
-        String message = outMessage.getSender().getNickname() + "，查询出来咯"+
-            "\n来源Gelbooru" +
-            "\n角色:" + characters +
-            "\n作者:" + creator +
-            "\n标签:" + tags +
-            "\n相似度:" + similarity +
-            "\n可能的图片地址:" + sourceNaoArray +
-            "\n[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "Gelbooru/" + fileName + "]" +
-            "\n信息来自Gelbooru，结果可能不准确，请通过上面的链接访问";
+        message.text(message.getSender().getNickname() + "，查询出来咯"+
+                "\n来源 Gelbooru" +
+                "\n角色:" + characters +
+                "\n作者:" + creator +
+                "\n标签:" + tags +
+                "\n相似度:" + similarity +
+                "\n可能的图片地址:" + sourceNaoArray + "\n")
+                .image(LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "Gelbooru/" + fileName)
+                .text("\n信息来自 Gelbooru，结果可能不准确，请通过上面的链接访问");
         return message;
     }
 
-    private String handleFromYande(OutMessage outMessage, String similarity, JSONObject sourceNaoData, JSONObject sourceNaoHeader) {
+    private Message handleFromYande(String similarity, JSONObject sourceNaoData, Message message) {
         log.info("处理Yande来源");
         String sourceNaoArray = sourceNaoData.getJSONArray("ext_urls").toString();
         String post_id = sourceNaoData.getString("yandere_id");
@@ -467,26 +436,26 @@ public class SearchPictureImpl implements SearchPictureService {
         String creator = sourceNaoData.getString("creator");
 
         String uri = "https://yande.re/post.json" + "?tags=id:" + post_id;
-        JSONObject imgJsonObj = requestBooru(uri, "Yande API", outMessage);
+        JSONObject imgJsonObj = requestBooru(uri, "Yande API", message);
 
         String jpegUrl = imgJsonObj.getString("sample_url");
         String tags = imgJsonObj.getString("tags");
         String fileName = imgJsonObj.getString("md5") + "." + imgJsonObj.getString("file_ext");
         fileControlApi.downloadPicture_RestTemplate(jpegUrl, fileName, "Yande");
 
-        String message = outMessage.getSender().getNickname() + "，查询出来咯"+
+        message.text(message.getSender().getNickname() + "，查询出来咯"+
                 "\n来源Yande.re" +
                 "\n角色:" + characters +
                 "\n作者:" + creator +
                 "\n标签:" + tags +
                 "\n相似度:" + similarity +
-                "\n可能的图片地址:" + sourceNaoArray +
-                "\n[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "Yande/" + fileName + "]" +
-                "\n信息来自Yande.re，结果可能不准确，请通过上面的链接访问";
+                "\n可能的图片地址:" + sourceNaoArray + "\n")
+                .image(LouiseConfig.BOT_LOUISE_CACHE_IMAGE + "Yande/" + fileName)
+                .text("\n信息来自Yande.re，结果可能不准确，请通过上面的链接访问");
         return message;
     }
 
-    private JSONObject requestBooru(String uri, String booru_type, OutMessage outMessage) {
+    private JSONObject requestBooru(String uri, String booru_type, Message message) {
         // 构造请求图站的请求体
         log.info("请求地址: " + uri);
         // 使用代理请求 Yande
@@ -507,8 +476,8 @@ public class SearchPictureImpl implements SearchPictureService {
         }
 
         if (returnArray == null) {
-            outMessage.setMessage("遗憾, 图片可能已经被删除了😢");
-            throw new ReplyException(outMessage);
+            message.text("遗憾, 图片可能已经被删除了😢").send();
+            return null;
         }
         return (JSONObject)returnArray.get(0);
     }

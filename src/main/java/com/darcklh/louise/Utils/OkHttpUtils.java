@@ -3,7 +3,6 @@ package com.darcklh.louise.Utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonObject;
 import okhttp3.*;
 
 import javax.net.ssl.SSLContext;

@@ -9,14 +9,14 @@ import com.darcklh.louise.Service.SysUserService;
 import com.darcklh.louise.Service.WebSocketService;
 import com.darcklh.louise.Utils.PluginManager;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.util.StringUtils;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 /**
@@ -83,7 +83,7 @@ public class SaitoController {
                     Object[] lines = reader.lines().toArray();
 
                     //只取从上次之后产生的日志
-                    Object[] copyOfRange = Arrays.copyOfRange(lines, 0, lines.length);
+                    String[] copyOfRange = (String[]) Arrays.copyOfRange(lines, 0, lines.length);
 
                     //对日志进行着色，更加美观  PS：注意，这里要根据日志生成规则来操作
                     for (int i = 0; i < copyOfRange.length; i++) {
@@ -120,8 +120,8 @@ public class SaitoController {
                         copyOfRange = Arrays.copyOfRange(copyOfRange, copyOfRange.length - 200, copyOfRange.length);
                         first = false;
                     }
-
-                    String result = StringUtils.join(copyOfRange, "<br/>");
+                    List<String> rangeList = Arrays.asList(copyOfRange);
+                    String result = StringUtils.join(rangeList, ' ');
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("result", result);
                     //发送

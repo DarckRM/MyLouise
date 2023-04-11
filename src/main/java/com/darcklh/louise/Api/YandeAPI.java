@@ -213,7 +213,7 @@ public class YandeAPI {
      */
     private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit, Integer page, String fileOrigin, String[] tags_info) throws InterruptedException {
 
-        String replyImgList = "";
+        StringBuilder replyImgList = new StringBuilder();
         List<DownloadPicTask> taskList = new ArrayList<>();
         OutMessage outMessage = new OutMessage(inMessage);
         int taskId = 0;
@@ -232,7 +232,7 @@ public class YandeAPI {
             // 分配下载任务
 //            fileControlApi.downloadPicture_RestTemplate(imgJsonObj.getString("jpeg_url"), fileName, fileOrigin);
             taskList.add(new DownloadPicTask(taskId, imgJsonObj.getString("jpeg_url"), fileName, fileOrigin, fileControlApi));
-            replyImgList += "[CQ:image,file=" + LouiseConfig.BOT_LOUISE_CACHE_IMAGE + fileOrigin + "/" + fileName + "]\r\n";
+            replyImgList.append("[CQ:image,file=").append(LouiseConfig.BOT_LOUISE_CACHE_IMAGE).append(fileOrigin).append("/").append(fileName).append("]\r\n");
             taskId++;
             limit--;
         }
@@ -267,7 +267,7 @@ public class YandeAPI {
 
         String announce = "支持中文搜索(原神)，请使用角色正确中文名\n如果想追加中文词条请使用!yande/help查看说明\n";
 
-        String msg = replyImgList;
+        String msg = replyImgList.toString();
         if (outMessage.getGroup_id() >= 0)
             msg += "已过滤过于离谱的图片，如需全部资料请私聊 (`ヮ´)";
         if (outMessage.getGroup_id() < 0)

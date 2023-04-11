@@ -7,6 +7,7 @@ import com.darcklh.louise.Model.Louise.Group;
 import com.darcklh.louise.Model.Louise.Role;
 import com.darcklh.louise.Model.Louise.User;
 import com.darcklh.louise.Model.Messages.InMessage;
+import com.darcklh.louise.Model.Messages.Message;
 import com.darcklh.louise.Model.Messages.Node;
 import com.darcklh.louise.Model.Messages.OutMessage;
 import com.darcklh.louise.Model.ReplyException;
@@ -94,7 +95,7 @@ public class MyLouiseApi implements ErrorController {
      */
     @RequestMapping("louise/help")
     public JSONObject help(@RequestBody InMessage inMessage) {
-        OutMessage out = new OutMessage(inMessage);
+        Message msg = Message.build(inMessage);
         String[] args = inMessage.getMessage().split(" ");
         JSONObject returnJson = new JSONObject();
         int intPage = 1;
@@ -110,8 +111,8 @@ public class MyLouiseApi implements ErrorController {
         }
         if (intPage >= 3)
             throw new ReplyException("现在还没有那么多帮助页面");
-        out.setMessage("[CQ:image,file=" + LouiseConfig.LOUISE_HELP_PAGE + page + ".png]");
-        r.sendMessage(out);
+        msg.image(LouiseConfig.LOUISE_HELP_PAGE + page + ".png")
+                .send();
         return returnJson;
     }
 

@@ -8,6 +8,7 @@ import com.darcklh.louise.Mapper.PluginInfoDao;
 import com.darcklh.louise.Mapper.SysConfigDao;
 import com.darcklh.louise.Mapper.TaskDao;
 import com.darcklh.louise.Model.InnerException;
+import com.darcklh.louise.Model.Messages.Message;
 import com.darcklh.louise.Model.Messages.OutMessage;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.R;
@@ -52,9 +53,6 @@ public class BootApplication {
     @Autowired
     PluginInfoController pluginInfoController;
 
-    @Autowired
-    R r = new R();
-
     public static Date bootDate;
 
     @PostConstruct
@@ -80,15 +78,10 @@ public class BootApplication {
                 log.info("加载定时任务 <-- " + task.getTask_name() + "---" + task.getInfo() + " -->");
             }
         }
-
-        OutMessage outMessage = new OutMessage();
-        outMessage.setUser_id(Long.valueOf(LouiseConfig.LOUISE_ADMIN_NUMBER));
-        outMessage.setMessage(LouiseConfig.LOUISE_WELCOME_SENTENCE);
-        try {
-            r.sendMessage(outMessage);
-        } catch (InnerException e) {
-            log.debug(e.getErrorMsg());
-        }
+        Message msg = Message.build();
+        msg.setUser_id(Long.parseLong(LouiseConfig.LOUISE_ADMIN_NUMBER));
+        msg.text("启动时间 " + bootDate + " Louise 系统已启动")
+                .send();
     }
 
 }

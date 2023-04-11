@@ -2,6 +2,7 @@ package com.darcklh.louise.Model;
 
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Model.Messages.Message;
 import com.darcklh.louise.Model.Messages.OutMessage;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -108,6 +109,30 @@ public class R {
         return response;
     }
 
+    public JSONObject requestAPI(String api, Message message) {
+
+        if (!testConnWithBot())
+            return null;
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> cqhttp = new HttpEntity<>(JSONObject.toJSONString(message), headers);
+        // 开始请求
+        log.info("请求 cqhttp 接口: " + api);
+        JSONObject response = restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + api, cqhttp, JSONObject.class);
+
+        // 校验请求结果
+        if(!verifyRequest(response)) {
+            String result = "露易丝被企鹅干扰了，请尝试私聊 (>д<)\n";
+            message.text(result);
+            cqhttp = new HttpEntity<>(JSONObject.toJSONString(message), headers);
+
+            log.info("发送错误原因:" + response.getString("wording") + " : " + response.getString("msg"));
+            restTemplate.postForObject(LouiseConfig.BOT_BASE_URL + "send_msg", cqhttp, JSONObject.class);
+        }
+        this.refresh();
+        log.info("接口 " + api + " 返回消息:" + response.toString());
+        return response;
+    }
+
     /**
      * 根据参数向cqhttp发送消息
      * @param outMessage OutMessage
@@ -120,6 +145,36 @@ public class R {
         if (outMessage.getMessages().size() != 0)
             this.requestAPI("send_group_forward_msg", outMessage);
         else this.requestAPI("send_msg", outMessage);
+    }
+
+    /**
+     * 返回结果后直接退出
+     * @param outMessage OutMessage
+     */
+    public void fall(OutMessage outMessage) {
+        if (!testConnWithBot())
+            throw new InnerException("B101", "无法连接 BOT， 请确认 Go-Cqhttp 正在运行", "");
+        if (outMessage.getMessages().size() != 0)
+            this.requestAPI("send_group_forward_msg", outMessage);
+        else this.requestAPI("send_msg", outMessage);
+        throw new InnerException(outMessage.getUser_id().toString(), "主动退出", "");
+    }
+
+    public JSONObject send(Message message) {
+        if (!testConnWithBot())
+            throw new InnerException("B101", "无法连接 BOT， 请确认 Go-Cqhttp 正在运行", "");
+        if (message.getMessages().size() != 0)
+            return this.requestAPI("send_group_forward_msg", message);
+        return this.requestAPI("send_msg", message);
+    }
+
+    public void fall(Message message) {
+        if (!testConnWithBot())
+            throw new InnerException("B101", "无法连接 BOT， 请确认 Go-Cqhttp 正在运行", "");
+        if (message.getMessages().size() != 0)
+            this.requestAPI("send_group_forward_msg", message);
+        this.requestAPI("send_msg", message);
+        throw new InnerException(message.getUser_id().toString(), "主动退出", "");
     }
 
     /**

@@ -105,8 +105,6 @@ public class CqhttpWSController {
         if (listenerCounts == 0)
             return;
 
-        log.info("正在监听来自 " + Arrays.toString(accounts.toArray()) + " 的消息");
-
         // 排除所有不是 message 类型且不属于监听对象的消息上报
         if (!accounts.contains(post.getUser_id()))
             return;
@@ -177,6 +175,8 @@ public class CqhttpWSController {
         int interval = 0;
         InMessage inMessage;
         while (interval < exceedTime) {
+            if (interval % 5000 == 0)
+                log.info("正在监听来自 " + Arrays.toString(accounts.toArray()) + " 的消息");
             inMessage = messageMap.get(userId);
             if (inMessage != null) {
                 // 监听计数器减少，移除多余消息

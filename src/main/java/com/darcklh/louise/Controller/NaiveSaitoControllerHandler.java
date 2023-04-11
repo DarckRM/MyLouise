@@ -36,37 +36,6 @@ public class NaiveSaitoControllerHandler {
         return sE.getJsonObject();
     }
 
-    @ExceptionHandler(value = Exception.class)
-    @ResponseBody
-    public JSONObject handleRuntimeException(Exception e) throws UnsupportedEncodingException {
-        JSONObject jsonObject = new JSONObject();
-        Result result = new Result();
-        if (e instanceof java.sql.SQLIntegrityConstraintViolationException) {
-            jsonObject.put("reply", "SQLIntegrityConstraintViolationException");
-            setData(result, e.getCause().toString(), ((SQLIntegrityConstraintViolationException) e).getErrorCode(), e);
-        } else if (e instanceof DuplicateKeyException){
-            jsonObject.put("reply", "你已经注册过了哦");
-            setData(result, e.getCause().toString(), 500, e);
-        }
-        jsonObject.put("result", result);
-        return jsonObject;
-    }
-
-    @ExceptionHandler(value = SQLException.class)
-    @ResponseBody
-    public JSONObject handleDatabaseException(SQLException e) throws UnsupportedEncodingException {
-        JSONObject jsonObject = new JSONObject();
-        Result result = new Result();
-        if (e instanceof java.sql.SQLIntegrityConstraintViolationException) {
-            jsonObject.put("reply", "你已经注册过了哦");
-        } else {
-            jsonObject.put("reply", "数据库出现异常: " + e.getMessage());
-        }
-        setData(result, e.getMessage(), e.getErrorCode(), e);
-        jsonObject.put("result", result);
-        return jsonObject;
-    }
-
     @ExceptionHandler(value = ReplyException.class)
     @ResponseBody
     public JSONObject handleReplyException(ReplyException e) {
@@ -74,12 +43,5 @@ public class NaiveSaitoControllerHandler {
             return e.getReply();
         r.sendMessage(e.getOutMessage());
         return null;
-    }
-
-    void setData(Result result,String errorMsg, Integer innerCode, Exception e) throws UnsupportedEncodingException {
-        result.setMsg(errorMsg);
-        result.setCode(innerCode);
-        log.error("errorMsg={},innerCode={},exception={}" ,errorMsg,innerCode,e);
-        log.info("出现异常");
     }
 }

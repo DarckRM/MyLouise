@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Controller.CqhttpWSController;
 import com.darcklh.louise.Model.Messages.InMessage;
+import com.darcklh.louise.Model.Messages.Message;
 import com.darcklh.louise.Model.Messages.OutMessage;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.ReplyException;
@@ -36,40 +37,21 @@ public class SearchPictureApi{
     @RequestMapping("louise/find")
     private JSONObject findPicture(@RequestBody InMessage inMessage) {
 
-        OutMessage outMsg = new OutMessage(inMessage);
+        Message msg = new Message(inMessage);
 
         new Thread(() -> {
-            // 进入监听模式
-            CqhttpWSController.startWatch(inMessage.getUser_id());
-            InMessage wsMsg;
-            int interval = 0;
-            outMsg.setMessage("[CQ:at,qq=" + inMessage.getUser_id() + "]请在 15秒 内发送你要搜索的图片吧");
-            r.sendMessage(outMsg);
+            long userId = inMessage.getUser_id();
+            msg.at(userId).text("请在 15秒 内发送你要搜索的图片吧").send();
             // 尝试从 WS 获取参数
-            while(true) {
+            CqhttpWSController.getMessage((value) -> {
+                if (value == null) {
+                    msg.at(userId).text("你已经很久没有理 Louise 了, 下次再搜索吧").fall();
+                } else {
+                    inMessage.setMessage(inMessage.getMessage() + value.getMessage());
+                    msg.setMessage_id(value.getMessage_id());
+                }
+            }, userId, 15000L);
 
-                if (interval > 5) {
-                    outMsg.setMessage("[CQ:at,qq=" + inMessage.getUser_id() + "]你已经很久没有理 Louise 了，下次再搜索吧");
-                    r.sendMessage(outMsg);
-                    CqhttpWSController.stopWatch(inMessage.getUser_id());
-                    return;
-                }
-
-                wsMsg = CqhttpWSController.messageMap.get(inMessage.getUser_id());
-                if (wsMsg != null) {
-                    inMessage.setMessage(inMessage.getMessage() + wsMsg.getMessage());
-                    outMsg.setMessage("[CQ:at,qq=" + inMessage.getUser_id() + "]收到你的图片了");
-                    r.sendMessage(outMsg);
-                    break;
-                }
-                interval++;
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            CqhttpWSController.stopWatch(inMessage.getUser_id());
             //解析上传的信息 拿到图片URL还有一些相关参数
             String url = inMessage.getMessage();
             url = url.substring(url.indexOf("url=")+4, url.length()-1);
@@ -77,13 +59,10 @@ public class SearchPictureApi{
             log.info("上传图片的地址:"+ url);
 
             String finalUrl = url;
+            msg.reply().text("开始检索图片").send();
             new Thread(() -> {searchPictureCenter(inMessage, finalUrl); }).start();
 
-            outMsg.setMessage("[CQ:at,qq=" + inMessage.getUser_id() + "]露易丝在搜索了哦！" +
-                    "\n目前Ascii2d搜索引擎仍在测试中，受网络影响较大！");
-            r.sendMessage(outMsg);
-
-        }, UniqueGenerator.uniqueThreadName("SPC", "Watching message")).start();
+        }).start();
         return null;
     }
 
@@ -94,12 +73,7 @@ public class SearchPictureApi{
      * @return
      */
     private void searchPictureCenter(InMessage inMessage, String url){
-
-        log.info("进入搜图流程, 发起用户为:"+ inMessage.getSender().getNickname()+" QQ:"+ inMessage.getUser_id());
-        log.debug(inMessage.toString());
-
         // TODO 线程名过长
-
         new Thread(() -> searchPictureService.findWithSourceNAO(inMessage, url), UniqueGenerator.uniqueThreadName("", "NAO")).start();
         new Thread(() -> searchPictureService.findWithAscii2d(inMessage, url), UniqueGenerator.uniqueThreadName("", "A2d")).start();
 
