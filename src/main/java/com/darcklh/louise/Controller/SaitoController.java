@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Model.LoggerQueue;
 import com.darcklh.louise.Model.Result;
 import com.darcklh.louise.Model.Saito.SysUser;
-import com.darcklh.louise.Service.PluginService;
 import com.darcklh.louise.Service.SysUserService;
 import com.darcklh.louise.Service.WebSocketService;
 import com.darcklh.louise.Utils.PluginManager;
@@ -15,10 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+
 import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @author DarckLH
  * @date 2021/9/8 18:42
@@ -35,6 +35,7 @@ public class SaitoController {
     PluginManager pluginManager;
 
     static private boolean output_log = true;
+    private static Map<String, Integer> lengthMap = new ConcurrentHashMap<>();
 
     @RequestMapping("/error")
     public JSONObject error() {
@@ -69,6 +70,7 @@ public class SaitoController {
     @GetMapping("saito/output_log/{client_name}")
     public void outputLog(@PathVariable String client_name) {
         output_log = true;
+        lengthMap.put(client_name, 1);//默认从第一行开始
         //获取日志信息
         new Thread(() -> {
             log.info("日志输出任务开始");
@@ -83,7 +85,7 @@ public class SaitoController {
                     Object[] lines = reader.lines().toArray();
 
                     //只取从上次之后产生的日志
-                    String[] copyOfRange = (String[]) Arrays.copyOfRange(lines, 0, lines.length);
+                    Object[] copyOfRange = Arrays.copyOfRange(lines, lengthMap.get(client_name), lines.length);
 
                     //对日志进行着色，更加美观  PS：注意，这里要根据日志生成规则来操作
                     for (int i = 0; i < copyOfRange.length; i++) {
@@ -113,15 +115,17 @@ public class SaitoController {
                     }
 
                     //存储最新一行开始
-                    //lengthMap.put(session.getId(), lines.length);
+                    lengthMap.put(client_name, lines.length);
 
                     //第一次如果太大，截取最新的200行就够了，避免传输的数据太大
                     if(first && copyOfRange.length > 200){
                         copyOfRange = Arrays.copyOfRange(copyOfRange, copyOfRange.length - 200, copyOfRange.length);
                         first = false;
                     }
-                    List<String> rangeList = Arrays.asList(copyOfRange);
-                    String result = StringUtils.join(rangeList, ' ');
+                    for (Object o : copyOfRange) {
+                        o += "<br/>";
+                    }
+                    String result = copyOfRange.toString();
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("result", result);
                     //发送

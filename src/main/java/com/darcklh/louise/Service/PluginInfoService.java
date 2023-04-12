@@ -13,5 +13,7 @@ import java.util.List;
 public interface PluginInfoService extends BaseService<PluginInfo>{
     public PluginInfo findByCmd(String cmd);
     public List<PluginInfo> loadPlugins();
+    public boolean reloadPlugin(Integer pluginId);
     public String unloadPlugins();
+    public boolean unloadPlugin(String path);
 }

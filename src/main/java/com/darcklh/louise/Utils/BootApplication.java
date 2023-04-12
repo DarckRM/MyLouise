@@ -2,6 +2,7 @@ package com.darcklh.louise.Utils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.darcklh.louise.Config.LouiseConfig;
+import com.darcklh.louise.Controller.CqhttpWSController;
 import com.darcklh.louise.Controller.PluginInfoController;
 import com.darcklh.louise.Controller.SaitoController;
 import com.darcklh.louise.Mapper.PluginInfoDao;
@@ -53,6 +54,9 @@ public class BootApplication {
     @Autowired
     PluginInfoController pluginInfoController;
 
+    @Autowired
+    CqhttpWSController cqhttpWSController;
+
     public static Date bootDate;
 
     @PostConstruct
@@ -78,10 +82,14 @@ public class BootApplication {
                 log.info("加载定时任务 <-- " + task.getTask_name() + "---" + task.getInfo() + " -->");
             }
         }
-        Message msg = Message.build();
-        msg.setUser_id(Long.parseLong(LouiseConfig.LOUISE_ADMIN_NUMBER));
-        msg.text("启动时间 " + bootDate + " Louise 系统已启动")
-                .send();
+
+        // 校验 Bot 连接状态
+        if (cqhttpWSController.isConnect) {
+            Message msg = Message.build();
+            msg.setUser_id(Long.parseLong(LouiseConfig.LOUISE_ADMIN_NUMBER));
+            msg.text("启动时间 " + bootDate + " Louise 系统已启动").send();
+        } else
+            log.info("未能建立与 Cqhttp 的连接 - Louise 系统已启动");
     }
 
 }

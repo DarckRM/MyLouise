@@ -27,36 +27,49 @@ public class PluginManager {
 
     private URLClassLoader urlClassLoader;
 
+    public void loadPlugin(PluginInfo pluginInfo) throws MalformedURLException, InstantiationException, IllegalAccessException {
+
+        URL[] urls = new URL[1];
+        initializing(pluginInfo, urls, 0);
+        //将jar文件组成数组 创建URLClassLoader
+        urlClassLoader = new URLClassLoader(urls, getClass().getClassLoader());
+        loadingPlugin(pluginInfo);
+    }
+
     public void loadPlugins(List<PluginInfo> pluginList) throws IOException, IllegalAccessException, InstantiationException {
         init(pluginList);
-        for(PluginInfo pluginInfo: pluginList) {
-            log.info("[" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 执行初始化函数 >>>");
-            PluginService plugin_service = getInstance(pluginInfo.getClass_name());
-            try {
+        for(PluginInfo pluginInfo: pluginList)
+            loadingPlugin(pluginInfo);
+    }
+
+    private void loadingPlugin(PluginInfo pluginInfo) throws IllegalAccessException, InstantiationException {
+        log.info("执行 [" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 初始化函数 >>>");
+        PluginService plugin_service = getInstance(pluginInfo.getClass_name());
+        try {
             if(plugin_service.init()) {
-                log.info("[" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 初始化插件成功 <<<");
+                log.info("结束 [" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 初始化成功 <<<");
             } else
                 log.info(pluginInfo.getName() + " 加载失败");
-            } catch (NoClassDefFoundError error) {
-                log.error("[" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 初始化插件失败 <<<");
-                log.error(error.getMessage());
-                continue;
-            }
-            pluginInfo.setPluginService(plugin_service);
-            pluginInfos.put(pluginInfo.getPlugin_id(), pluginInfo);
+        } catch (NoClassDefFoundError error) {
+            log.error("结束 [" + pluginInfo.getName() + "---" + pluginInfo.getAuthor() +"] 初始化失败 <<<");
+            log.error(error.getMessage());
+            return;
         }
-        // urlClassLoader.close();
+        pluginInfo.setPluginService(plugin_service);
+        pluginInfos.put(pluginInfo.getPlugin_id(), pluginInfo);
+    }
+
+    private void initializing(PluginInfo pluginInfo, URL[] urls, int i) throws MalformedURLException {
+        String filePath = pluginInfo.getPath();
+        urls[i] = new URL("jar:file:" +filePath+ "!/");
     }
 
     private void init(List<PluginInfo> pluginList) throws MalformedURLException {
         int size = pluginList.size();
         URL[] urls = new URL[size];
 
-        for (int i = 0; i < size; i++) {
-            PluginInfo pluginInfo = pluginList.get(i);
-            String filePath = pluginInfo.getPath();
-            urls[i] = new URL("jar:file:" +filePath+ "!/");
-        }
+        for (int i = 0; i < size; i++)
+            initializing(pluginList.get(i), urls, i);
 
         //将jar文件组成数组 创建URLClassLoader
         urlClassLoader = new URLClassLoader(urls, getClass().getClassLoader());

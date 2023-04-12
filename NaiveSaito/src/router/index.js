@@ -43,6 +43,10 @@ const routes = [
               component: () => import('../pages/louise/GroupManagement.vue')
           },
           {
+            path: 'plugin-info',
+            component: () => import('../pages/saito/PluginInfo.vue')
+          },
+          {
               path: 'feature-info',
               component: () => import('../pages/saito/FeatureInfo.vue')
           },

@@ -3,6 +3,8 @@ package com.darcklh.louise.Utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.darcklh.louise.Config.LouiseConfig;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
 import javax.net.ssl.SSLContext;
@@ -10,6 +12,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -26,6 +29,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2023/4/8 17:51
  * @Description OkHttp3 的封装
  */
+@Slf4j
 public class OkHttpUtils {
 
     private static volatile OkHttpClient okHttpClient = null;
@@ -33,7 +37,6 @@ public class OkHttpUtils {
     private Map<String, String> headerMap;
     private Map<String, Object> paramMap;
     private String body;
-    private Proxy proxy;
     private String url;
     private Request.Builder request;
 
@@ -61,9 +64,9 @@ public class OkHttpUtils {
 
     /**
      * 配置代理初始化 okHttpClient
-     * @param proxy
+     * @param proxyOn
      */
-    private OkHttpUtils(Proxy proxy) {
+    private OkHttpUtils(Proxy proxyOn) {
         if (okHttpClient == null) {
             synchronized (OkHttpUtils.class) {
                 if (okHttpClient == null) {
@@ -72,7 +75,7 @@ public class OkHttpUtils {
                             .connectTimeout(25, TimeUnit.SECONDS)
                             .writeTimeout(35, TimeUnit.SECONDS)
                             .readTimeout(35, TimeUnit.SECONDS)
-                            .proxy(proxy)
+                            .proxy(proxyOn)
                             .sslSocketFactory(createSSLSocketFactory(trustManagers), (X509TrustManager) trustManagers[0])
                             .hostnameVerifier((hostName, session) -> true)
                             .retryOnConnectionFailure(true)
@@ -100,10 +103,15 @@ public class OkHttpUtils {
 
     /**
      * 配置代理初始化 okHttpUtils
-     * @param newProxy
+     * @param proxyOn
      */
-    public static OkHttpUtils builder(Proxy newProxy) {
-        return new OkHttpUtils(newProxy);
+    public static OkHttpUtils builder(boolean proxyOn) {
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(LouiseConfig.LOUISE_PROXY, LouiseConfig.LOUISE_PROXY_PORT));
+        return new OkHttpUtils(proxy);
+    }
+
+    public static OkHttpUtils builder(Proxy proxy) {
+        return new OkHttpUtils(proxy);
     }
 
     /**
@@ -233,6 +241,30 @@ public class OkHttpUtils {
             e.printStackTrace();
             return "请求失败：" + e.getMessage();
         }
+    }
+
+    public Response async(boolean responseOn) {
+        final Response[] responseReturn = new Response[1];
+        setHeader(request);
+        okHttpClient.newCall(request.build()).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                log.error("请求错误: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                assert response.body() != null;
+                responseReturn[0] = response;
+                getSemaphoreInstance().release();
+            }
+        });
+        try {
+            getSemaphoreInstance().acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return responseReturn[0];
     }
 
     /**

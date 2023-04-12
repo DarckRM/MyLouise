@@ -124,12 +124,14 @@ public class Message {
     }
 
     public Message reply() {
-        JSONObject obj = new JSONObject();
-        obj.put("type", "reply");
-        JSONObject data = new JSONObject();
-        data.put("id", this.message_id);
-        obj.put("data", data);
-        this.message.add(obj);
+        if (this.message_id != null) {
+            JSONObject obj = new JSONObject();
+            obj.put("type", "reply");
+            JSONObject data = new JSONObject();
+            data.put("id", this.message_id);
+            obj.put("data", data);
+            this.message.add(obj);
+        }
         return this;
     }
 

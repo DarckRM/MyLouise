@@ -3,6 +3,7 @@ package com.darcklh.louise.Api;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Model.Result;
+import com.darcklh.louise.Service.PluginInfoService;
 import com.darcklh.louise.Utils.HttpProxy;
 import com.darcklh.louise.Utils.UniqueGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,64 @@ import java.util.concurrent.ThreadPoolExecutor;
 @RestController
 public class FileControlApi {
 
+    @Autowired
+    PluginInfoService pluginInfoService;
+
+    /**
+     * 上传插件
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/saito/upload/plugin", produces = "application/json")
+    public JSONObject uploadPlugin(MultipartFile file) throws IOException {
+        JSONObject jsonObject = new JSONObject();
+        Result<String> result = new Result<>();
+        log.info("上传插件: " + file.getOriginalFilename());
+
+        if (!file.isEmpty()) {
+
+            String fileName = file.getOriginalFilename(); //获取上传的文件名
+            String suffixName = fileName.substring(fileName.lastIndexOf("." )+ 1); //获取后缀名
+            result.setData(fileName);
+            if (!suffixName.equals("jar")) {
+                result.setMsg("上传失败\n不支持的文件类型 " + suffixName);
+                result.setCode(403);
+                jsonObject.put("result", result);
+                return jsonObject;
+            }
+
+            File dest = new File(new File("plugins/").getAbsolutePath() + "/" + fileName);
+            // 如果插件存在则先尝试卸载插件
+            if (dest.exists()) {
+                log.info("系统已存在插件 " + fileName);
+                pluginInfoService.unloadPlugin("plugins/" + fileName);
+                log.info("已完成插件 " + fileName + " 的卸载");
+                if(dest.delete())
+                    log.info("已删除旧版本的插件");
+            }
+
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+
+            file.transferTo(dest);
+            String realUrl = "/plugins/" + fileName;
+            result.setMsg("上传成功");
+            result.setData(realUrl);
+            result.setCode(200);
+            jsonObject.put("file_name", fileName);
+            jsonObject.put("result", result);
+            return jsonObject;
+
+        } else {
+            result.setCode(500);
+            result.setMsg("上传失败");
+            jsonObject.put("result", result);
+            return jsonObject;
+        }
+    }
+
     /**
      * 上传图片
      * @param file
@@ -72,7 +131,7 @@ public class FileControlApi {
             String realUrl = "/saito/image/" + fileName;
             result.setMsg("上传成功");
             result.setData(realUrl);
-            result.setCode(1);
+            result.setCode(200);
             jsonObject.put("file_name", fileName);
             jsonObject.put("result", result);
             return jsonObject;

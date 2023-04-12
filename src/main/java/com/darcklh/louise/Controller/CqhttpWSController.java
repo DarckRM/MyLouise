@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
 public class CqhttpWSController {
 
     // 和 CQHTTP Reverse WS 的连接状态
-    private boolean isConnect = false;
+    public boolean isConnect = false;
 
     // 监听者计数器，当计数器为 0 时停止接收 WS 的消息
     public static int listenerCounts = 0;
