@@ -1,7 +1,7 @@
 package com.darcklh.louise.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.darcklh.louise.Model.Saito.Task;
+import com.darcklh.louise.Model.Saito.CronTask;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @Description
  */
 @Mapper
-public interface TaskDao extends BaseMapper<Task> {
+public interface CronTaskDao extends BaseMapper<CronTask> {
 }

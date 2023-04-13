@@ -1,8 +1,8 @@
 package com.darcklh.louise.Service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.darcklh.louise.Mapper.TaskDao;
-import com.darcklh.louise.Model.Saito.Task;
+import com.darcklh.louise.Mapper.CronTaskDao;
+import com.darcklh.louise.Model.Saito.CronTask;
 import com.darcklh.louise.Service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,12 @@ import java.util.List;
 public class TaskImpl implements TaskService {
 
     @Autowired
-    private TaskDao taskDao;
+    private CronTaskDao cronTaskDao;
 
     @Override
-    public List<Task> findBy() {
-        QueryWrapper<Task> wrapper = new QueryWrapper<>();
-        return taskDao.selectList(wrapper);
+    public List<CronTask> findBy() {
+        QueryWrapper<CronTask> wrapper = new QueryWrapper<>();
+        return cronTaskDao.selectList(wrapper);
     }
 
     @Override
@@ -32,12 +32,12 @@ public class TaskImpl implements TaskService {
     }
 
     @Override
-    public String editBy(Task object) {
+    public String editBy(CronTask object) {
         return null;
     }
 
     @Override
-    public String add(Task object) {
+    public String add(CronTask object) {
         return null;
     }
 }

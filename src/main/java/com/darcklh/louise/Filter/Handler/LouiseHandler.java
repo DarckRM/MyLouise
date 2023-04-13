@@ -111,6 +111,10 @@ public class LouiseHandler implements HandlerInterceptor {
             return false;
         }
 
+        // 管理员和 Bot 的命令将不受限制
+        if (user_id.equals(LouiseConfig.BOT_ACCOUNT) || user_id.equals(LouiseConfig.LOUISE_ADMIN_NUMBER))
+            return true;
+
         logger.info("用户 " + user_id + " 请求 " + featureInfo.getFeature_name() + " at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date().getTime()));
 
         // 更新 Interval 控制

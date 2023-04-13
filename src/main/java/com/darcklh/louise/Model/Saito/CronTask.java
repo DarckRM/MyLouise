@@ -9,7 +9,7 @@ import lombok.Data;
  * @Description 定时任务信息
  */
 @Data
-public class Task {
+public class CronTask {
 
     @TableId
     private Integer task_id;

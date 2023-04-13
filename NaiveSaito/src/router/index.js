@@ -55,6 +55,10 @@ const routes = [
               component: () => import('../pages/saito/RoleInfo.vue')
           },
           {
+            path: 'cron-task',
+            component: () => import('../pages/saito/CronTask.vue')
+          },
+          {
             path: 'image-manage',
             component: () => import('../pages/louise/ImageManagement.vue')
           }

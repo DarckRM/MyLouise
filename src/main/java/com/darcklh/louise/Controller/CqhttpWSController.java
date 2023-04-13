@@ -9,6 +9,8 @@ import com.darcklh.louise.Model.Louise.Group;
 import com.darcklh.louise.Model.Messages.InMessage;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.Saito.PluginInfo;
+import com.darcklh.louise.Service.FeatureInfoService;
+import com.darcklh.louise.Service.Impl.FeatureInfoImpl;
 import com.darcklh.louise.Utils.PluginManager;
 import com.darcklh.louise.Utils.PostDecoder;
 import com.darcklh.louise.Utils.PostEncoder;
@@ -19,6 +21,7 @@ import okhttp3.Call;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
 import javax.websocket.*;
@@ -36,9 +39,19 @@ import java.util.regex.Pattern;
  * @Description
  */
 @ServerEndpoint(value="/go-cqhttp", decoders = { PostDecoder.class }, encoders = { PostEncoder.class })
-@Component
 @Slf4j
+@Component
 public class CqhttpWSController {
+
+    @Autowired
+    FeatureInfoService featureInfoService;
+
+    static CqhttpWSController cqhttpWSController;
+
+    @PostConstruct
+    public void init() {
+        cqhttpWSController = this;
+    }
 
     // 和 CQHTTP Reverse WS 的连接状态
     public boolean isConnect = false;
@@ -85,18 +98,20 @@ public class CqhttpWSController {
         }
     }
 
-    private void handleMessagePost(MessagePost post) {
+    public void handleMessagePost(MessagePost post) {
         InMessage inMessage = new InMessage(post);
-        // 向所有监听模式插件发送消息
+        // 向所有监听模式功能发送消息
         Pattern pattern;
         // TODO 使用正则表达式判断
         for ( Map.Entry<Integer, PluginInfo> entry: PluginManager.pluginInfos.entrySet()) {
-            if (entry.getValue().getType() == 1) {
+            if (entry.getValue().getType() != 0) {
                 pattern = Pattern.compile(entry.getValue().getCmd());
                 if (pattern.matcher(inMessage.getMessage()).find()) {
+                    // 更新调用统计数据
+                    cqhttpWSController.featureInfoService.addCount(entry.getValue().getFeature_id(), inMessage.getGroup_id().toString(), inMessage.getUser_id().toString());
                     new Thread(() -> {
                         entry.getValue().getPluginService().service(inMessage);
-                    }, "WS PLG-" + entry.getValue().getName()).start();
+                    }, entry.getValue().getName()).start();
                 }
             }
         }
@@ -171,7 +186,7 @@ public class CqhttpWSController {
      */
     public static InMessage getMessage(GoCallBack callBack, Long userId, Long exceedTime) {
         // 进入监听模式
-        CqhttpWSController.startWatch(userId);
+        startWatch(userId);
         int interval = 0;
         InMessage inMessage;
         while (interval < exceedTime) {
@@ -180,7 +195,7 @@ public class CqhttpWSController {
             inMessage = messageMap.get(userId);
             if (inMessage != null) {
                 // 监听计数器减少，移除多余消息
-                CqhttpWSController.stopWatch(userId);
+                stopWatch(userId);
                 callBack.call(inMessage);
                 return inMessage;
             }
@@ -192,7 +207,7 @@ public class CqhttpWSController {
             }
         }
         // 监听计数器减少，移除多余消息
-        CqhttpWSController.stopWatch(userId);
+        stopWatch(userId);
         callBack.call(null);
         return null;
     }
