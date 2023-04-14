@@ -27,7 +27,7 @@ public class R {
     //发送报文的基础信息
     private String nickname;
     private String senderType;
-    private String number;
+    private long number;
 
     //报文体
     private JSONObject message = new JSONObject();
@@ -141,7 +141,7 @@ public class R {
     public void sendMessage(OutMessage outMessage) {
 
         if (!testConnWithBot())
-            throw new InnerException("B101", "无法连接 BOT， 请确认 Go-Cqhttp 正在运行", "");
+            throw new InnerException(outMessage.getUser_id(), "无法连接 BOT， 请确认 Go-Cqhttp 正在运行", "");
         if (outMessage.getMessages().size() != 0)
             this.requestAPI("send_group_forward_msg", outMessage);
         else this.requestAPI("send_msg", outMessage);
@@ -153,16 +153,16 @@ public class R {
      */
     public void fall(OutMessage outMessage) {
         if (!testConnWithBot())
-            throw new InnerException("B101", "无法连接 BOT， 请确认 Go-Cqhttp 正在运行", "");
+            throw new InnerException(outMessage.getUser_id(), "无法连接 BOT， 请确认 Go-Cqhttp 正在运行", "");
         if (outMessage.getMessages().size() != 0)
             this.requestAPI("send_group_forward_msg", outMessage);
         else this.requestAPI("send_msg", outMessage);
-        throw new InnerException(outMessage.getUser_id().toString(), "主动退出", "");
+        throw new InnerException(outMessage.getUser_id(), "主动退出", "");
     }
 
     public JSONObject send(Message message) {
         if (!testConnWithBot())
-            throw new InnerException("B101", "无法连接 BOT， 请确认 Go-Cqhttp 正在运行", "");
+            throw new InnerException(message.getUser_id(), "无法连接 BOT， 请确认 Go-Cqhttp 正在运行", "");
         if (message.getMessages().size() != 0)
             return this.requestAPI("send_group_forward_msg", message);
         return this.requestAPI("send_msg", message);
@@ -170,11 +170,11 @@ public class R {
 
     public void fall(Message message) {
         if (!testConnWithBot())
-            throw new InnerException("B101", "无法连接 BOT， 请确认 Go-Cqhttp 正在运行", "");
+            throw new InnerException(message.getUser_id(), "无法连接 BOT， 请确认 Go-Cqhttp 正在运行", "");
         if (message.getMessages().size() != 0)
             this.requestAPI("send_group_forward_msg", message);
         this.requestAPI("send_msg", message);
-        throw new InnerException(message.getUser_id().toString(), "主动退出", "");
+        throw new InnerException(message.getUser_id(), "主动退出", "");
     }
 
     /**

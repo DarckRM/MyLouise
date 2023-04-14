@@ -16,7 +16,6 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-@Controller
 public class EncryptUtils {
 
     public static String checkSumMD5(String path) throws IOException, NoSuchAlgorithmException

@@ -14,6 +14,7 @@ import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Service.BooruTagsService;
 import com.darcklh.louise.Service.UserService;
+import com.darcklh.louise.Utils.DragonflyUtils;
 import com.darcklh.louise.Utils.HttpProxy;
 import com.darcklh.louise.Utils.TaskDistributor;
 import com.darcklh.louise.Utils.WorkThread;
@@ -52,6 +53,9 @@ public class YandeAPI {
     private BooruTagsService booruTagsService;
 
     @Autowired
+    DragonflyUtils dragonflyUtils;
+
+    @Autowired
     R r;
 
     /**
@@ -63,7 +67,7 @@ public class YandeAPI {
     public JSONObject addBooruTag(@RequestBody InMessage inMessage) {
 
         JSONObject reply = new JSONObject();
-        String user_id = inMessage.getUser_id().toString();
+        long user_id = inMessage.getUser_id();
         // 解析命令
         String message = inMessage.getMessage();
         String[] tags = message.split(" ");
@@ -83,7 +87,7 @@ public class YandeAPI {
         booruTag.setCn_name(tags[1]);
         List<BooruTags> booruTags = booruTagsService.findBy(booruTag);
         // 写入创建人 QQ
-        booruTag.setInfo(user_id);
+        booruTag.setInfo(String.valueOf(user_id));
 
         // 判断是否有别名
         if (tags.length == 2) {
@@ -105,11 +109,11 @@ public class YandeAPI {
                 booruTag = booruTags.get(0);
                 booruTag.setAlter_name(booruTag.getCn_name());
                 // 写入创建人 QQ
-                booruTag.setInfo(user_id);
+                booruTag.setInfo(String.valueOf(user_id));
             } else {
                 // 写入新的根词条
                 // 写入创建人 QQ
-                booruTag.setInfo(user_id);
+                booruTag.setInfo(String.valueOf(user_id));
                 if(!booruTagsService.saveAlter(booruTag))
                     throw new ReplyException("[CQ:at,qq=" + user_id + "]追加新的词条失败，请联系开发者 (>д<)");
             }
@@ -212,14 +216,16 @@ public class YandeAPI {
      * @param resultJsonArray
      * @param limit 如果是精选图集则只展示 15 张
      */
-    private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit, Integer page, String fileOrigin, String[] tags_info) throws InterruptedException {
+    private void sendYandeResult(InMessage inMessage, JSONArray resultJsonArray, Integer limit, Integer page, String fileOrigin, String[] tags_info, String final_tags) throws InterruptedException {
         Message message = Message.build(inMessage);
-        StringBuilder replyImgList = new StringBuilder();
+        String image;
+        ArrayList<String> replyImgList = new ArrayList<>();
         List<DownloadPicTask> taskList = new ArrayList<>();
         OutMessage outMessage = new OutMessage(inMessage);
         int taskId = 0;
         String page_nation = page + "页/" +  limit + "条";
         Node imageNode = Node.build();
+
         for ( Object object: resultJsonArray) {
             if (limit == 0)
                 break;
@@ -231,13 +237,15 @@ public class YandeAPI {
                     continue;
 
             String fileName = imgJsonObj.getString("md5") + "." + imgJsonObj.getString("file_ext");
-
+            image = LouiseConfig.BOT_LOUISE_CACHE_IMAGE + fileOrigin + "/" + fileName;
             taskList.add(new DownloadPicTask(taskId, imgJsonObj.getString("jpeg_url"), fileName, fileOrigin, fileControlApi));
-            // replyImgList.append(LouiseConfig.BOT_LOUISE_CACHE_IMAGE).append(fileOrigin).append("/").append(fileName);
-            imageNode.image(LouiseConfig.BOT_LOUISE_CACHE_IMAGE + fileOrigin + "/" + fileName).text("\n");
+            replyImgList.add(image);
+            imageNode.image(image);
             taskId++;
             limit--;
         }
+        // 写入缓存
+        dragonflyUtils.setEx(fileOrigin + " " + final_tags, replyImgList, 3600);
         List[] taskListPerThread = TaskDistributor.distributeTasks(taskList, 4);
         List<WorkThread> threads = new ArrayList<>();
         for (int j = 0; j < taskListPerThread.length; j++) {
@@ -268,6 +276,20 @@ public class YandeAPI {
         message.node(Node.build()
                 .text(announce)
                 .text("你的请求结果出来了，你的参数是: " + Arrays.toString(tags_info) + "\n分页: " + page_nation), 0);
+        if (message.getGroup_id() >= 0)
+            message.node(Node.build().text("已过滤过于离谱的图片，如需全部资料请私聊 (`ヮ´)"));
+        message.node(imageNode).send();
+    }
+
+    private void instantSend(Message message, ArrayList<String> imageList, String tags_info, String page_nation) {
+        Node imageNode = Node.build();
+        for (String s : imageList)
+            imageNode.image(s);
+
+        String announce = "支持中文搜索(原神)，请使用角色正确中文名\n如果想追加中文词条请使用!yande/help查看说明\n";
+        message.node(Node.build()
+                .text(announce)
+                .text("你的请求结果出来了，你的参数是: " + tags_info + "\n分页: " + page_nation), 0);
         if (message.getGroup_id() >= 0)
             message.node(Node.build().text("已过滤过于离谱的图片，如需全部资料请私聊 (`ヮ´)"));
         message.node(imageNode).send();
@@ -364,13 +386,13 @@ public class YandeAPI {
                     // 如果返回了多个结果 优先考虑创建者的 QQ 匹配
                     if (booru_list.size() > 1)
                         for (BooruTags bt: booru_list)
-                            if (bt.getInfo().equals(inMessage.getUser_id().toString()))
+                            if (bt.getInfo().equals(String.valueOf(inMessage.getUser_id())))
                                 booru_list.set(0, bt);
 
                     if (booru_list.get(0).getInfo() == null)
                         nickname = "";
                     else
-                        nickname = userService.selectById(booru_list.get(0).getInfo()).getNickname();
+                        nickname = userService.selectById(Long.parseLong(booru_list.get(0).getInfo())).getNickname();
                     tags[index] = booru_list.get(0).getOrigin_name();
                     tags_info[index] = booru_list.get(0).getCn_name();
                     if (nickname.equals(""))
@@ -402,6 +424,14 @@ public class YandeAPI {
         String[] finalPageNation = pageNation;
         String[] finalTags = tags;
         String[] final_tags_info = tags_info;
+        // 尝试从缓存获取
+        ArrayList<String> dragon = dragonflyUtils.get(target + " " + Arrays.toString(tags), ArrayList.class);
+        if (dragon != null) {
+            log.info("已找到 Dragonfly 缓存");
+            String page_nation = pageNation[0] + "页/" +  pageNation[1] + "条";
+            instantSend(Message.build(inMessage), dragon, Arrays.toString(tags_info), page_nation);
+            return null;
+        }
         new Thread(() -> {
             // 构造消息请求体
             OutMessage outMessage = new OutMessage(inMessage);
@@ -431,7 +461,7 @@ public class YandeAPI {
                 return;
             }
             try {
-                sendYandeResult(inMessage, resultJsonArray, Integer.parseInt(finalPageNation[1]), Integer.parseInt(finalPageNation[0]), target, final_tags_info);
+                sendYandeResult(inMessage, resultJsonArray, Integer.parseInt(finalPageNation[1]), Integer.parseInt(finalPageNation[0]), target, final_tags_info, Arrays.toString(finalTags));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -452,6 +482,14 @@ public class YandeAPI {
         uri += type + ".json";
 
         String finalUri = uri;
+        // 尝试从缓存获取
+        ArrayList<String> dragon = dragonflyUtils.get(target + " /day", ArrayList.class);
+        if (dragon != null) {
+            log.info("已找到 Dragonfly 缓存");
+            String page_nation =  "1 页/ 10 条";
+            instantSend(Message.build(inMessage), dragon, "/day", page_nation);
+            return null;
+        }
         new Thread(() -> {
             // 构造消息请求体
             OutMessage outMessage = new OutMessage(inMessage);
@@ -474,7 +512,7 @@ public class YandeAPI {
                 return;
             }
             try {
-                sendYandeResult(inMessage, resultJsonArray, LIMIT, 1, target, null);
+                sendYandeResult(inMessage, resultJsonArray, LIMIT, 1, target, null, "/day");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

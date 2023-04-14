@@ -17,6 +17,6 @@ public class SysConfig {
     private String config_key;
     private String config_value;
     private String info;
-    private Integer type;
+    private int type;
 
 }

@@ -1,12 +1,8 @@
 package com.darcklh.louise.Filter.Handler;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Config.LouiseConfig;
-import com.darcklh.louise.Mapper.FeatureInfoDao;
 import com.darcklh.louise.Mapper.GroupDao;
-import com.darcklh.louise.Mapper.RoleDao;
-import com.darcklh.louise.Mapper.UserDao;
 import com.darcklh.louise.Model.Louise.Group;
 import com.darcklh.louise.Model.Louise.User;
 import com.darcklh.louise.Model.Messages.InMessage;
@@ -16,21 +12,18 @@ import com.darcklh.louise.Model.Saito.FeatureInfo;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Model.VO.FeatureInfoMin;
 import com.darcklh.louise.Service.*;
-import com.darcklh.louise.Service.Impl.GroupImpl;
-import com.darcklh.louise.Service.Impl.UserImpl;
+import com.darcklh.louise.Utils.DragonflyUtils;
 import com.darcklh.louise.Utils.HttpServletWrapper;
-import com.darcklh.louise.Utils.isEmpty;
-import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -43,13 +36,12 @@ import java.util.*;
 public class LouiseHandler implements HandlerInterceptor {
 
     Logger logger = LoggerFactory.getLogger(LouiseHandler.class);
-    class ReqLog {
-        public int feature_id;
-        public long last_req;
-    }
 
     // 控制用户请求时间间隔
     Map<Long, Map<Integer , Long>> user_req_log = new HashMap<>();
+
+    @Autowired
+    DragonflyUtils dragonflyUtils;
 
     @Autowired
     UserService userService;
@@ -71,6 +63,9 @@ public class LouiseHandler implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         //获取相关信息
         HttpServletWrapper wrapper = new HttpServletWrapper(request);
         String body = wrapper.getBody();
@@ -78,8 +73,8 @@ public class LouiseHandler implements HandlerInterceptor {
 
         InMessage inMessage = JSONObject.parseObject(body).toJavaObject(InMessage.class);
 
-        String group_id = inMessage.getGroup_id().toString();
-        String user_id = inMessage.getSender().getUser_id().toString();
+        long group_id = inMessage.getGroup_id();
+        long user_id = inMessage.getUser_id();
         String message = inMessage.getMessage();
 
         //对command预处理
@@ -111,11 +106,12 @@ public class LouiseHandler implements HandlerInterceptor {
             return false;
         }
 
-        // 管理员和 Bot 的命令将不受限制
-        if (user_id.equals(LouiseConfig.BOT_ACCOUNT) || user_id.equals(LouiseConfig.LOUISE_ADMIN_NUMBER))
-            return true;
-
         logger.info("用户 " + user_id + " 请求 " + featureInfo.getFeature_name() + " at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date().getTime()));
+        // 管理员和 Bot 的命令将不受限制
+        if (user_id == Long.parseLong(LouiseConfig.BOT_ACCOUNT)) {
+            featureInfoService.addCount(featureInfo.getFeature_id(), group_id, user_id);
+            return true;
+        }
 
         // 更新 Interval 控制
         long now = new Date().getTime();
@@ -145,7 +141,7 @@ public class LouiseHandler implements HandlerInterceptor {
             return true;
         }
 
-        int isAvailable = userService.isUserAvaliable(user_id);
+        int isAvailable = userService.isUserAvailable(user_id);
 
         // 判断用户是否存在并启用
         if (isAvailable == 0) {
@@ -173,7 +169,7 @@ public class LouiseHandler implements HandlerInterceptor {
             List<FeatureInfoMin> featureInfoMins = featureInfoService.findWithRoleId(group.getRole_id());
             logger.debug("群聊允许的功能列表: " + formatList(featureInfoMins));
             for ( FeatureInfoMin featureInfoMin: featureInfoMins) {
-                if (featureInfoMin.getFeature_id().equals(featureInfo.getFeature_id())) {
+                if (featureInfoMin.getFeature_id() == featureInfo.getFeature_id()) {
                     tag = true;
                     break;
                 }
@@ -188,7 +184,7 @@ public class LouiseHandler implements HandlerInterceptor {
         List<FeatureInfoMin> featureInfoMins = featureInfoService.findWithRoleId(user.getRole_id());
         logger.debug("用户允许的功能列表: " + formatList(featureInfoMins));
         for ( FeatureInfoMin featureInfoMin: featureInfoMins) {
-            if (featureInfoMin.getFeature_id().equals(featureInfo.getFeature_id())) {
+            if (featureInfoMin.getFeature_id() == featureInfo.getFeature_id()) {
                 tag = true;
                 break;
             }
@@ -205,7 +201,8 @@ public class LouiseHandler implements HandlerInterceptor {
         // 更新调用统计数据
         featureInfoService.addCount(featureInfo.getFeature_id(), group_id, user_id);
         logger.info("功能 " + featureInfo.getFeature_name() + " 消耗用户 " + user_id +" CREDIT " + featureInfo.getCredit_cost());
-
+        stopWatch.stop();
+        logger.info("解析此次请求共耗时 " + stopWatch.getTotalTimeMillis());
         return true;
     }
 

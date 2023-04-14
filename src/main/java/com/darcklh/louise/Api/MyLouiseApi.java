@@ -129,7 +129,7 @@ public class MyLouiseApi implements ErrorController {
             reply.put("reply", "管理员限定");
             return reply;
         }
-        String user_id = message.getString("message").substring(5);
+        long user_id = Long.parseLong(message.getString("message").substring(5));
         reply.put("reply", userService.banUser(user_id));
         return reply;
     }
@@ -184,7 +184,7 @@ public class MyLouiseApi implements ErrorController {
 
         Long group_id = inMessage.getGroup_id();
         Group group = new Group();
-        group.setGroup_id(group_id.toString());
+        group.setGroup_id(group_id);
         //快速返回
         JSONObject returnJson = new JSONObject();
 
@@ -205,9 +205,9 @@ public class MyLouiseApi implements ErrorController {
      */
     @RequestMapping("louise/group_update")
     public JSONObject groupUpdate(@RequestBody InMessage inMessage) {
-        Long group_id = inMessage.getGroup_id();
+        long group_id = inMessage.getGroup_id();
         Group group = new Group();
-        group.setGroup_id(group_id.toString());
+        group.setGroup_id(group_id);
         //快速返回
         JSONObject returnJson = new JSONObject();
 
@@ -220,10 +220,11 @@ public class MyLouiseApi implements ErrorController {
         // TODO 需要处理管理员变动的上报事件，否则会造成数据库与 QQ 端数据不一致从而影响权限判断
         // 更新前校验管理员身份
         String group_admins = groupService.getGroupAdmin(group.getGroup_id());
-        String[] admin_list = group_admins.split(",");
-        for ( String admin: admin_list ) {
+
+        for (String s : group_admins.split(",")) {
+            long admin = Long.parseLong(s);
             // 如果发言者是该群的管理员，那么允许更新群聊
-            if(admin.equals(inMessage.getUser_id().toString()))
+            if(admin == inMessage.getUser_id())
                 break;
             else
                 returnJson.put("reply", "露易丝只允许群管理员进行更新哦，请联系管理员吧");
@@ -242,8 +243,8 @@ public class MyLouiseApi implements ErrorController {
     @RequestMapping("louise/join")
     public JSONObject join(@RequestBody InMessage inMessage) {
 
-        Long user_id = inMessage.getUser_id();
-        Long group_id = inMessage.getGroup_id();
+        long user_id = inMessage.getUser_id();
+        long group_id = inMessage.getGroup_id();
 
         //快速返回
         JSONObject returnJson = new JSONObject();
@@ -254,7 +255,7 @@ public class MyLouiseApi implements ErrorController {
             returnJson.put("reply","露易丝不支持私聊注册哦，\n请在群聊里使用吧");
             return returnJson;
         }
-        return userService.joinLouise(user_id.toString(), group_id.toString());
+        return userService.joinLouise(user_id, group_id);
     }
 
     /**
@@ -267,19 +268,19 @@ public class MyLouiseApi implements ErrorController {
 
         //获取请求元数据信息
         String message_type = inMessage.getMessage_type();
-        String number = "";
+        long number;
         String nickname = inMessage.getSender().getNickname();
         //TODO 有待优化的变量
-        String user_id = inMessage.getUser_id().toString();
+        long user_id = inMessage.getUser_id();
 
         //判断私聊或是群聊
         String senderType = "";
         if (message_type.equals("group")) {
-            number = inMessage.getGroup_id().toString();
+            number = inMessage.getGroup_id();
             senderType = "group_id";
 
-        } else if (message_type.equals("private")) {
-            number = inMessage.getUser_id().toString();
+        } else {
+            number = inMessage.getUser_id();
             senderType = "user_id";
         }
 
@@ -392,7 +393,7 @@ public class MyLouiseApi implements ErrorController {
     @RequestMapping("louise/myinfo")
     public JSONObject myInfo(@RequestBody InMessage inMessage) {
 
-        String user_id = inMessage.getUser_id().toString();
+        long user_id = inMessage.getUser_id();
 
         JSONObject returnJson = new JSONObject();
 

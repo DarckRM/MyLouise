@@ -15,10 +15,10 @@ public class GroupRole {
     private String member_count;
     private String group_memo;
     private String group_name;
-    private Integer group_level;
-    private Integer is_enabled;
+    private int group_level;
+    private int is_enabled;
     private String avatar;
-    private Integer role_id;
+    private int role_id;
     private String role_name;
     private String info;
 }

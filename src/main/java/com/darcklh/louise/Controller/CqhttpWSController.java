@@ -108,7 +108,7 @@ public class CqhttpWSController {
                 pattern = Pattern.compile(entry.getValue().getCmd());
                 if (pattern.matcher(inMessage.getMessage()).find()) {
                     // 更新调用统计数据
-                    cqhttpWSController.featureInfoService.addCount(entry.getValue().getFeature_id(), inMessage.getGroup_id().toString(), inMessage.getUser_id().toString());
+                    cqhttpWSController.featureInfoService.addCount(entry.getValue().getFeature_id(), inMessage.getGroup_id(), inMessage.getUser_id());
                     new Thread(() -> {
                         entry.getValue().getPluginService().service(inMessage);
                     }, entry.getValue().getName()).start();

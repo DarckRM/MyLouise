@@ -14,7 +14,7 @@ public class DataType {
     // 发送者显示名字
     String name = "Louise";
     // 发送者QQ号
-    Long uin;
+    long uin;
     // 用于自定义消息 不支持转发套娃
     String content;
 }

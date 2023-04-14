@@ -14,13 +14,13 @@ public interface GroupService extends BaseService<Group> {
 
     public List<GroupRole> findGroupRoleBy();
     public List<Group> findBy();
-    public String delByGroup_ID(String group_id);
-    public Group selectById(String group_id);
+    public String delByGroup_ID(long group_id);
+    public Group selectById(long group_id);
     public String editBy(Group group);
     public String add(Group group);
     public String update(Group group);
-    public String getGroupAdmin(String group_id);
-    public String switchStatus(String group_id);
-    public boolean isGroupExist(String group_id);
-    public boolean isGroupEnabled(String group_id);
+    public String getGroupAdmin(long group_id);
+    public String switchStatus(long group_id);
+    public boolean isGroupExist(long group_id);
+    public boolean isGroupEnabled(long group_id);
 }

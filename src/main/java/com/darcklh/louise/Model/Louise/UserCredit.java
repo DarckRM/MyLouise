@@ -16,7 +16,7 @@ public class UserCredit {
     private Integer credit_id;
     private String user_id;
     private String type;
-    private Integer number;
-    private Integer credit_left;
+    private int number;
+    private int credit_left;
 
 }

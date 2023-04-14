@@ -22,11 +22,11 @@ public class NoticePost implements AllPost {
     private SubType sub_type;
 
     // 群文件上传部分字段
-    private Long operator_id;
-    private Long group_id = (long)-1;
-    private Long user_id;
+    private long operator_id;
+    private long group_id = -1;
+    private long user_id;
     // 禁言事件字段
-    private Long duration;
+    private long duration;
 
     private enum NoticeType {
         group_upload,

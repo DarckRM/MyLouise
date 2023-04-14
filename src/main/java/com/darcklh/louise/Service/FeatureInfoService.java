@@ -14,7 +14,7 @@ import java.util.List;
 public interface FeatureInfoService extends BaseService<FeatureInfo>{
     public String switchStatus(Integer feature_id, String feature_name);
     public FeatureInfo findWithFeatureURL(String feature_url);
-    public FeatureInfo findWithFeatureCmd(String feature_cmd, String qq);
+    public FeatureInfo findWithFeatureCmd(String feature_cmd, long user_id);
     public List<FeatureInfoMin> findWithRoleId(Integer role_id);
-    public void addCount(Integer feature_id, String group_id, String user_id);
+    public void addCount(Integer feature_id, long group_id, long user_id);
 }

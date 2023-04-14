@@ -15,10 +15,10 @@ public class SysUser {
 
     @TableId
     private String user_id;
-    private Integer sex;
+    private int sex;
     private String username;
     private String password;;
     private Timestamp create_time;
-    private Integer isEnabled;
+    private int isEnabled;
 
 }

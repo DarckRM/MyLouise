@@ -10,13 +10,13 @@ import java.util.List;
 public interface UserService extends IService<User> {
 
     public List<UserRole> findAll();
-    public JSONObject joinLouise(String user_id, String group_id);
-    public JSONObject myInfo(String user_id);
-    public void updateCount(String user_id, int option);
-    public String banUser(String user_id);
-    public int isUserAvaliable(String user_id);
-    public User selectById(String user_id);
-    public int minusCredit( String user_id, int credit);
+    public JSONObject joinLouise(long user_id, long group_id);
+    public JSONObject myInfo(long user_id);
+    public void updateCount(long user_id, int option);
+    public String banUser(long user_id);
+    public int isUserAvailable(long user_id);
+    public User selectById(long user_id);
+    public int minusCredit(long user_id, int credit);
 
 
 

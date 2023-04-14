@@ -16,9 +16,9 @@ public class FeatureStatic {
 
     @TableId(type = IdType.AUTO)
     private Integer invoke_id;
-    private String user_id;
-    private String group_id;
-    private Integer feature_id;
+    private long user_id;
+    private long group_id;
+    private int feature_id;
     private Timestamp invoke_time;
 
 }

@@ -23,15 +23,15 @@ public class PluginInfo {
 
     @TableId
     private Integer plugin_id;
-    private Integer feature_id;
-    private Integer type;
+    private int feature_id;
+    private int type;
     private String author;
     private String name;
     private String cmd;
     private String path;
     private String class_name;
     private Timestamp create_time;
-    private Integer is_enabled;
+    private int is_enabled;
     private String info;
     private String description;
 

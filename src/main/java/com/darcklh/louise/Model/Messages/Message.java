@@ -4,13 +4,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.darcklh.louise.Model.R;
 import com.darcklh.louise.Model.Sender;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 
+@Slf4j
 @Data
 public class Message {
     // 事件发生的时间戳
-    private Long time;
+    private long time;
     // 收到事件的机器人 QQ 号
     private Long self_id;
     // 上报类型 message: 消息; request: 请求; notice: 通知; meta_event: 元事件
@@ -20,11 +22,11 @@ public class Message {
     // 消息子类型, 如果是好友则是 friend, 如果是群临时会话则是 group, 如果是在群中自身发送则是 group_self
     private String sub_type;
     // 消息 ID
-    private Integer message_id;
+    private Long message_id;
     // 发送者 QQ 号
     private Long user_id;
     // 发送群 QQ 号
-    private Long group_id = (long)-1;
+    private Long group_id = -1L;
     // 数组类型消息
     private ArrayList<JSONObject> message = new ArrayList<>();
     // 合并转发时的消息结构体
@@ -32,7 +34,7 @@ public class Message {
     // 原始消息内容
     private String raw_message;
     // 字体
-    private Integer font;
+    private int font;
     // 发送人信息
     private Sender sender;
     // 临时会话来源

@@ -21,9 +21,9 @@ public class SendPictureApi {
 
     Logger logger = LoggerFactory.getLogger(SendPictureApi.class);
 
-    public JSONObject sendPicture(String id, String nickname, String senderType, InMessage inMessage) {
+    public JSONObject sendPicture(long user_id, String nickname, String senderType, InMessage inMessage) {
 
-        logger.info("进入发图流程, 发起用户为:"+nickname+" QQ:"+id);
+        logger.info("进入发图流程, 发起用户为:"+nickname+" QQ:" + user_id);
 
         //构造Rest请求模板
         RestTemplate restTemplate = new RestTemplate();
@@ -69,7 +69,7 @@ public class SendPictureApi {
             tags = loliArray.getJSONObject(i).getJSONArray("tags").toString();
         }
         logger.info("图片地址: " + url);
-        jsonObject.put(senderType, id);
+        jsonObject.put(senderType, user_id);
         jsonObject.put("reply",
                 nickname+"，你要的图片已经送达，请注意身体健康哦"+
                 "\n标题:"+title+

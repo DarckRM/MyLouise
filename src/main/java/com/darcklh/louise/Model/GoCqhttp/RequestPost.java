@@ -20,8 +20,8 @@ public class RequestPost implements AllPost {
     private RequestType request_type;
     private SubType sub_type;
 
-    private Long user_id;
-    private Long group_id = (long) -1;
+    private long user_id;
+    private long group_id = -1;
 
     // 验证信息
     private String comment;

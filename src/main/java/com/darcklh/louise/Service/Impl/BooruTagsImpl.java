@@ -41,7 +41,6 @@ public class BooruTagsImpl extends ServiceImpl<BooruTagsDao, BooruTags> implemen
     @Override
     public boolean saveAlter(BooruTags booruTags) {
         // 校验是否存在其它词条与之对应
-        booruTags.setTag_id(null);
         QueryWrapper<BooruTags> wrapper = new QueryWrapper<>(booruTags);
         wrapper.eq("cn_name", booruTags.getCn_name());
         wrapper.eq("alter_name", booruTags.getAlter_name());

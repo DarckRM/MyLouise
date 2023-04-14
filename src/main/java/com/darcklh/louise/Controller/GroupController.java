@@ -58,7 +58,7 @@ public class GroupController {
     @RequestMapping("switchStatus")
     public Result switchStatus(@RequestBody JSONObject jsonObject) {
         Result result = new Result();
-        result.setMsg(groupService.switchStatus(jsonObject.getString("group_id")));
+        result.setMsg(groupService.switchStatus(jsonObject.getLong("group_id")));
         if (result.getMsg().equals("变更状态失败")) {
             result.setCode(201);
         } else {

@@ -13,7 +13,7 @@ public class RoleFeature {
 
     @TableId
     private Integer role_id;
-    private Integer feature_id;
+    private int feature_id;
     private String info;
 
 }

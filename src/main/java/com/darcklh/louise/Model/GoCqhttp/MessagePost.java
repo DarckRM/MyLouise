@@ -23,17 +23,17 @@ public class MessagePost implements AllPost {
     // 消息子类型, 如果是好友则是 friend, 如果是群临时会话则是 group, 如果是在群中自身发送则是 group_self
     private SubType sub_type;
     // 消息 ID
-    private Integer message_id;
+    private int message_id;
     // 发送者 QQ 号
-    private Long user_id;
+    private long user_id;
     // 发送群 QQ 号
-    private Long group_id = (long)-1;
+    private long group_id = (long)-1;
     // 消息内容
     private String message;
     // 原始消息内容
     private String raw_message;
     // 字体
-    private Integer font;
+    private int font;
     // 发送人信息
     private Sender sender;
 

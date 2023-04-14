@@ -15,15 +15,15 @@ public class OutMessage {
     // 消息类型, 支持 private、group , 分别对应私聊、群组, 如不传入, 则根据传入的 *_id 参数判断
     private String message_type;
     // 接收消息对象的 QQ
-    private Long user_id;
+    private long user_id;
     // 接收消息对象的群组 QQ
-    private Long group_id;
+    private long group_id;
     // 消息体支持复杂类型
     private String message;
     // 合并转发时的消息结构体
     private ArrayList<Node> messages = new ArrayList<>();
     // 消息内容是否作为纯文本发送 ( 即不解析 CQ 码 ) , 只在 message 字段是字符串时有效
-    private Boolean auto_escape = false;
+    private boolean auto_escape = false;
     // 用于存放发送消息者信息的字段
     private Sender sender;
     private String post_type;

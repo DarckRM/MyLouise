@@ -37,11 +37,11 @@ public class GroupImpl implements GroupService {
 
     public String delBy(Integer id){return null; };
 
-    public String delByGroup_ID(String group_id) {
+    public String delByGroup_ID(long group_id) {
         return null;
     }
 
-    public Group selectById(String group_id) {
+    public Group selectById(long group_id) {
         return groupDao.selectById(group_id);
     }
 
@@ -127,7 +127,7 @@ public class GroupImpl implements GroupService {
     }
 
     @Override
-    public String getGroupAdmin(String group_id) {
+    public String getGroupAdmin(long group_id) {
         if (isGroupExist(group_id))
             return groupDao.selectById(group_id).getGroup_admins();
         else
@@ -135,7 +135,7 @@ public class GroupImpl implements GroupService {
     }
 
     @Override
-    public String switchStatus(String group_id) {
+    public String switchStatus(long group_id) {
         String reply = "变更状态失败";
         if (groupDao.switchStatus(group_id) == 1) {
             reply = isGroupEnabled(group_id) ? "群组"+group_id+"已启用" : "群组"+group_id+"已禁用";
@@ -144,7 +144,7 @@ public class GroupImpl implements GroupService {
     }
 
     @Override
-    public boolean isGroupExist(String group_id) {
+    public boolean isGroupExist(long group_id) {
         //判断用户是否已注册
         if (groupDao.isGroupExist(group_id) == 0)
             return false;
@@ -152,7 +152,7 @@ public class GroupImpl implements GroupService {
     }
 
     @Override
-    public boolean isGroupEnabled(String group_id) {
+    public boolean isGroupEnabled(long group_id) {
         //判断用户是否启用
         if (groupDao.isGroupEnabled(group_id) <= 0)
             return false;

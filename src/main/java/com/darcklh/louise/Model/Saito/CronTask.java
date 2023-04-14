@@ -15,15 +15,15 @@ public class CronTask {
     private Integer task_id;
     private String task_name;
     private String cron;
-    private Integer type;
+    private int type;
     private String url;
     private String target;
-    private Integer is_return;
-    private Integer is_parameter;
+    private int is_return;
+    private int is_parameter;
     private String sender_type;
     private String number;
     private String parameter;
     private String info;
-    private Integer is_enabled;
+    private int is_enabled;
 
 }

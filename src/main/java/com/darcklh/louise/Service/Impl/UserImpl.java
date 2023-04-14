@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.darcklh.louise.Mapper.RoleDao;
 import com.darcklh.louise.Mapper.UserDao;
 import com.darcklh.louise.Model.Louise.User;
-import com.darcklh.louise.Model.InnerException;
 import com.darcklh.louise.Model.ReplyException;
 import com.darcklh.louise.Model.VO.UserRole;
 import com.darcklh.louise.Service.UserService;
@@ -36,15 +35,15 @@ public class UserImpl extends ServiceImpl<UserDao, User> implements UserService 
     @Autowired
     RoleDao roleDao;
 
-    public JSONObject joinLouise(String user_id, String group_id) {
+    public JSONObject joinLouise(long user_id, long group_id) {
 
         log.info("进入注册流程");
         log.info("用户来自群: " + group_id + " QQ号: " + user_id);
         JSONObject jsonObject = new JSONObject();
         //判断用户是否注册
-        List<String> users_id = findAllUserID();
-        for (String id : users_id)
-            if (id.equals(user_id)) {
+        long[] users_id = findAllUserID();
+        for (long id : users_id)
+            if (id == user_id) {
                 log.warn("用户 " + user_id + " 已注册");
                 throw new ReplyException("你已经注册过了哦");
             }
@@ -91,7 +90,7 @@ public class UserImpl extends ServiceImpl<UserDao, User> implements UserService 
     }
 
     @Override
-    public User selectById(String user_id) {
+    public User selectById(long user_id) {
         User user = userDao.selectById(user_id);
         if (isEmpty(user)) {
             log.warn("用户 " + user_id + " 不存在");
@@ -106,9 +105,8 @@ public class UserImpl extends ServiceImpl<UserDao, User> implements UserService 
      * @return
      */
     @Override
-    public JSONObject myInfo(String user_id) {
-
-    return null;
+    public JSONObject myInfo(long user_id) {
+        return null;
     }
 
     /**
@@ -116,7 +114,7 @@ public class UserImpl extends ServiceImpl<UserDao, User> implements UserService 
      * @param user_id String 用户qq
      * @param option String 某个字段
      */
-    public void updateCount(String user_id, int option) {
+    public void updateCount(long user_id, int option) {
 
         switch (option) {
             case 1: userDao.updateCountSetu(user_id); return;
@@ -125,15 +123,15 @@ public class UserImpl extends ServiceImpl<UserDao, User> implements UserService 
 
     }
 
-    public String banUser(String user_id) {
+    public String banUser(long user_id) {
         String reply = "变更状态失败";
         if (userDao.banUser(user_id) == 1) {
-            reply = isUserAvaliable(user_id) == 1 ? "用户"+user_id+"已解封" : "用户"+user_id+"已封禁";
+            reply = isUserAvailable(user_id) == 1 ? "用户"+user_id+"已解封" : "用户"+user_id+"已封禁";
         }
         return reply;
     }
 
-    public int isUserAvaliable(String user_id) {
+    public int isUserAvailable(long user_id) {
         //判断用户是否已注册
         if (userDao.isUserExist(user_id) == 0)
             return 0;
@@ -144,7 +142,7 @@ public class UserImpl extends ServiceImpl<UserDao, User> implements UserService 
     }
 
     @Override
-    public int minusCredit(String user_id, int credit) {
+    public int minusCredit(long user_id, int credit) {
 
         User user = userDao.selectById(user_id);
         int balance = user.getCredit() - credit;
@@ -160,7 +158,7 @@ public class UserImpl extends ServiceImpl<UserDao, User> implements UserService 
         return userDao.findBy();
     }
 
-    public List<String> findAllUserID() {
+    public long[] findAllUserID() {
         return userDao.findAllUserID();
     }
 }

@@ -13,7 +13,7 @@ public class CreditInfo {
 
     @TableId
     private Integer credit_total;
-    private Integer credit_backup;
-    private Integer credit_recover;
+    private int credit_backup;
+    private int credit_recover;
 
 }

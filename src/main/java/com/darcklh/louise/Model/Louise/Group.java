@@ -13,14 +13,14 @@ import lombok.Data;
 public class Group {
 
     @TableId
-    private String group_id;
-    private Integer role_id;
+    private Long group_id;
+    private int role_id;
     private String member_count;
     private String group_memo;
     private String group_name;
     private String group_owner;
     private String group_admins;
-    private Integer group_level;
-    private Integer is_enabled;
+    private int group_level;
+    private int is_enabled;
     private String avatar;
 }

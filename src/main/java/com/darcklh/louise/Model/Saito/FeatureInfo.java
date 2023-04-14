@@ -14,18 +14,18 @@ public class FeatureInfo {
 
     @TableId(type = IdType.AUTO)
     private Integer feature_id;
-    private Integer type;
+    private int type;
     private String feature_url;
     private String feature_name;
     private String feature_cmd;
-    private Integer credit_cost;
-    private Integer invoke_limit;
+    private int credit_cost;
+    private int invoke_limit;
     private String description;
     private String info;
-    private Integer is_original;
-    private Integer is_auth;
-    private Integer is_enabled;
-    private Integer count;
+    private int is_original;
+    private int is_auth;
+    private int is_enabled;
+    private int count;
     private String avatar;
 
 }

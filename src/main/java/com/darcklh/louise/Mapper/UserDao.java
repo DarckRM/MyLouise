@@ -30,23 +30,23 @@ public interface UserDao extends BaseMapper<User> {
     public List<UserRole> findBy();
 
     @Select("SELECT user_id FROM t_user")
-    public List<String> findAllUserID();
+    public long[] findAllUserID();
 
     @Select("SELECT COUNT(user_id) FROM t_user WHERE user_id = #{user_id}")
-    public Integer isUserExist(String user_id);
+    public Integer isUserExist(long user_id);
 
     @Select("SELECT isenabled FROM t_user WHERE user_id = #{user_id}")
-    public Integer isUserEnabled(String user_id);
+    public Integer isUserEnabled(long user_id);
 
     @Update("UPDATE t_user SET isenabled = -isenabled WHERE user_id = #{user_id}")
-    public Integer banUser(String user_id);
+    public Integer banUser(long user_id);
 
     @Update("UPDATE t_user SET count_setu = count_setu + 1 WHERE user_id = #{user_id}")
-    public Integer updateCountSetu(String user_id);
+    public Integer updateCountSetu(long user_id);
 
     @Update("UPDATE t_user SET count_upload = count_upload + 1 WHERE user_id = #{user_id}")
-    public Integer updateCountUpload(String user_id);
+    public Integer updateCountUpload(long user_id);
 
     @Update("UPDATE t_user SET credit = credit - #{credit_cost} WHERE user_id = #{user_id}")
-    public Integer minusCredit(Integer credit_cost, String user_id);
+    public Integer minusCredit(Integer credit_cost, long user_id);
 }

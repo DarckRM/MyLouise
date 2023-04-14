@@ -23,11 +23,11 @@ public interface GroupDao extends BaseMapper<Group> {
     public List<GroupRole> findBy();
 
     @Select("SELECT COUNT(group_id) FROM t_group WHERE group_id = #{group_id}")
-    public Integer isGroupExist(String group_id);
+    public Integer isGroupExist(long group_id);
 
     @Select("SELECT is_enabled FROM t_group WHERE group_id = #{group_id}")
-    public Integer isGroupEnabled(String group_id);
+    public Integer isGroupEnabled(long group_id);
 
     @Update("UPDATE t_group SET is_enabled = -is_enabled WHERE group_id = #{group_id}")
-    public Integer switchStatus(String group_id);
+    public Integer switchStatus(long group_id);
 }

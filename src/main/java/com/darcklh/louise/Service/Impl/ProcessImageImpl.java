@@ -55,7 +55,7 @@ public class ProcessImageImpl implements ProcessImageService {
                 log.info("文件删除失败！");
             }
         }catch(Exception e){
-            throw new InnerException("500", "删除文件失败", e.getMessage());
+            throw new InnerException(500, "删除文件失败", e.getMessage());
         }
         return processImageDao.deleteById(processImage.getHash_code());
     }

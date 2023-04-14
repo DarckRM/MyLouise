@@ -44,9 +44,9 @@ public class WorkThread extends Thread {
                     callBackFunc();
             }
         } catch (IOException e) {
-            throw new InnerException("500", "文件读写错误", e.getMessage());
+            throw new InnerException(500, "文件读写错误", e.getMessage());
         } catch ( NoSuchAlgorithmException e) {
-            throw new InnerException("501", "未知的错误", e.getClass() + "-" + e.getMessage());
+            throw new InnerException(501, "未知的错误", e.getClass() + "-" + e.getMessage());
         }
     }
 

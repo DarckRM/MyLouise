@@ -1,5 +1,6 @@
 package com.darcklh.louise.Utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.darcklh.louise.Config.LouiseConfig;
 import com.darcklh.louise.Controller.CqhttpWSController;
@@ -11,8 +12,10 @@ import com.darcklh.louise.Model.Messages.Message;
 import com.darcklh.louise.Model.Messages.Node;
 import com.darcklh.louise.Model.Result;
 import com.darcklh.louise.Model.Saito.CronTask;
+import com.darcklh.louise.Model.Saito.FeatureInfo;
 import com.darcklh.louise.Model.Saito.PluginInfo;
 import com.darcklh.louise.Service.CronTaskService;
+import com.darcklh.louise.Service.FeatureInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,6 +46,9 @@ public class BootApplication {
     @Autowired
     PluginInfoController pluginInfoController;
 
+    @Autowired
+    FeatureInfoService featureInfoService;
+
     public static Date bootDate;
 
     @PostConstruct
@@ -68,6 +74,10 @@ public class BootApplication {
                 log.info("加载定时任务 <-- " + cronTask.getTask_name() + "---" + cronTask.getInfo() + " -->");
             }
         }
+
+//        log.info("<--加载 MyLouise 系统缓存-->");
+//        List<FeatureInfo> featureInfos = featureInfoService.findBy();
+//        dragonflyUtils.setEx("feature-info", JSONObject.toJSONString(featureInfos), 3600);
 
         try {
             Message msg = Message.build();

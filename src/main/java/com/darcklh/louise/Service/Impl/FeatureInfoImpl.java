@@ -79,10 +79,10 @@ public class FeatureInfoImpl implements FeatureInfoService {
     }
 
     @Override
-    public FeatureInfo findWithFeatureCmd(String feature_cmd, String qq) {
+    public FeatureInfo findWithFeatureCmd(String feature_cmd, long user_id) {
         FeatureInfo featureInfo = featureInfoDao.findWithFeatureCmd(feature_cmd);
         if (featureInfo == null)
-            throw new ReplyException("[CQ:at,qq=" + qq + "]未知的命令，请使用!help [页数]命令获取相关帮助");
+            throw new ReplyException("[CQ:at,qq=" + user_id + "]未知的命令，请使用!help [页数]命令获取相关帮助");
         return featureInfo;
     }
 
@@ -92,7 +92,7 @@ public class FeatureInfoImpl implements FeatureInfoService {
     }
 
     @Override
-    public void addCount(Integer feature_id, String group_id, String user_id) {
+    public void addCount(Integer feature_id, long group_id, long user_id) {
 
         FeatureStatic featureStatic = new FeatureStatic();
         Timestamp now = new Timestamp(new Date().getTime());

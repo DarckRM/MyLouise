@@ -20,7 +20,7 @@ public class Role {
     private Integer role_id;
     private String role_name;
     private String info;
-    private Integer is_enabled;
+    private int is_enabled;
     @TableField(exist = false)
     private List<FeatureInfoMin> featureInfoList;
 

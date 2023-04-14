@@ -38,7 +38,7 @@ public class UserController {
     @RequestMapping("switchStatus")
     public Result test(@RequestBody JSONObject jsonObject) {
         Result result = new Result();
-        result.setMsg(userService.banUser(jsonObject.getString("user_id")));
+        result.setMsg(userService.banUser(jsonObject.getLong("user_id")));
         result.setCode(200);
         return result;
     }

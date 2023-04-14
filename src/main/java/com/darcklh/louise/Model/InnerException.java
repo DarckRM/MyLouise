@@ -40,7 +40,7 @@ public class InnerException extends RuntimeException {
      * @param errorMsg
      * @param originErrorMessage
      */
-    public InnerException(String innerCode, String errorMsg, String originErrorMessage) {
+    public InnerException(long innerCode, String errorMsg, String originErrorMessage) {
         super(errorMsg);
         this.innerCode = "SRT" + innerCode;
         this.errorMsg = "RuntimeException: "+errorMsg;
@@ -48,7 +48,7 @@ public class InnerException extends RuntimeException {
 
     }
 
-    public InnerException(String innerCode, String errorMsg, JSONObject reply, String originErrorMessage) {
+    public InnerException(long innerCode, String errorMsg, JSONObject reply, String originErrorMessage) {
         super(errorMsg);
         this.innerCode = "SRT" + innerCode;
         this.errorMsg = "RuntimeException: "+errorMsg;
