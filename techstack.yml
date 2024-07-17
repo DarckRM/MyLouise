@@ -1,0 +1,447 @@
+repo_name: DarckRM/MyLouise
+report_id: 5298e47487dae739906e2633f9b079ad
+version: 0.1
+repo_type: Public
+timestamp: '2024-07-17T08:13:57+00:00'
+requested_by: DarckRM
+provider: github
+branch: master
+detected_tools_count: 30
+tools:
+- name: Java
+  description: A concurrent, class-based, object-oriented, language specifically designed
+    to have as few implementation dependencies as possible
+  website_url: https://www.java.com
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/995/K85ZWV2F.png
+  detection_source_url: https://github.com/DarckRM/MyLouise
+  detection_source: Repo Metadata
+- name: JavaScript
+  description: Lightweight, interpreted, object-oriented language with first-class
+    functions
+  website_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1209/javascript.jpeg
+  detection_source_url: https://github.com/DarckRM/MyLouise
+  detection_source: Repo Metadata
+- name: SQL
+  description: It is a domain-specific language used in programming
+  website_url: https://en.wikipedia.org/wiki/SQL
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/2271/default_068d33483bba6b81ee13fbd4dc7aab9780896a54.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/NaiveSaito/TecentCloud.session.sql
+  detection_source: NaiveSaito/TecentCloud.session.sql
+  last_updated_by: DarckRM
+  last_updated_on: 2022-01-12 08:10:41.000000000 Z
+- name: Chart.js
+  description: Simple, clean and engaging charts for designers and developers
+  website_url: http://www.chartjs.org/
+  version: 3.9.1
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Javascript Utilities & Libraries
+  image_url: https://img.stackshare.io/service/3866/_GD1-XrU_400x400.jpg
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/NaiveSaito/package-lock.json
+  detection_source: NaiveSaito/package.json
+  last_updated_by: DarckRM
+  last_updated_on: 2022-09-07 09:24:47.000000000 Z
+- name: ECharts
+  description: A free, powerful charting and visualization library
+  website_url: https://echarts.apache.org/en/index.html
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Charting Libraries
+  image_url: https://img.stackshare.io/service/4230/aSzYQa43_400x400.jpg
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/NaiveSaito/package.json
+  detection_source: NaiveSaito/package.json
+  last_updated_by: DarckRM
+  last_updated_on: 2022-05-22 21:56:19.000000000 Z
+- name: Spring Framework
+  description: An application framework and inversion of control container for the
+    Java platform
+  website_url: https://spring.io/projects/spring-framework
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Frameworks (Full Stack)
+  image_url: https://img.stackshare.io/service/2006/spring-framework-project-logo.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2021-09-24 17:57:47.000000000 Z
+- name: Vue.js
+  description: A progressive framework for building user interfaces
+  website_url: http://vuejs.org/
+  version: 3.2.47
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Javascript MVC Frameworks
+  image_url: https://img.stackshare.io/service/3837/paeckCWC.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/NaiveSaito/package-lock.json
+  detection_source: NaiveSaito/package.json
+  last_updated_by: DarckRM
+  last_updated_on: 2021-09-10 05:08:32.000000000 Z
+- name: vuex
+  description: Centralized State Management for Vue.js.
+  website_url: https://vuex.vuejs.org
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: State Management Library
+  image_url: https://img.stackshare.io/service/6705/6128107.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/NaiveSaito/package.json
+  detection_source: NaiveSaito/package.json
+  last_updated_by: DarckRM
+  last_updated_on: 2022-04-21 19:55:07.000000000 Z
+- name: MySQL
+  description: The world's most popular open source database
+  website_url: http://www.mysql.com
+  open_source: true
+  hosted_saas: false
+  category: Data Stores
+  sub_category: Databases
+  image_url: https://img.stackshare.io/service/1025/logo-mysql-170x170.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2021-08-04 13:12:03.000000000 Z
+- name: Git
+  description: Fast, scalable, distributed revision control system
+  website_url: http://git-scm.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Version Control System
+  image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/DarckRM/MyLouise
+  detection_source: Repo Metadata
+- name: Vite
+  description: Native-ESM powered web dev build tool
+  website_url: https://vitejs.dev/
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: JS Build Tools / JS Task Runners
+  image_url: https://img.stackshare.io/service/21547/default_1aeac791cde11ff66cc0b20dcc6144eeb185c905.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/NaiveSaito/package.json
+  detection_source: NaiveSaito/package.json
+  last_updated_by: DarckRM
+  last_updated_on: 2021-09-10 05:08:32.000000000 Z
+- name: highlight.js
+  description: Syntax highlighter in JavaScript
+  website_url: https://highlightjs.org/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Text Editor
+  image_url: https://img.stackshare.io/service/6888/c17e7d9688d86bd9f9506ec1fbd6d200_400x400.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/NaiveSaito/package.json
+  detection_source: NaiveSaito/package.json
+  last_updated_by: DarckRM
+  last_updated_on: 2022-09-07 09:24:47.000000000 Z
+- name: npm
+  description: The package manager for JavaScript.
+  website_url: https://www.npmjs.com/
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Front End Package Manager
+  image_url: https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/NaiveSaito/package.json
+  detection_source: NaiveSaito/package.json
+  last_updated_by: DarckRM
+  last_updated_on: 2021-09-10 05:08:32.000000000 Z
+- name: Apache Camel
+  description: A versatile open source integration framework
+  website_url: https://camel.apache.org/
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Application Hosting
+  sub_category: Platform as a Service
+  image_url: https://img.stackshare.io/service/3276/xWt1RFo6_400x400.jpg
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/src/main/resources/application.yml
+  detection_source: src/main/resources/application.yml
+  last_updated_by: DarckRM
+  last_updated_on: 2022-04-26 08:54:56.000000000 Z
+- name: axios
+  description: Promise based HTTP client for the browser and node.js
+  website_url: https://github.com/mzabriskie/axios
+  version: 0.26.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Javascript Utilities & Libraries
+  image_url: https://img.stackshare.io/no-img-open-source.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/NaiveSaito/package-lock.json
+  detection_source: NaiveSaito/package.json
+  last_updated_by: DarckRM
+  last_updated_on: 2022-04-18 06:37:23.000000000 Z
+- name: com.alibaba:fastjson
+  description: Fastjson is a JSON processor
+  version: 1.2.28
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2022-05-08 06:17:08.000000000 Z
+  vulnerabilities:
+  - name: Unsafe deserialization in com.alibaba:fastjson
+    cve_id: CVE-2022-25845
+    cve_url: https://github.com/advisories/GHSA-pv7h-hx5h-mgfj
+    detected_date: Jun 17
+    severity: high
+    first_patched: 1.2.83
+- name: com.google.code.gson:gson
+  description: Gson JSON library
+  version: 2.8.6
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2022-05-08 06:17:08.000000000 Z
+  vulnerabilities:
+  - name: Deserialization of Untrusted Data in Gson
+    cve_id: CVE-2022-25647
+    cve_url: https://github.com/advisories/GHSA-4jrv-ppp4-jm57
+    detected_date: May 21
+    severity: high
+    first_patched: 2.8.9
+- name: org.jsoup:jsoup
+  description: Jsoup is a Java library for working with real-world HTML
+  version: 1.11.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2022-04-20 18:17:01.000000000 Z
+  vulnerabilities:
+  - name: Uncaught Exception in jsoup
+    cve_id: CVE-2021-37714
+    cve_url: https://github.com/advisories/GHSA-m72m-mhq2-9p6c
+    detected_date: Aug 24
+    severity: high
+    first_patched: 1.14.2
+  - name: jsoup may not sanitize code injection XSS attempts if SafeList.preserveRelativeLinks
+      is enabled
+    cve_id: CVE-2022-36033
+    cve_url: https://github.com/advisories/GHSA-gp7f-rwcx-9369
+    detected_date: Sep 2
+    severity: moderate
+    first_patched: 1.15.3
+- name: org.apache.httpcomponents:httpclient
+  description: Apache HttpComponents Client
+  version: 4.5.2
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2022-04-20 18:17:01.000000000 Z
+  vulnerabilities:
+  - name: Cross-site scripting in Apache HttpClient
+    cve_id: CVE-2020-13956
+    cve_url: https://github.com/advisories/GHSA-7r82-7xv7-xcpj
+    detected_date: Aug 22
+    severity: moderate
+    first_patched: 4.5.13
+- name: com.github.oshi:oshi-core
+  description: A JNA-based
+  version: 4.0.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2022-05-08 06:17:08.000000000 Z
+- name: commons-codec:commons-codec
+  description: The Apache Commons Codec package contains simple encoder and decoders
+    for various formats such as Base64 and Hexadecimal
+  version: '1.11'
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2021-08-06 10:27:59.000000000 Z
+- name: mysql:mysql-connector-java
+  description: MySQL JDBC Type 4 driver
+  license: GPL-3.0-only
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2021-08-12 11:24:45.000000000 Z
+- name: org.projectlombok:lombok
+  description: 'Spice up your java: Automatic Resource Management'
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2022-04-20 18:17:01.000000000 Z
+- name: org.springframework.boot:spring-boot-devtools
+  description: Spring Boot Developer Tools
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2023-03-29 20:17:20.000000000 Z
+- name: org.springframework.boot:spring-boot-starter-test
+  description: Starter for testing Spring Boot applications with libraries including
+    JUnit
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2022-04-20 18:17:01.000000000 Z
+- name: org.springframework.boot:spring-boot-starter-thymeleaf
+  description: Starter for building MVC web applications using Thymeleaf views
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2022-04-20 18:17:01.000000000 Z
+- name: org.springframework.boot:spring-boot-starter-websocket
+  description: Starter for building WebSocket applications using Spring Framework's
+    WebSocket support
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/pom.xml
+  detection_source: pom.xml
+  last_updated_by: DarckRM
+  last_updated_on: 2022-04-20 18:17:01.000000000 Z
+- name: vite
+  description: Native-ESM powered web dev build tool
+  package_url: https://www.npmjs.com/vite
+  version: 3.2.5
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Package Managers
+  image_url: https://img.stackshare.io/package/npm/image.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/NaiveSaito/package-lock.json
+  detection_source: NaiveSaito/package.json
+  last_updated_by: DarckRM
+  last_updated_on: 2022-10-22 16:30:30.000000000 Z
+  vulnerabilities:
+  - name: Vite dev server option `server.fs.deny` can be bypassed when hosted on case-insensitive
+      filesystem
+    cve_id: CVE-2024-23331
+    cve_url: https://github.com/advisories/GHSA-c24v-8rfc-w8vw
+    detected_date: Jan 20
+    severity: high
+    first_patched: 3.2.8
+  - name: Vite Server Options (server.fs.deny) can be bypassed using double forward-slash
+      (//)
+    cve_id: CVE-2023-34092
+    cve_url: https://github.com/advisories/GHSA-353f-5xf4-qw67
+    detected_date: Nov 23
+    severity: high
+    first_patched: 3.2.7
+  - name: Vite's `server.fs.deny` did not deny requests for patterns with directories.
+    cve_id: CVE-2024-31207
+    cve_url: https://github.com/advisories/GHSA-8jhw-289h-jh2g
+    detected_date: Apr 4
+    severity: moderate
+    first_patched: 3.2.10
+- name: vue
+  description: Vue
+  package_url: https://www.npmjs.com/vue
+  version: 3.2.47
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15844/default_b71c906aeda030a5e2f1fe40bf12a93be52404ab.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/NaiveSaito/package-lock.json
+  detection_source: NaiveSaito/package.json
+  last_updated_by: DarckRM
+  last_updated_on: 2021-09-10 05:08:32.000000000 Z
+- name: vue-router
+  description: Official router for Vue.js 2
+  package_url: https://www.npmjs.com/vue-router
+  version: 4.1.6
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15969/default_261820f5687b4c88a3e8f95c71b5e8dccd34c1d7.png
+  detection_source_url: https://github.com/DarckRM/MyLouise/blob/master/NaiveSaito/package-lock.json
+  detection_source: NaiveSaito/package.json
+  last_updated_by: DarckRM
+  last_updated_on: 2022-08-22 16:15:16.000000000 Z
